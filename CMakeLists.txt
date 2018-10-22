@@ -1,9 +1,9 @@
 file(GLOB_RECURSE OUI_src
-    "**/*.cpp"
+    "source/**/*.cpp"
 )
 
 file(GLOB OUI_include
-    "**/*.h"
+    "include/**/*.h"
 )
 
 add_library (OUI ${OUI_src})
