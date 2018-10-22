@@ -5,7 +5,9 @@
 	#ifdef OUI_EXPORTS
 		#define OUI_API __declspec(dllexport)
 	#else
-		#define OUI_API __declspec(dllexport)
+		#ifdef _WIN32
+			#define OUI_API __declspec(dllexport)
+		#endif
 	#endif
 
 #include <string>
