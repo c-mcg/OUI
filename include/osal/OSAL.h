@@ -24,13 +24,13 @@ namespace OSAL {
 	*/
 	static Sheet parseSheet(std::u16string fileName) {
 		
-		std::wifstream stream(convertUTF16toUTF8(fileName));
+		std::ifstream stream(convertUTF16toUTF8(fileName));
 		if(!stream.good()) {//File doesnt exist
 			std::cout << "Could not find file: " << convertUTF16toUTF8(fileName.c_str()) << ".osal" << std::endl;
 			return Sheet(u"null", {});
 		}
-		std::u16string str = std::u16string(std::istreambuf_iterator<wchar_t>(stream),
-			std::istreambuf_iterator<wchar_t>());//Load file
+		std::string str = std::string(std::istreambuf_iterator<char>(stream),
+			std::istreambuf_iterator<char>());//Load file
 		stream.close();
 
 		

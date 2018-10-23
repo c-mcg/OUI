@@ -14,4 +14,6 @@ int OUI_API stringToInt(std::u16string str);
 
 double OUI_API stringToDouble(std::u16string str);
 
+std::u16string  OUI_API doubleToString(double d);
+
 #endif

@@ -39,7 +39,7 @@ void oui::AttributeProfile::addDefaultProfile(AttributeProfile* defaultProfile) 
 void oui::AttributeProfile::parseAttribute(std::string name, std::u16string value) {
 
 	//This parses the attribute to create an OSAL Attribute
-	OSAL::Attribute osalAttribute = OSAL::Attribute(name, value.c_str());
+	OSAL::Attribute osalAttribute = OSAL::Attribute(name, value);
 
 	//Set the attribute, performing needed substitutions
 	setAttribute(name, osalAttribute);
@@ -83,6 +83,8 @@ void oui::AttributeProfile::setAttribute(std::string name, OSAL::Attribute value
 			break;
 	}
 	
+	//std::cout << "parsed attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.getOriginalString()).c_str() << std::endl;
+	
 	//Finally, add the attribute to our attributes list
 	attributes.insert({name, val});
 }
@@ -118,7 +120,7 @@ void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
 		attributes.erase(it);
 	}
 
-	std::cout << "added attribute " << name.c_str() << " value " << value << std::endl;
+	//std::cout << "added attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.toString()).c_str() << std::endl;
 	//Create and insert the new value
 	attributes.insert({name, value});
 
@@ -170,7 +172,7 @@ int oui::AttributeProfile::getInt(std::string name) {
 	}
 		
 	//TODO throw error because it exists and wasn't an int
-	std::cout << "Tried to get incorrect type (int): " << name.c_str() << " type=" << ((int) attribute->type) << std::endl;
+	std::cout << "Tried to get incorrect type (int): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
 	return 0;
 
 }
@@ -189,7 +191,7 @@ std::u16string oui::AttributeProfile::getString(std::string name) {
 	}
 		
 	//TODO throw error because it exists and wasn't a string
-	std::cout << "Tried to get incorrect type (string): " << name.c_str() << " type=" << ((int) attribute->type) << std::endl;
+	std::cout << "Tried to get incorrect type (string): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
 	return u"";
 
 }
@@ -208,7 +210,7 @@ bool oui::AttributeProfile::getBool(std::string name) {
 	}
 		
 	//TODO throw error because it exists and wasn't a string
-	std::cout << "Tried to get incorrect type (bool): " << name.c_str() << " type=" << ((int) attribute->type) << std::endl;
+	std::cout << "Tried to get incorrect type (bool): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
 	return false;
 
 }
@@ -227,7 +229,7 @@ double oui::AttributeProfile::getDouble(std::string name) {
 	}
 		
 	//TODO throw error because it exists and wasn't a string
-	std::cout << "Tried to get incorrect type (double): " << name.c_str() << " type=" << ((int) attribute->type) << std::endl;
+	std::cout << "Tried to get incorrect type (double): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
 	return 0.0;
 
 }

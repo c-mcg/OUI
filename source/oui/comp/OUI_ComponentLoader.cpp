@@ -27,13 +27,13 @@ oui::ComponentLoader::ComponentLoader() {
 }
 
 bool oui::ComponentLoader::loadComponents(std::u16string path) {
-	std::wifstream stream(convertUTF16toUTF8(path));
+	std::ifstream stream(convertUTF16toUTF8(path));
 	if(!stream.good()) {//File doesnt exist
 		std::cout << "Could not find file: " << convertUTF16toUTF8(path.c_str()) << std::endl;
 		return false;
 	}
-	std::u16string str =  std::u16string(std::istreambuf_iterator<wchar_t>(stream),
-		std::istreambuf_iterator<wchar_t>());//Load file
+	std::string str =  std::string(std::istreambuf_iterator<char>(stream),
+		std::istreambuf_iterator<char>());//Load file
 	stream.close();
 
 	oui::Container* currContainer = NULL;
@@ -149,7 +149,7 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 				attributes.push_back(attributeValue);
 				state = 3;
 			} else {
-				attributeValue += c;
+				attributeValue += (char16_t) c;
 			}
 		} else if(state == 7) {
 			

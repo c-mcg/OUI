@@ -9,14 +9,27 @@
 OSAL::Attribute::Attribute(std::string name, std::u16string value) {
 	this->originalString = value;
 	this->name = name;
-	std::wistringstream iss((wchar_t*) value.c_str());
-	std::wstring rawToken;
+
+	std::vector<std::u16string> tokens;
 	std::u16string token = u"";
+	for (unsigned int i = 0; i < value.length(); i++) {
+		if (value.at(i) == u' ') {
+			tokens.push_back(token);
+			token = u"";
+			continue;
+		}
+		token += value.at(i);
+	}
+	if (token.length() > 0) {
+		tokens.push_back(token);
+	}
+
 	bool quote = false;
 	bool doubleQuote = false;
 	std::u16string strLiteral;
-	while(iss >> rawToken) {
-		token = std::u16string((char16_t*) rawToken.c_str());
+	token = u"";
+	for (unsigned int i = 0; i < tokens.size(); i++) {
+		token = tokens.at(i);
 		if(token.length() == 0) {
 			continue;
 		}
@@ -56,9 +69,10 @@ OSAL::Attribute::Attribute(std::string name, std::u16string value) {
 			} else if (isDouble(token)) {
 				types.push_back(TYPE_DOUBLE);
 			} else if (equalsIgnoreCase(token, u"true") || equalsIgnoreCase(token, u"false")) {
-				std::cout << "parsed bool: " << convertUTF16toUTF8(token).c_str() << std::endl;
+				//std::cout << "parsed bool: " << convertUTF16toUTF8(token).c_str() << std::endl;
 				types.push_back(TYPE_BOOL);
 			} else {
+				//std::cout << "Defaulted to string for value " << convertUTF16toUTF8(token).c_str() << std::endl;
 				types.push_back(TYPE_STRING);
 			}
 			this->value.push_back(token);

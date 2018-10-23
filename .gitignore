@@ -4,6 +4,8 @@ x64/
 Debug/
 Release/
 
+.vs_code/*
+
 CMakeFiles/*
 *.cmake
 Makefile

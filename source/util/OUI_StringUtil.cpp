@@ -38,6 +38,10 @@ std::u16string intToString(int i) {
 	return convertUTF8toUTF16(std::to_string(i));
 }
 
+std::u16string doubleToString(double d) {
+	return convertUTF8toUTF16(std::to_string(d));
+}
+
 int stringToInt(std::u16string str) {
 	return std::stoi(convertUTF16toUTF8(str).c_str());
 }

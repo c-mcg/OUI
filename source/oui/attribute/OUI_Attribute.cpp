@@ -55,6 +55,21 @@ oui::Attribute::Attribute(double value) {
 	doubleVal = value;
 }
 
+std::u16string oui::Attribute::toString() {
+	switch (type) {
+		case OSAL::TYPE_INT:
+			return intToString(intVal);
+		case OSAL::TYPE_STRING:
+			return stringVal;
+		case OSAL::TYPE_BOOL:
+			return boolVal ? u"true" : u"false";
+		case OSAL::TYPE_DOUBLE:
+			return doubleToString(doubleVal);
+			break;
+	}
+	return stringVal;
+}
+
 bool oui::Attribute::equals(Attribute other) {
 
 	//Return false if types are different

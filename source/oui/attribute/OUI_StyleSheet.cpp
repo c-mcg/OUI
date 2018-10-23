@@ -124,7 +124,7 @@ oui::StyleSheet* oui::StyleSheet::fromOSAL(OSAL::Sheet osalSheet) {
 			std::vector<OSAL::Attribute>::iterator aIt = attributes.begin();
 			while (aIt != attributes.end()) {
 				//TODO this should be setAttribute... At the time of writing, OSAL attribute types are unreliable so it must be parsed
-				std::cout << "Parsing attribute: element=" << eIt->getName().c_str() << " " << aIt->getName().c_str() << "=" << aIt->getOriginalString().c_str() << " type=" << ((int)aIt->getType()) << std::endl;
+				//std::cout << "Parsing attribute: element=" << eIt->getName().c_str() << " " << aIt->getName().c_str() << "=" << convertUTF16toUTF8(aIt->getOriginalString()).c_str() << " type=" << ((int)aIt->getType()) << std::endl;
 				profile->setAttribute(aIt->getName(), *aIt);
 				aIt++;
 			}

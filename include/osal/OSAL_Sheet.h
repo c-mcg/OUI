@@ -5,7 +5,7 @@
 /*
 * This class represents a sheet full of elements with attributes
 */
-namespace  OSAL {
+namespace OSAL {
 	class Sheet {
 		private: std::u16string name;//The name of the sheet
 		private: std::vector<Element> elements;//The elements in the sheet

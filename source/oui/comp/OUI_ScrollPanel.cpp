@@ -48,7 +48,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
 	button1->parseAttribute("bg-color", u"0 0 0 0");
 	button1->setAttribute("border-style", u"none");
 
-	button1->setAttribute("image", vertical ? "img/uparrow.png" : "img/leftarrow.png");
+	button1->setAttribute("image", vertical ? "./data/img/uparrow.png" : "./data/img/leftarrow.png");
 	button1->parseAttribute("bg-color", u"190 190 190 255", u"hover");
 
 	button1->addEventListener(Event::CLICKED, [this, vertical](MouseEvent e, Component* b) {
@@ -73,7 +73,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
 	button2->parseAttribute("bg-color", u"0 0 0 0");
 	button2->setAttribute("border-style", u"none");
 
-	button2->setAttribute("image", vertical ? "img/downarrow.png" : "img/rightarrow.png");
+	button2->setAttribute("image", vertical ? "./data/img/downarrow.png" : "./data/img/rightarrow.png");
 	button2->parseAttribute("bg-color", u"190 190 190 255", u"hover");
 
 	button2->addEventListener(Event::CLICKED, [this, vertical](MouseEvent e, Component* b) {

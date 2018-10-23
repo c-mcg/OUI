@@ -109,7 +109,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	minimizeBtn->parseAttribute("size", u"0 0 25 25");
 	minimizeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	minimizeBtn->setAttribute("border-style", u"solid");
-	minimizeBtn->setAttribute("image", u"img/minimizeBtn.png");
+	minimizeBtn->setAttribute("image", u"./data/img/minimizeBtn.png");
 
 	Button* maximizeBtn = new Button("maximizeBtn", "windowButton");
 
@@ -120,7 +120,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	maximizeBtn->parseAttribute("size", u"0 0 25 25");
 	maximizeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	maximizeBtn->setAttribute("border-style", u"solid");
-	maximizeBtn->setAttribute("image", u"img/maximizeBtn1.png");
+	maximizeBtn->setAttribute("image", u"./data/img/maximizeBtn1.png");
 
 	Button* closeBtn = new Button("closeBtn", "windowButton");
 	closeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
@@ -132,7 +132,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	closeBtn->parseAttribute("size", u"0 0 25 25");
 	closeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	closeBtn->setAttribute("border-style", u"solid");
-	closeBtn->setAttribute("image", u"img/closeBtn.png");
+	closeBtn->setAttribute("image", u"./data/img/closeBtn.png");
 
 	windowBar->addChild(titleLbl);
 	windowBar->addChild(minimizeBtn);
@@ -183,8 +183,9 @@ void oui::Window::setProfile(std::u16string profileName) {
 				//parseAttribute("location", std::u16string("0 0 ") + intToString(w->globalMouseX - w->moveOffX) + " " + intToString(w->globalMouseY - w->moveOffY));
 				//setLocation(getProfile("default")->getInt("x-percent"), getProfile("default")->getInt("y-percent"), getProfile("default")->getInt("x-offset"), getProfile("default")->getInt("y-offset"));
 				//setSize(getWidth(), getHeight());
-				std::cout << "base window shown" << std::endl;
+				std::cout << "base window showing..." << std::endl;
 				SDL_ShowWindow(baseWindow);
+				std::cout << "base window shown" << std::endl;
 			} else {
 				SDL_HideWindow(baseWindow);
 			}
@@ -716,7 +717,7 @@ void oui::Window::close() {
 void oui::Window::maximize() {
 	Button* maximizeBtn = ((Button*) ((Container*) getChild("windowBar"))->getChild("maximizeBtn"));
 	if (maximizeBtn != NULL) {
-		maximizeBtn->setAttribute("image", u"img/maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
+		maximizeBtn->setAttribute("image", u"./data/img/maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
 	}
 	if (!maximized) {
 		maximizeX = getX();

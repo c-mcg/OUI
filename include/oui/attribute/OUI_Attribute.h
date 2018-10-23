@@ -26,6 +26,7 @@ namespace oui {
 		public: Attribute(bool value);
 		public: Attribute(double value);
 
+		public: std::u16string toString();
 		public: bool equals(Attribute other);
 		public: Attribute* clone();
 	};
