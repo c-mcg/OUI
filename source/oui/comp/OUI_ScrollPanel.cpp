@@ -32,7 +32,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
 	scrollBar->parseAttribute("bg-color", u"230 230 230 255");
 	scrollBar->setAttribute("z-index", 10);
 
-	scrollBar->addEventListener(Event::MOUSE_WHEEL, [this, vertical](ScrollEvent& e, Component* c) {
+	scrollBar->addEventListener(Event::MOUSE_WHEEL, [this, vertical](ScrollEvent e, Component* c) {
 		if (vertical) {
 			scrollY(e.getScroll() * SCROLL_WHEEL_SPEED);
 		} else {

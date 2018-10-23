@@ -31,7 +31,7 @@ oui::Image* oui::Image::loadImage(std::u16string path, Window* window) {
 
 	SDL_Surface* loadedSurface = IMG_Load(convertUTF16toUTF8(path).c_str());
 	if(loadedSurface == NULL) {
-		printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+		printf("Unable to load image %s! SDL_image Error: %s\n", convertUTF16toUTF8(path).c_str(), IMG_GetError());
 	} else {
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(window->getGraphics()->getRenderer(), loadedSurface);
 		if(texture == NULL) {

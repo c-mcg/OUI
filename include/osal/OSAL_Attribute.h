@@ -7,6 +7,11 @@
 * This class represents an attribute on an element
 */
 namespace OSAL {
+
+	static const char TYPE_STRING = 0;
+	static const char TYPE_INT = 1;
+	static const char TYPE_DOUBLE = 2;
+	static const char TYPE_BOOL = 3;
 	class Attribute {
 
 		public: static const char STRING = 0;

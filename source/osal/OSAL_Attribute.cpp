@@ -25,41 +25,41 @@ OSAL::Attribute::Attribute(std::string name, std::u16string value) {
 			strLiteral = token.substr(1);
 			if(token.at(token.length() - 1) == '\'') {//End quote
 				strLiteral = token.substr(1, token.length() - 2);
-				types.push_back(STRING);
+				types.push_back(TYPE_STRING);
 				this->value.push_back(strLiteral);
 				quote = false;
 			}
 		} else if(token.at(token.length() - 1) == '\'' && quote) {//End quote
 			quote = false;
 			strLiteral += std::u16string(u" ").append(token.substr(0, token.length() - 1));
-			types.push_back(STRING);
+			types.push_back(TYPE_STRING);
 			this->value.push_back(strLiteral);
 		} else if(token.at(0) == '"' && !quote && !doubleQuote) {//Start double quote
 			doubleQuote = true;
 			strLiteral = token.substr(1);
 			if(token.at(token.length() - 1) == '"') {//End double quote
 				strLiteral = token.substr(1, token.length() - 2);
-				types.push_back(STRING);
+				types.push_back(TYPE_STRING);
 				this->value.push_back(strLiteral);
 				doubleQuote = false;
 			}
 		} else if(token.at(token.length() - 1) == '"' && doubleQuote) {//End double quote
 			doubleQuote = false;
 			strLiteral += std::u16string(u" ").append(token.substr(0, token.length() - 1));
-			types.push_back(STRING);
+			types.push_back(TYPE_STRING);
 			this->value.push_back(strLiteral);
 		} else if(quote || doubleQuote) {
 			strLiteral += std::u16string(u" ").append(token);
 		} else {
 			if (isInteger(token)) {
-				types.push_back(INT);
+				types.push_back(TYPE_INT);
 			} else if (isDouble(token)) {
-				types.push_back(DOUBLE);
+				types.push_back(TYPE_DOUBLE);
 			} else if (equalsIgnoreCase(token, u"true") || equalsIgnoreCase(token, u"false")) {
 				std::cout << "parsed bool: " << convertUTF16toUTF8(token).c_str() << std::endl;
-				types.push_back(BOOL);
+				types.push_back(TYPE_BOOL);
 			} else {
-				types.push_back(STRING);
+				types.push_back(TYPE_STRING);
 			}
 			this->value.push_back(token);
 		}

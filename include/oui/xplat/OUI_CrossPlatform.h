@@ -1,4 +1,4 @@
-#ifndef OUI_CROSSPLATFORM_H
+#ifndef OUI_CROSS_PLATFORM_H
 #define OUI_CROSS_PLATFORM_H
 
 namespace oui {

@@ -50,7 +50,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	this->title = u"";
 	this->visible = false;
 	this->selectedComponent = NULL;
-	this->cursor = NULL;
+	this->cursor = -1;
 
 	//setProfile(u"default");
 
@@ -163,7 +163,7 @@ void oui::Window::setContext(oui::Context* context) {
 }
 
 oui::Context* oui::Window::getContext() {
-	return context;
+	return this->context;
 }
 
 void oui::Window::setProfile(std::u16string profileName) {

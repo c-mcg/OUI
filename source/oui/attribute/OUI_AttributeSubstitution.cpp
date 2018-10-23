@@ -63,16 +63,16 @@ bool oui::AttributeSubstitution::applySubstitution(std::string name, OSAL::Attri
 			//Populate new attribute value
 			Attribute val = Attribute(); //TODO this little block is starting to look too familiar
 			switch (value.getType(i)) {
-				case OSAL::Attribute::INT:
+				case OSAL::TYPE_INT:
 					val = value.getAsInt(i);
 					break;
-				case OSAL::Attribute::STRING:
+				case OSAL::TYPE_STRING:
 					val = std::u16string(value.getAsString(i));
 					break;
-				case OSAL::Attribute::DOUBLE:
+				case OSAL::TYPE_DOUBLE:
 					val = value.getAsDouble(i);
 					break;
-				case OSAL::Attribute::BOOL:
+				case OSAL::TYPE_BOOL:
 					val = value.getAsBool(i);
 					break;
 			}
@@ -100,7 +100,7 @@ bool oui::AttributeSubstitution::applySubstitution(std::string name, OSAL::Attri
 				std::u16string attributeStringValue = value.getAsString(i);
 
 				//Put quotations back around the attribute if it's a string
-				if (value.getType(i) == OSAL::Attribute::STRING) {
+				if (value.getType(i) == OSAL::TYPE_STRING) {
 					attributeStringValue = u"\"" + attributeStringValue + u"\"";
 				}
 
@@ -118,16 +118,16 @@ bool oui::AttributeSubstitution::applySubstitution(std::string name, OSAL::Attri
 			Attribute val = Attribute();
 			//Popuplating the new attribute, seen this too many times
 			switch (value.getType(i)) {
-				case OSAL::Attribute::INT:
+				case OSAL::TYPE_INT:
 					val = value.getAsInt(i);
 					break;
-				case OSAL::Attribute::STRING:
+				case OSAL::TYPE_STRING:
 					val = std::u16string(value.getAsString(i));
 					break;
-				case OSAL::Attribute::DOUBLE:
+				case OSAL::TYPE_DOUBLE:
 					val = value.getAsDouble(i);
 					break;
-				case OSAL::Attribute::BOOL:
+				case OSAL::TYPE_BOOL:
 					val = value.getAsBool(i);
 					break;
 			}

@@ -69,16 +69,16 @@ void oui::AttributeProfile::setAttribute(std::string name, OSAL::Attribute value
 	//Populate the new attribute value
 	Attribute val = Attribute();
 	switch (value.getType()) {
-		case OSAL::Attribute::INT:
+		case OSAL::TYPE_INT:
 			val = value.getAsInt();
 			break;
-		case OSAL::Attribute::STRING:
+		case OSAL::TYPE_STRING:
 			val = value.getAsString();
 			break;
-		case OSAL::Attribute::DOUBLE:
+		case OSAL::TYPE_DOUBLE:
 			val = value.getAsDouble();
 			break;
-		case OSAL::Attribute::BOOL:
+		case OSAL::TYPE_BOOL:
 			val = value.getAsBool();
 			break;
 	}
@@ -93,7 +93,7 @@ void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
 	if (AttributeSubstitution::hasSubstitution(name)) {
 
 		//If the attribute is a string, we will put it back in automatically
-		if (value.type == OSAL::Attribute::STRING) {
+		if (value.type == OSAL::TYPE_STRING) {
 			setAttribute(name, OSAL::Attribute(name, value.stringVal));
 			return;
 		}
@@ -118,6 +118,7 @@ void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
 		attributes.erase(it);
 	}
 
+	std::cout << "added attribute " << name.c_str() << " value " << value << std::endl;
 	//Create and insert the new value
 	attributes.insert({name, value});
 
@@ -164,7 +165,7 @@ int oui::AttributeProfile::getInt(std::string name) {
 	}
 
 	//Attribute exists and is an integer
-	if (attribute->type == OSAL::Attribute::INT) {
+	if (attribute->type == OSAL::TYPE_INT) {
 		return attribute->intVal;
 	}
 		
@@ -183,7 +184,7 @@ std::u16string oui::AttributeProfile::getString(std::string name) {
 	}
 
 	//Attribute exists and is a string
-	if (attribute->type == OSAL::Attribute::STRING) {
+	if (attribute->type == OSAL::TYPE_STRING) {
 		return attribute->stringVal;
 	}
 		
@@ -202,7 +203,7 @@ bool oui::AttributeProfile::getBool(std::string name) {
 	}
 
 	//Attribute exists and is a bool
-	if (attribute->type == OSAL::Attribute::BOOL) {
+	if (attribute->type == OSAL::TYPE_BOOL) {
 		return attribute->boolVal;
 	}
 		
@@ -221,7 +222,7 @@ double oui::AttributeProfile::getDouble(std::string name) {
 	}
 
 	//Attribute exists and is a double
-	if (attribute->type == OSAL::Attribute::DOUBLE) {
+	if (attribute->type == OSAL::TYPE_DOUBLE) {
 		return attribute->doubleVal;
 	}
 		

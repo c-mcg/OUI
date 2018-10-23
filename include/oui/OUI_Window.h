@@ -29,11 +29,7 @@ namespace oui {
 
 	class OUI_API Window: public Container {
 
-#ifdef _DEBUG
-
 		private: oui::Context* context;
-
-#endif
 
 		//TODO: ? Don't export these
 		private: SDL_Window* baseWindow;
@@ -79,8 +75,6 @@ namespace oui {
 
 		public: ~Window();
 		public: Window();
-
-		
 
 		public: void setContext(Context* context);
 		public: Context* getContext();

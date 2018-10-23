@@ -494,7 +494,7 @@ int oui::Component::calculateHeight() {//TODO cache height
 int oui::Component::calculateX() {
 	//TODO percent based on screen size for Window class
 	int offset = (int) (xOffset - (centeredX ? calculateWidth() / 2 : 0));
-	return (int) parent == NULL ? offset : ((float) (xPercent) / 100.0) * parent->calculateWidth() + offset - scrollOffsetX;
+	return (int) (parent == NULL ? offset : ((float) (xPercent) / 100.0) * parent->calculateWidth() + offset - scrollOffsetX);
 }
 int oui::Component::calculateY() {
 	//TODO percent based on screen size for Window class
@@ -525,7 +525,7 @@ oui::Graphics* oui::Component::getGraphics() {
 }
 void oui::Component::flagGraphicsUpdate(bool flagParent) {
 	this->graphicsUpdate = true;
-	if (flagParent && !parent == NULL) {
+	if (flagParent && parent != NULL) {
 		parent->flagGraphicsUpdate();
 	}
 }

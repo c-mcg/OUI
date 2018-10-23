@@ -31,7 +31,7 @@ oui::Font* oui::Font::getFont(std::u16string name, int size) {
 }
 
 oui::Font* oui::Font::loadFont(std::u16string name, int size) {
-	TTF_Font* mFont = TTF_OpenFont(std::string("fonts/" + convertUTF16toUTF8(name) + ".ttf").c_str(), size);
+	TTF_Font* mFont = TTF_OpenFont(std::string("data/fonts/" + convertUTF16toUTF8(name) + ".ttf").c_str(), size);
 	if (mFont == NULL) {
 		std::cout << "Error loading font: " << convertUTF16toUTF8(name).c_str() << " " << TTF_GetError() << std::endl;
 		if (name != u"notoserif") {

@@ -14,19 +14,19 @@ oui::Attribute::Attribute() {
 
 oui::Attribute::Attribute(const Attribute& a) {
 	type = a.type;
-	if (a.type == OSAL::Attribute::INT) {
+	if (a.type == OSAL::TYPE_INT) {
 		intVal = a.intVal;
-	} else if (a.type == OSAL::Attribute::STRING) {
+	} else if (a.type == OSAL::TYPE_STRING) {
 		stringVal = a.stringVal;
-	} else if (a.type == OSAL::Attribute::BOOL) {
+	} else if (a.type == OSAL::TYPE_BOOL) {
 		boolVal = a.boolVal;
-	} else if (a.type == OSAL::Attribute::DOUBLE) {
+	} else if (a.type == OSAL::TYPE_DOUBLE) {
 		doubleVal = a.doubleVal;
 	}
 }
 
 oui::Attribute::Attribute(int value) {
-	type = OSAL::Attribute::INT;
+	type = OSAL::TYPE_INT;
 	intVal = value;
 }
 
@@ -37,7 +37,7 @@ oui::Attribute::Attribute(const char* value) : Attribute(std::string(value)) {
 }
 
 oui::Attribute::Attribute(std::u16string value) {
-	type = OSAL::Attribute::STRING;
+	type = OSAL::TYPE_STRING;
 	stringVal = value;
 }
 
@@ -46,12 +46,12 @@ oui::Attribute::Attribute(const char16_t* value) : Attribute(std::u16string(valu
 }
 
 oui::Attribute::Attribute(bool value) {
-	type = OSAL::Attribute::BOOL;
+	type = OSAL::TYPE_BOOL;
 	boolVal = value;
 }
 
 oui::Attribute::Attribute(double value) {
-	type = OSAL::Attribute::DOUBLE;
+	type = OSAL::TYPE_DOUBLE;
 	doubleVal = value;
 }
 
@@ -69,16 +69,16 @@ bool oui::Attribute::equals(Attribute other) {
 
 oui::Attribute* oui::Attribute::clone() {
 	switch (type) {
-		case OSAL::Attribute::INT:
+		case OSAL::TYPE_INT:
 			return new Attribute(intVal);
 			break;
-		case OSAL::Attribute::STRING:
+		case OSAL::TYPE_STRING:
 			return new Attribute(stringVal);
 			break;
-		case OSAL::Attribute::BOOL:
+		case OSAL::TYPE_BOOL:
 			return new Attribute(boolVal);
 			break;
-		case OSAL::Attribute::DOUBLE:
+		case OSAL::TYPE_DOUBLE:
 			return new Attribute(doubleVal);
 			break;
 	}
