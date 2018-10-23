@@ -2,11 +2,12 @@
 #ifndef OUI_COLOR_H
 #define OUI_COLOR_H
 
+#include "OUI_Export.h"
 #include <stdint.h>
 
 namespace oui {
 
-	class __declspec(dllexport) Color {
+	class OUI_API Color {
 		public: static Color BLACK;
 
 		private:uint32_t rgba;

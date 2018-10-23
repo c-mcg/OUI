@@ -20,7 +20,7 @@ namespace oui {
 //Static members and functions
 
 		//Represents the type of substitution
-		public: const enum SubstitutionType {
+		public: enum SubstitutionType {
 			APPLY_RESPECTIVELY,//Attributes are applied respectively to their substitutions. 
 				//E.g if "a" has substitutions "b", "c"
 				//Then "a: x y;" becomes "b: x; c: y;"

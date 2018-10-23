@@ -2,12 +2,10 @@
 
 #ifndef OUI_API
 
-	#ifdef OUI_EXPORTS
+	#ifdef _WIN32
 		#define OUI_API __declspec(dllexport)
 	#else
-		#ifdef _WIN32
-			#define OUI_API __declspec(dllexport)
-		#endif
+		#define OUI_API
 	#endif
 
 #include <string>
