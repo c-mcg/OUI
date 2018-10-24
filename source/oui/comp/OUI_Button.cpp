@@ -62,11 +62,13 @@ oui::Style* oui::Button::getDefaultButtonStyle() {
 }
 
 oui::Button::~Button() {
-	image = NULL;
-	font = NULL;
+	//TODO
 }
 
 oui::Button::Button(std::string name, std::string classes) : Component("button", name, classes) {
+	image = NULL;
+	font = NULL;
+	loadImg = false;
 }
 
 void oui::Button::setProfile(std::u16string profileName) {
@@ -99,7 +101,7 @@ void oui::Button::addedToContainer(Container* parent) {
 		if(graphics->getRenderer() == NULL) {
 			std::cout << " 5544" << std::endl;
 		}
-		if(image == NULL) {
+		if(image == NULL && imageString.length() > 0) {
 			loadImg = true;
 		}
 	}
@@ -130,7 +132,7 @@ void oui::Button::redraw() {
 		} else {
 			//graphics->drawImage(getImage(), getWidth() / 2 - image->getWidth() / 2, getHeight() / 2 - image->getHeight() / 2);
 		}
-		graphics->drawImage(getImage(), getWidth() / 2 - image->getWidth() / 2, getHeight() / 2 - image->getHeight() / 2);
+		graphics->drawImage(image, getWidth() / 2 - image->getWidth() / 2, getHeight() / 2 - image->getHeight() / 2);
 	}
 	if (text != u"") {
 		graphics->setColor(textColor);

@@ -109,7 +109,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	minimizeBtn->parseAttribute("size", u"0 0 25 25");
 	minimizeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	minimizeBtn->setAttribute("border-style", u"solid");
-	minimizeBtn->setAttribute("image", u"./data/img/minimizeBtn.png");
+	minimizeBtn->setAttribute("image", u"minimize-btn.png");
 
 	Button* maximizeBtn = new Button("maximizeBtn", "windowButton");
 
@@ -120,7 +120,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	maximizeBtn->parseAttribute("size", u"0 0 25 25");
 	maximizeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	maximizeBtn->setAttribute("border-style", u"solid");
-	maximizeBtn->setAttribute("image", u"./data/img/maximizeBtn1.png");
+	maximizeBtn->setAttribute("image", u"maximize-btn1.png");
 
 	Button* closeBtn = new Button("closeBtn", "windowButton");
 	closeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
@@ -132,7 +132,7 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	closeBtn->parseAttribute("size", u"0 0 25 25");
 	closeBtn->parseAttribute("bg-color", u"200 200 200 255");
 	closeBtn->setAttribute("border-style", u"solid");
-	closeBtn->setAttribute("image", u"./data/img/closeBtn.png");
+	closeBtn->setAttribute("image", u"close-btn.png");
 
 	windowBar->addChild(titleLbl);
 	windowBar->addChild(minimizeBtn);
@@ -209,7 +209,6 @@ bool oui::Window::isWindow() {
 	return true;
 }
 
-
 int oui::Window::process() {
 	if (quit) {
 		return -1;
@@ -229,6 +228,7 @@ int oui::Window::process() {
 	if (resizing) {
 		this->parseAttribute("size", u"0 0 " + intToString(globalMouseX - getX() + resizeX) + u" " + intToString(globalMouseY - getY() + resizeY));
 	}
+
 
 	auto size = queuedEvents.size();
     for (auto i = 0; i < size; ++i)
@@ -717,7 +717,7 @@ void oui::Window::close() {
 void oui::Window::maximize() {
 	Button* maximizeBtn = ((Button*) ((Container*) getChild("windowBar"))->getChild("maximizeBtn"));
 	if (maximizeBtn != NULL) {
-		maximizeBtn->setAttribute("image", u"./data/img/maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
+		maximizeBtn->setAttribute("image", u"maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
 	}
 	if (!maximized) {
 		maximizeX = getX();
