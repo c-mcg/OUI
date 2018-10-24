@@ -29,12 +29,18 @@ oui::Image* oui::Image::loadImage(std::u16string path, Window* window) {
 		cachedImages.insert({window, imgs});
 	}
 
-	SDL_Surface* loadedSurface = IMG_Load(convertUTF16toUTF8(path).c_str());
+	SDL_Surface* loadedSurface = IMG_Load(std::string("data/img/" + convertUTF16toUTF8(path)).c_str());
 	if(loadedSurface == NULL) {
 		printf("Unable to load image %s! SDL_image Error: %s\n", convertUTF16toUTF8(path).c_str(), IMG_GetError());
 	} else {
+		SDL_Renderer* renderer = window->getGraphics()->getRenderer();
+		if (renderer == NULL) {
+			printf("Unable to load RENDERER!! %s! SDL_image Error: %s\n", convertUTF16toUTF8(path).c_str(), IMG_GetError());
+			return NULL;
+		}
 		SDL_Texture* texture = SDL_CreateTextureFromSurface(window->getGraphics()->getRenderer(), loadedSurface);
 		if(texture == NULL) {
+			printf("Unable to load TEXTURE! %s! SDL_image Error: %s\n", convertUTF16toUTF8(path).c_str(), IMG_GetError());
 			return NULL;
 		}
 		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
@@ -44,7 +50,7 @@ oui::Image* oui::Image::loadImage(std::u16string path, Window* window) {
 		SDL_QueryTexture(img->baseImage, NULL, NULL, &w, &h);
 		img->width = w;
 		img->height = h;
-		//std::cout << "img=" << path.c_str() << " imgw=" << img->width << " imgh=" << img->height << std::endl;
+		std::cout << "img=" << path.c_str() << " imgw=" << img->width << " imgh=" << img->height << std::endl;
 		SDL_FreeSurface(loadedSurface);
 		std::unordered_map<oui::Window*, std::unordered_map<std::u16string, oui::Image*>>::iterator it = cachedImages.find(window);
 		if (it != cachedImages.end()) {

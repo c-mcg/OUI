@@ -1,5 +1,6 @@
 #include "OUI.h"
 #include <SDL.h>
+#include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <thread>
 #include "oui/attribute/OUI_AttributeSubstitution.h"
@@ -7,7 +8,16 @@
 #define _DEBUG
 
 int oui::initialize() {
-	//TODO initialize SDL
+	if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO)==-1)) { 
+        printf("Could not initialize SDL: %s.\n", SDL_GetError());
+        return false;
+    }
+
+	if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+		printf("IMG_Init: Failed to init required jpg and png support!\n");
+		printf("IMG_Init: %s\n", IMG_GetError());
+		return false;
+	}
 	
 	//Initialize SDL_ttf
 	if (TTF_Init() == -1)
