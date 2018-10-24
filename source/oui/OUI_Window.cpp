@@ -55,7 +55,12 @@ oui::Window::Window() : Container("window", "window", "window") {//TODO let you 
 	//setProfile(u"default");
 
 	this->graphics = new oui::Graphics(getWidth(), getHeight());
-	this->baseWindow = SDL_CreateWindow(convertUTF16toUTF8(getTitle()).c_str(), 0, 0, widthOffset, heightOffset, SDL_WINDOW_BORDERLESS);
+	this->baseWindow = SDL_CreateWindow(convertUTF16toUTF8(getTitle()).c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, widthOffset, heightOffset, SDL_WINDOW_BORDERLESS);
+	
+	if (baseWindow == NULL) {
+		std::cout << "NULL WINDOW!!" << std::endl;
+	}
+	
 	renderer = SDL_CreateRenderer(baseWindow, -1, SDL_RENDERER_ACCELERATED);
 	if (renderer == NULL) {
 		std::cout << "NULL RENDERER" << std::endl;

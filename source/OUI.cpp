@@ -8,7 +8,7 @@
 #define _DEBUG
 
 int oui::initialize() {
-	if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO)==-1)) { 
+	if((SDL_Init(SDL_INIT_EVERYTHING)==-1)) { 
         printf("Could not initialize SDL: %s.\n", SDL_GetError());
         return false;
     }
