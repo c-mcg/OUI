@@ -24,22 +24,22 @@ namespace oui {
 		private: bool childrenChanged;
 
 		public: ~ScrollPanel();
-		public: ScrollPanel(std::string name, std::string classes);
+		public: ScrollPanel(const std::string& name, const std::string& classes);
 
 		private: void createScrollBar(bool vertical);
 		private: void getChildSize(int* w, int* h);//TODO move this to container class for autosizing (TODO padding) (this will probably be great for scrollbars)
 		private: bool addScrollBar(Container* scrollbar);
 
-		public: virtual bool addChild(Component* child);
+		public: bool addChild(Component* child) override;
 
-		public: virtual Component* removeChild(int index, bool shouldDelete = false);
-		public: virtual void removeAllChildren(bool shouldDelete = false);
+		public: Component* removeChild(int index, bool shouldDelete = false) override;
+		public: void removeAllChildren(bool shouldDelete = false) override;
 
-		public: virtual void setProfile(std::u16string profile);
-		public: virtual void handleEvent(Event& e);
-		public: virtual int process();
-		public: virtual void redraw();
-		private: virtual void resize();
+		public: void setProfile(const std::u16string& profile) override;
+		public: void handleEvent(Event& e) override;
+		public: int process() override;
+		public: void redraw() override;
+		private: void resize();
 
 		public: void scrollX(int speed);
 		public: void scrollY(int speed);

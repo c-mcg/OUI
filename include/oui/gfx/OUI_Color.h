@@ -12,9 +12,9 @@ namespace oui {
 
 		private:uint32_t rgba;
 
-		public:Color();
-		public:Color(uint32_t rgba);
-		public:Color(int r, int g, int b, int a = 255);
+		public: Color();
+		public: explicit Color(uint32_t rgba);
+		public: Color(int r, int g, int b, int a = 255);
 
 		public:int getARGB();
 		public:int getA();

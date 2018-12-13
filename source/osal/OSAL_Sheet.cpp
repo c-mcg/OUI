@@ -3,13 +3,12 @@
 
 #include <iostream>//TODO
 
-OSAL::Sheet::Sheet(){
-	this->name = u"null";
+OSAL::Sheet::Sheet() :
+	name{u"null"} {
 }
 
-OSAL::Sheet::Sheet(std::u16string name, std::vector<Element> elements) {
-	this->name = name;
-	this->elements = std::vector<Element>(elements);
+OSAL::Sheet::Sheet(const std::u16string& name, const std::vector<Element>& elements) :
+	name{name}, elements{std::vector<Element>(elements)} {
 }
 
 OSAL::Sheet OSAL::Sheet::combine(Sheet sheet) {
@@ -26,7 +25,7 @@ std::u16string OSAL::Sheet::getName() {
 	return name;
 }
 
-OSAL::Element OSAL::Sheet::getElement(Element::Type type, std::string name) {
+OSAL::Element OSAL::Sheet::getElement(Element::Type type, const std::string& name) {
 	if(name.find(" ") != std::string::npos) {
 		return Element();
 	}
@@ -38,7 +37,7 @@ OSAL::Element OSAL::Sheet::getElement(Element::Type type, std::string name) {
 	return Element();
 }
 
-OSAL::Element OSAL::Sheet::getElement(std::string name) {
+OSAL::Element OSAL::Sheet::getElement(const std::string& name) {
 	if(name.find(" ") != std::string::npos) {
 		return Element();
 	}

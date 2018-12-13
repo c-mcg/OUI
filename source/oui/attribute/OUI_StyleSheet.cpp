@@ -27,17 +27,17 @@ oui::StyleSheet::~StyleSheet() {
 	}
 }
 
-oui::StyleSheet::StyleSheet() {
-	tags = std::unordered_map<std::string, Style*>();
-	classes = std::unordered_map<std::string, Style*>();
-	names = std::unordered_map<std::string, Style*>();
+oui::StyleSheet::StyleSheet() :
+	tags{std::unordered_map<std::string, Style*>()},
+	classes{std::unordered_map<std::string, Style*>()},
+	names{std::unordered_map<std::string, Style*>()} {
 }
 
-bool oui::StyleSheet::hasStyle(ElementType type, std::string identifier) {
+bool oui::StyleSheet::hasStyle(ElementType type, const std::string& identifier) {
 	return getStyle(type, identifier) != NULL;
 }
 
-oui::Style* oui::StyleSheet::getStyle(ElementType type, std::string identifier) {
+oui::Style* oui::StyleSheet::getStyle(ElementType type, const std::string& identifier) {
 	switch (type) {
 		case ElementType::TAG:
 			return getByTag(identifier);
@@ -65,21 +65,21 @@ void oui::StyleSheet::addStyle(ElementType type, std::string identifier, Style* 
 	}
 }
 
-oui::Style* oui::StyleSheet::getByTag(std::string tag) {
+oui::Style* oui::StyleSheet::getByTag(const std::string& tag) {
 	auto it = tags.find(tag);
 	if (it != tags.end()) {
 		return it->second;
 	}
 	return NULL;
 }
-oui::Style* oui::StyleSheet::getByClass(std::string className) {
+oui::Style* oui::StyleSheet::getByClass(const std::string& className) {
 	auto it = classes.find(className);
 	if (it != classes.end()) {
 		return it->second;
 	}
 	return NULL;
 }
-oui::Style* oui::StyleSheet::getByName(std::string name) {
+oui::Style* oui::StyleSheet::getByName(const std::string& name) {
 	auto it = names.find(name);
 	if (it != names.end()) {
 		return it->second;
@@ -126,13 +126,13 @@ oui::StyleSheet* oui::StyleSheet::fromOSAL(OSAL::Sheet osalSheet) {
 				//TODO this should be setAttribute... At the time of writing, OSAL attribute types are unreliable so it must be parsed
 				//std::cout << "Parsing attribute: element=" << eIt->getName().c_str() << " " << aIt->getName().c_str() << "=" << convertUTF16toUTF8(aIt->getOriginalString()).c_str() << " type=" << ((int)aIt->getType()) << std::endl;
 				profile->setAttribute(aIt->getName(), *aIt);
-				aIt++;
+				++aIt;
 			}
 
-			pIt++;
+			++pIt;
 		}
 
-		eIt++;
+		++eIt;
 	}
 
 	return sheet;

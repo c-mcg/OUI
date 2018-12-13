@@ -30,18 +30,20 @@ oui::Attribute::Attribute(int value) {
 	intVal = value;
 }
 
-oui::Attribute::Attribute(std::string value) : Attribute(convertUTF8toUTF16(value)) {
+oui::Attribute::Attribute(const std::string value) : 
+	Attribute(convertUTF8toUTF16(value)) {
 }
 
-oui::Attribute::Attribute(const char* value) : Attribute(std::string(value)) {
+oui::Attribute::Attribute(const char* value) : 
+	Attribute(std::string(value)) {
 }
 
-oui::Attribute::Attribute(std::u16string value) {
-	type = OSAL::TYPE_STRING;
-	stringVal = value;
+oui::Attribute::Attribute(const std::u16string value) :
+	type{OSAL::TYPE_STRING}, stringVal{value} {
 }
 
-oui::Attribute::Attribute(const char16_t* value) : Attribute(std::u16string(value)) {
+oui::Attribute::Attribute(const char16_t* value) :
+	Attribute(std::u16string(value)) {
 
 }
 

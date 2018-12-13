@@ -11,9 +11,14 @@ oui::TextField::~TextField() {
 	font = NULL;
 }
 
-oui::TextField::TextField(std::string name, std::string classes) : Component("button", name, classes, true){
+oui::TextField::TextField(const std::string& name, const std::string& classes) : 
+	selectStart{0}, typing{false}, font{NULL},
+	highlighting{false}, caratWidth{1}, caratHeightOffset{1},
+	caratVisible{true}, resetInput{false}, lastInput{0},
+	caratIndex{0}, lastCaratSwitch{0}, drawX{0},
+	Component("button", name, classes, true) {
 	selectStart = 0;
-	typing = true;
+	typing = false;
 	setAttribute("text", u"");
 	parseAttribute("font", u"notoserif 14");
 	parseAttribute("bg-color1", u"240 240 240 255");
@@ -57,7 +62,7 @@ int oui::TextField::process() {
 	return 0;
 }
 
-void oui::TextField::setProfile(std::u16string profileName) {
+void oui::TextField::setProfile(const std::u16string& profileName) {
 	Component::setProfile(profileName);
 
 	AttributeProfile* profile = style->getProfile(profileName);
@@ -164,7 +169,6 @@ void oui::TextField::handleEvent(Event& e) {
 
 		MouseEvent& mouseEvt = (MouseEvent&) e;
 		int evtX = mouseEvt.getX();
-		int evtY = mouseEvt.getY();
 
 		if (e.type == e.MOUSE_DOWN) {
 			caratVisible = true;
@@ -253,9 +257,6 @@ void oui::TextField::handleEvent(Event& e) {
 			} else if (character == ' ' && code != KEY_SPACE) {
 				resetInput = true;
 			} else {
-				int selectStart_ = selectStart;
-				int caratIndex_ = caratIndex;
-				std::u16string text_ = text;
 				EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
 					insertChar(character);
 				}, false, true, this);
@@ -276,11 +277,11 @@ void oui::TextField::setSelected(bool selected) {
 	}
 }
 
-void oui::TextField::setText(std::u16string text) {
+void oui::TextField::setText(const std::u16string& text) {
 	setAttribute("text", text);
 }
 
-void oui::TextField::insertString(std::u16string string) {
+void oui::TextField::insertString(const std::u16string& string) {
 	if (selectStart != caratIndex) {
 		deleteChar(true);
 	}
@@ -369,17 +370,14 @@ void oui::TextField::updateTextPosition() {
 
 int oui::TextField::getIndexAt(int x) {
 	int borderWidth = getCurrentProfile()->getInt("border-width");
-	std::u16string lastStr = std::u16string(text);
-	int lastWidth = font->getStringWidth(lastStr);
-	int strWidth = 0;
+	int lastWidth = font->getStringWidth(std::u16string(text));
 	for (int i = text.length() - 1; i >= 0; i--) {
 		std::u16string testStr = text.substr(0, i);
-		strWidth = font->getStringWidth(testStr);
+		int strWidth = font->getStringWidth(testStr);
 		int halfPoint = strWidth + (lastWidth - strWidth) / 2 + borderWidth + 1;
 		if (x + drawX > halfPoint) {
 			return i + 1;
 		}
-		lastStr = testStr;
 		lastWidth = strWidth;
 	}
 	return 0;

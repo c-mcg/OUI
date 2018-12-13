@@ -9,7 +9,7 @@ namespace oui {
 	class OUI_API Panel : public Container {
 
 		public: ~Panel();
-		public: Panel(std::string name, std::string classes);
+		public: Panel(const std::string& name, const std::string& classes);
 
 	};
 }

@@ -27,18 +27,18 @@ namespace oui {
 
         public: void handleSDLEvent(SDL_Event* event);
         
-        public: virtual Graphics* createGraphics(int width, int height);
+        public: Graphics* createGraphics(int width, int height) override;
 
-        public: virtual void render();
-        public: virtual void showWindow();
-        public: virtual void hideWindow();
+        public: void render() override;
+        public: void showWindow() override;
+        public: void hideWindow() override;
 
-        public: virtual void setTitle(std::u16string title);
-        public: virtual void setSize(int width, int height);
-        public: virtual void setPosition(int x, int y);
-        public: virtual bool setCursor(int cursor);
-        public: virtual void minimize();
-        public: virtual void maximize();
+        public: void setTitle(const std::u16string& title) override;
+        public: void setSize(int width, int height) override;
+        public: void setPosition(int x, int y) override;
+        public: bool setCursor(int cursor) override;
+        public: void minimize() override;
+        public: void maximize() override;
 
     };
 

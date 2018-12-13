@@ -9,7 +9,9 @@ oui::Menu::~Menu() {
 
 }
 
-oui::Menu::Menu(std::string name, std::string classes) : Container("menu", name, classes) {
+oui::Menu::Menu(const std::string& name, const std::string& classes) : 
+	numOptions{0}, fontSize{0}, minWidth{0}, optionHeight{0}, padding{0},
+	Container("menu", name, classes) {
 	//setSize(0, 0, 150, 30);
 	setAttribute("border-style", u"solid");
 	setAttribute("border-color-r", 0);
@@ -27,7 +29,7 @@ oui::Menu::Menu(std::string name, std::string classes) : Container("menu", name,
 	parseAttribute("options", u"");
 }
 
-void oui::Menu::setProfile(std::u16string profileName) {
+void oui::Menu::setProfile(const std::u16string& profileName) {
 	AttributeProfile* profile = style->getProfile(profileName);
 	if (profile != NULL) {
 
@@ -74,10 +76,10 @@ bool oui::Menu::addChild(Component* child) {
 	return false;
 }
 
-oui::Button* oui::Menu::addOption(std::u16string option) {
+oui::Button* oui::Menu::addOption(const std::u16string& option) {
 	return addOption(option, numOptions);
 }
-oui::Button* oui::Menu::addOption(std::u16string option, int index) {
+oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 	AttributeProfile* profile = getCurrentProfile();
 
 	//Create button for option
@@ -142,10 +144,9 @@ oui::Button* oui::Menu::addOption(std::u16string option, int index) {
 		currentButton->setName("MENU_TEMP_NAME_" + std::to_string(index));
 
 		//Reorganize remaining items
-		Button* nextButton;
 		for (int i = index; i < numOptions; i++) {
 			currentButton = (Button*) getChild("MENU_TEMP_NAME_" + std::to_string(i));
-			nextButton = (Button*) getChild("option_" + std::to_string(i + 1));
+			Button* nextButton = (Button*) getChild("option_" + std::to_string(i + 1));
 
 			//Set next button to temp name
 			if (nextButton != NULL) {
@@ -190,11 +191,11 @@ oui::Button* oui::Menu::addOption(std::u16string option, int index) {
 }
 
 
-std::vector<oui::Button*> oui::Menu::addOptions(std::vector<std::u16string> options) {
+std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
 	return addOptions(options, numOptions);
 }
 
-std::vector<oui::Button*> oui::Menu::addOptions(std::vector<std::u16string> options, int index) {
+std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options, int index) {
 	std::vector<Button*> buttons;
 	for (int i = options.size() - 1; i >= 0; i--) {
 		buttons.push_back(addOption(options.at(i), index));
@@ -215,7 +216,7 @@ bool oui::Menu::removeOption(int index) {
 	parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
 	return true;
 }
-std::vector<oui::Button*> oui::Menu::setOptions(std::vector<std::u16string> options) {
+std::vector<oui::Button*> oui::Menu::setOptions(const std::vector<std::u16string>& options) {
 	this->options = options;
 	std::vector<Component*>::iterator it;
 	for (it = children.begin(); it != children.end(); ) {

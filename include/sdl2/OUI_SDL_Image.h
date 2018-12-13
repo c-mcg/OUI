@@ -10,13 +10,13 @@ struct SDL_Renderer;
 namespace oui {
 
 	class SDLImage : public Image {
-		public: OUI_API static Image* loadImage(std::u16string path, Window* window);
+		public: OUI_API static Image* loadImage(const std::u16string& path, Window* window);
 
 		private: SDL_Texture* baseImage;
 
 		public: ~SDLImage();
 
-		public: SDLImage(SDL_Texture* baseImage);
+		public: explicit SDLImage(SDL_Texture* baseImage);
 
 		public: SDL_Texture* getBaseImage();
 	

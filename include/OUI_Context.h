@@ -21,10 +21,10 @@ namespace oui {
 
         public: virtual Window* createWindow(int width, int height);
 
-		public: Window* getWindow(std::string name);
+		public: Window* getWindow(const std::string& name);
 		public: Window* addWindow(Window* window);
 		public: bool removeWindow(Window* window);
-		public: bool deleteWindow(std::string name);
+		public: bool deleteWindow(const std::string& name);
 
 	};
 

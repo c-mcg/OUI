@@ -12,10 +12,10 @@ std::unordered_map<oui::Window*, std::vector<std::u16string>> oui::Font::fontNam
 std::unordered_map<oui::Window*, std::vector<int>> oui::Font::fontSizes = std::unordered_map<Window*, std::vector<int>>();
 
 oui::Font::Font() {
-
+    size = 0;
 }
 
-oui::Font* oui::Font::getFont(std::u16string name, int size, Window* window) {
+oui::Font* oui::Font::getFont(const std::u16string& name, int size, Window* window) {
     auto nameIt = fontNames.find(window);
     auto sizeIt = fontSizes.find(window);
     auto fontIt = cachedFonts.find(window);
@@ -49,9 +49,9 @@ oui::Font* oui::Font::getFont(std::u16string name, int size, Window* window) {
 }
 
 //TODO font sizes shoul support utf16
-int oui::Font::getStringHeight(std::u16string string) {
+int oui::Font::getStringHeight(const std::u16string& string) {
 	return 0;
 }
-int oui::Font::getStringWidth(std::u16string string) {
+int oui::Font::getStringWidth(const std::u16string& string) {
 	return 0;
 }

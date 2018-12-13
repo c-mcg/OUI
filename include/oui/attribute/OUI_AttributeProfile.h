@@ -25,7 +25,7 @@ namespace oui {
 
 //Instance functions
 		public: ~AttributeProfile();
-		public: AttributeProfile(std::string compName, AttributeProfile* defaultProfile = NULL);
+		public: AttributeProfile(const std::string& compName, AttributeProfile* defaultProfile = NULL);
 
 		public: void clearDefaultProfiles();
         
@@ -35,37 +35,37 @@ namespace oui {
 		//TODO default attributes values for attributes with optional parameters (bg-color: 0 0 0 128; then bg-color: 0 0 0; will result in 128 opacity)
 
 		//Used to set and parse an attribute from an OSAL string
-		public: void parseAttribute(std::string name, std::u16string value);
+		public: void parseAttribute(const std::string& name, const std::u16string& value);
 
 		//Used to set an attribute from an OSAL value
-		public: void setAttribute(std::string name, OSAL::Attribute value);
+		public: void setAttribute(const std::string& name, OSAL::Attribute value);
 
 		//Used to directly set an attribute
-		public: void setAttribute(std::string name, Attribute value);
+		public: void setAttribute(const std::string& name, Attribute value);
 
 		//Returns true if an attribute value exists, false if not
 		//Checks default profiles
 		//To ignore default profiles, use containsAttribute
-		private: Attribute* hasAttribute(std::string name);
+		private: Attribute* hasAttribute(const std::string& name);
 
         //Gets the value of an integer attribute
-		public: Attribute* getAttribute(std::string name);
+		public: Attribute* getAttribute(const std::string& name);
 
 		//Gets the value of an integer attribute
-		public: int getInt(std::string name);
+		public: int getInt(const std::string& name);
 		
 		//Gets the value of a string attribute
-		public: std::u16string getString(std::string name);
+		public: std::u16string getString(const std::string& name);
 
 		//Gets the value of a boolean attribute
-		public: bool getBool(std::string name);
+		public: bool getBool(const std::string& name);
 
 		//Gets the value of a double attribute
-		public: double getDouble(std::string name);
+		public: double getDouble(const std::string& name);
 
 		//Removes an attribute if it exists
 		//TODO this should be a bool, and maybe throw some errors in the engine if it doesn't work
-		public: void removeAttribute(std::string name);
+		public: void removeAttribute(const std::string& name);
 
 		//Adds the specified profile's attributes to this profile
 		//Overwrites attributes if `overwrite` is true

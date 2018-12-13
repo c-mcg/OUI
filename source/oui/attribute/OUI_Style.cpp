@@ -14,11 +14,11 @@ oui::Style::~Style() {
 
 }
 
-oui::Style::Style() {
-	profiles = std::unordered_map<std::u16string, AttributeProfile*>();
+oui::Style::Style() :
+	profiles{std::unordered_map<std::u16string, AttributeProfile*>()} {
 }
 
-void oui::Style::addProfile(std::u16string name, AttributeProfile* profile) {
+void oui::Style::addProfile(const std::u16string& name, AttributeProfile* profile) {
 	std::unordered_map<std::u16string, AttributeProfile*>::iterator it = profiles.find(name);
 	if (it != profiles.end()) {
 		it->second->combineProfile(profile);
@@ -32,7 +32,7 @@ void oui::Style::addProfile(std::u16string name, AttributeProfile* profile) {
 	}
 }
 
-bool oui::Style::hasProfile(std::u16string profile) {
+bool oui::Style::hasProfile(const std::u16string& profile) {
 	std::unordered_map<std::u16string, AttributeProfile*>::iterator it = profiles.find(profile);
 	return it != profiles.end();
 }
@@ -46,12 +46,12 @@ std::vector<std::u16string> oui::Style::getProfileNames() {
     return keys;
 }
 
-oui::AttributeProfile* oui::Style::getProfile(std::u16string profile) {
+oui::AttributeProfile* oui::Style::getProfile(const std::u16string& profile) {
 	std::unordered_map<std::u16string, AttributeProfile*>::iterator it = profiles.find(profile);
 	return it == profiles.end() ? NULL : it->second;
 }
 
-oui::AttributeProfile* oui::Style::getOrCreateProfile(std::u16string profile) {
+oui::AttributeProfile* oui::Style::getOrCreateProfile(const std::u16string& profile) {
 	AttributeProfile* apf = getProfile(profile);
 	if (apf == NULL) {
 		apf = new AttributeProfile("...", profile == u"default" ? NULL : getProfile(u"default"));
@@ -83,7 +83,7 @@ void oui::Style::combineStyle(Style* style, bool overwrite) {
 
 		}
 
-		it++;
+		++it;
 	}
 
 }
@@ -109,8 +109,8 @@ bool oui::Style::equals(Style* other) {
 			return false;
 		}
 
-		thisIt++;
-		otherIt++;
+		++thisIt;
+		++otherIt;
 	}
 
 	return true;
@@ -124,7 +124,7 @@ oui::Style* oui::Style::clone() {
 	while (it != profiles.end()) {
 		clone->addProfile(it->first, it->second->clone());
 
-		it++;
+		++it;
 	}
 
 	return clone;

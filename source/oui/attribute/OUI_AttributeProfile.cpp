@@ -15,14 +15,10 @@ oui::AttributeProfile::~AttributeProfile() {
 
 }
 
-oui::AttributeProfile::AttributeProfile(std::string componentName, AttributeProfile* defaultProfile) {
-
-	//Initialize class members
-	attributes = std::unordered_map<std::string, Attribute>();
-	if (componentName != "...") {
-		//std::cout << "'" << componentName.c_str() << "'" << std::endl;
-	}
-	this->componentName = componentName;
+oui::AttributeProfile::AttributeProfile(const std::string& componentName, AttributeProfile* defaultProfile) :
+	componentName{componentName},
+	attributes{ std::unordered_map<std::string, Attribute>() } {
+	
 	if (defaultProfile != NULL) {
 		this->defaultProfiles.push_back(defaultProfile);
 	}
@@ -41,7 +37,7 @@ std::vector<oui::AttributeProfile*> oui::AttributeProfile::getDefaultProfiles() 
     return defaultProfiles;
 }
 
-void oui::AttributeProfile::parseAttribute(std::string name, std::u16string value) {
+void oui::AttributeProfile::parseAttribute(const std::string& name, const std::u16string& value) {
 
 	//This parses the attribute to create an OSAL Attribute
 	OSAL::Attribute osalAttribute = OSAL::Attribute(name, value);
@@ -51,7 +47,7 @@ void oui::AttributeProfile::parseAttribute(std::string name, std::u16string valu
 
 }
 
-void oui::AttributeProfile::setAttribute(std::string name, OSAL::Attribute value)  {
+void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribute value)  {
 
 	//Perform any substitutions
 	//`AttributeSubstitution::applySubstitution` recursively calls this function with the substitutions
@@ -94,7 +90,7 @@ void oui::AttributeProfile::setAttribute(std::string name, OSAL::Attribute value
 	attributes.insert({name, val});
 }
 
-void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
+void oui::AttributeProfile::setAttribute(const std::string& name, Attribute value) {
 
 	//See if we can get a valid substitution
 	if (AttributeSubstitution::hasSubstitution(name)) {
@@ -131,7 +127,7 @@ void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
 
 }
 
-/*void oui::AttributeProfile::setAttribute(std::u16string name, Attribute* value) {
+/*void oui::AttributeProfile::setAttribute(const std::u16string& name, Attribute* value) {
 
 	//Delete the attribute if it already exists
 	std::unordered_map<std::u16string, Attribute*>::iterator it = attributes.find(name);
@@ -145,7 +141,7 @@ void oui::AttributeProfile::setAttribute(std::string name, Attribute value) {
 
 }*/
 
-oui::Attribute* oui::AttributeProfile::hasAttribute(std::string name) {
+oui::Attribute* oui::AttributeProfile::hasAttribute(const std::string& name) {
 
 	auto it = attributes.find(name);
 
@@ -163,11 +159,11 @@ oui::Attribute* oui::AttributeProfile::hasAttribute(std::string name) {
 	return NULL;
 }
 
-oui::Attribute* oui::AttributeProfile::getAttribute(std::string name) {
+oui::Attribute* oui::AttributeProfile::getAttribute(const std::string& name) {
 	return hasAttribute(name);
 }
 
-int oui::AttributeProfile::getInt(std::string name) {
+int oui::AttributeProfile::getInt(const std::string& name) {
 
 	Attribute* attribute = hasAttribute(name);
 
@@ -186,7 +182,7 @@ int oui::AttributeProfile::getInt(std::string name) {
 
 }
 
-std::u16string oui::AttributeProfile::getString(std::string name) {
+std::u16string oui::AttributeProfile::getString(const std::string& name) {
 
 	Attribute* attribute = hasAttribute(name);
 
@@ -205,7 +201,7 @@ std::u16string oui::AttributeProfile::getString(std::string name) {
 
 }
 
-bool oui::AttributeProfile::getBool(std::string name) {
+bool oui::AttributeProfile::getBool(const std::string& name) {
 
 	Attribute* attribute = hasAttribute(name);
 
@@ -224,7 +220,7 @@ bool oui::AttributeProfile::getBool(std::string name) {
 
 }
 
-double oui::AttributeProfile::getDouble(std::string name) {
+double oui::AttributeProfile::getDouble(const std::string& name) {
 
 	Attribute* attribute = hasAttribute(name);
 
@@ -243,7 +239,7 @@ double oui::AttributeProfile::getDouble(std::string name) {
 
 }
 
-void oui::AttributeProfile::removeAttribute(std::string name) {//TODO substitutions
+void oui::AttributeProfile::removeAttribute(const std::string& name) {//TODO substitutions
 
 	auto it = attributes.find(name);
 

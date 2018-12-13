@@ -18,16 +18,16 @@ namespace OSAL {
 		private: std::unordered_map<std::u16string, std::vector<Attribute>> attributes;//The attributes of this element
 
 		public: Element();
-		public: Element(Type type, std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes);
-		public: Element(std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes);
-		private: void setValues(Type type, std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes);
+		public: Element(Type type, const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes);
+		public: Element(const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes);
+		private: void setValues(Type type, const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes);
 
 		public: void combine(Element e);
 
 		public: Type getType();
 		public: std::string getName();
-		public: std::vector<Attribute> getAttributes(std::u16string profile);
-		public: Attribute getAttribute(std::string name, std::u16string profile);
+		public: std::vector<Attribute> getAttributes(const std::u16string& profile);
+		public: Attribute getAttribute(const std::string& name, const std::u16string& profile);
 
 		public: std::unordered_map<std::u16string, std::vector<Attribute>> getAttributes();
 

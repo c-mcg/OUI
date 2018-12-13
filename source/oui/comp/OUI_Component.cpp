@@ -71,17 +71,15 @@ oui::Component::~Component() {
 	delete graphics;
 }
 
-oui::Component::Component(std::string tag, std::string name, std::string classes, bool needsProcessing) : needsProcessing(true) {
-	
-	this->tag = tag;
-	this->name = name;
-	
-	this->window = NULL;
-	this->parent = NULL;
-	this->graphics = NULL;
-
-    this->scrollOffsetX = 0;
-    this->scrollOffsetY = 0;
+oui::Component::Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing) : 
+	tag{tag}, name{name}, needsProcessing{needsProcessing},
+	window{NULL}, graphics{NULL}, parent{NULL},
+	x{0}, y{0}, z{0}, screenX{0}, screenY{0}, xPercent{0}, xOffset{0}, yPercent{0}, yOffset{0}, scrollOffsetX{0}, scrollOffsetY{0},
+	width{0}, height{0}, minWidth{0}, minHeight{0}, widthPercent{0}, widthOffset{0}, heightPercent{0}, heightOffset{0},
+	visible{true}, profileUpdate{false}, graphicsUpdate{true}, currentProfileName{u"default"},
+	hovered{false}, selected{false}, mouseDown{false}, interactable{false},
+	cursor{CURSOR_DEFAULT}, mouseX{0}, mouseY{0},
+	opacity{255}, centeredX{false}, centeredY{false}, borderWidth{0} {
 
 	this->classes = std::vector<std::string>();
 	std::istringstream iss(classes.c_str());
@@ -100,11 +98,10 @@ oui::Component::Component(std::string tag, std::string name, std::string classes
 	style->getOrCreateProfile(u"default")->componentName = this->name + ":default";
 	style->getOrCreateProfile(u"hover")->componentName = this->name + ":hover";
 
-	this->currentProfileName = u"default";
     this->currentProfile = style->getProfile(u"default");
 }
 
-oui::Attribute oui::Component::getAttribute(std::string name, Attribute defaultVal) {
+oui::Attribute oui::Component::getAttribute(const std::string& name, Attribute defaultVal) {
     Attribute* attr = getCurrentProfile()->getAttribute(name);
     if (attr == NULL) {
         return defaultVal;
@@ -196,8 +193,8 @@ void oui::Component::handleEvent(Event& e) {
 
 			auto handlers = it->second;
 
-			for (auto it = handlers.begin(); it != handlers.end(); it++) {
-				(*it)(mouseEvt, this);
+			for (auto it2 = handlers.begin(); it2 != handlers.end(); it2++) {
+				(*it2)(mouseEvt, this);
 			}
 		}
 
@@ -279,8 +276,7 @@ void oui::Component::addEventListener(char type, std::function<void(MenuEvent, C
 
 /* START OF USAGE FUNCTIONS */
 
-void oui::Component::setProfile(std::u16string profile) {
-	int w = getWidth(), h = getHeight();
+void oui::Component::setProfile(const std::u16string& profile) {
 	AttributeProfile* apf = style->getProfile(profile);
 	if (apf != NULL) {
 		currentProfileName = profile;
@@ -362,14 +358,14 @@ void oui::Component::setProfile(std::u16string profile) {
 	height = calculateHeight();
 }
 
-void oui::Component::parseAttribute(std::string name, std::u16string value, std::u16string profile) {
+void oui::Component::parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile) {
 	//definedStyle->getOrCreateProfile(profile)->parseAttribute(name, value);
 	style->getOrCreateProfile(profile)->parseAttribute(name, value);
 
 	flagProfileUpdate();
 }
 
-void oui::Component::setAttribute(std::string name, Attribute a, std::u16string profile) {
+void oui::Component::setAttribute(const std::string& name, Attribute a, const std::u16string& profile) {
 	//definedStyle->getOrCreateProfile(profile)->setAttribute(name, a);
 	style->getOrCreateProfile(profile)->setAttribute(name, a);
 
@@ -402,7 +398,7 @@ bool oui::Component::isChildOf(Component* c) {
 	}
 	return false;
 }
-bool oui::Component::isChildOf(std::string tag) {
+bool oui::Component::isChildOf(const std::string& tag) {
 	if (parent != NULL) {
 		return parent->compareTag(tag) ? true : parent->isChildOf(tag);
 	}
@@ -417,10 +413,10 @@ bool oui::Component::isChildOf(std::string tag) {
 std::string oui::Component::getTag() {
 	return tag;
 }
-bool oui::Component::compareTag(std::string tag) {
+bool oui::Component::compareTag(const std::string& tag) {
 	return strcmp(this->tag.c_str(), tag.c_str()) == 0;
 }
-bool oui::Component::setName(std::string name) {
+bool oui::Component::setName(const std::string& name) {
 	if (parent != NULL) {
 		if (((Container*) parent)->isDuplicateName(name, this)) {
 			std::cout << "Tried to set duplicate name: " << name.c_str() << std::endl;
@@ -437,7 +433,7 @@ void oui::Component::addClass(std::string _class) {
 	classes.push_back(_class);
 	createStyle();
 }
-bool oui::Component::removeClass(std::string _class) {
+bool oui::Component::removeClass(const std::string& _class) {
 	for (unsigned int i = 0; i < classes.size(); i++) {
 		if (classes.at(i) == _class) {
 			classes.erase(classes.begin() + i);
@@ -446,7 +442,7 @@ bool oui::Component::removeClass(std::string _class) {
 	}
 	return false;
 }
-void oui::Component::setClasses(std::string classes) {
+void oui::Component::setClasses(const std::string& classes) {
 	this->classes = std::vector<std::string>();
 	std::istringstream iss(classes.c_str());
 	std::string currClass;

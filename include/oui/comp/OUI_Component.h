@@ -103,10 +103,10 @@ namespace oui {
 		public: ~Component();
 
 		//Default attributes are not loaded until the component is added, so do not attempt to get attribute values in the constructor
-		public: Component(std::string tag, std::string name, std::string classes, bool needsProcessing=false);
+		public: Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false);
 
-        public: void setAttribute(std::string name, Attribute val, std::u16string profile=u"default");
-        public: Attribute getAttribute(std::string name, Attribute defaultVal=0);
+        public: void setAttribute(const std::string& name, Attribute val, const std::u16string& profile=u"default");
+        public: Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
 
 	//Processing and Drawing
 		public: virtual int process();
@@ -127,8 +127,8 @@ namespace oui {
 	//Usage functions
 		//This parses a value as if it were an OSAL attribute
 		//This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("bg-color", u"0 0 0 255")"
-		public: void parseAttribute(std::string name, std::u16string value, std::u16string profile = u"default");
-		public: virtual void setProfile(std::u16string profile);
+		public: void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
+		public: virtual void setProfile(const std::u16string& profile);
 		public: bool contains(int localX, int localY);
 
 	//Containers
@@ -139,16 +139,16 @@ namespace oui {
 		//Recursively checks parents for the specified component
 		public: bool isChildOf(Component* c);
 		//Recursively looks for a parent with the specified tag
-		public: bool isChildOf(std::string tag);
+		public: bool isChildOf(const std::string& tag);
 
 	//Identification
 		public: std::string getTag();
-		public: bool compareTag(std::string tag);
-		public: virtual bool setName(std::string name);
+		public: bool compareTag(const std::string& tag);
+		public: virtual bool setName(const std::string& name);
 		public: std::string getName();
 		public: void addClass(std::string _class);
-		public: bool removeClass(std::string _class);
-		public: void setClasses(std::string classes);
+		public: bool removeClass(const std::string& _class);
+		public: void setClasses(const std::string& classes);
 		public: void setClasses(std::vector<std::string> classes);
 		public: std::vector<std::string> getClasses();
 

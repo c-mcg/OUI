@@ -4,16 +4,16 @@
 OSAL::Element::Element() : Element(TAG, "null", std::unordered_map<std::u16string, std::vector<Attribute>>()) {
 }
 
-OSAL::Element::Element(Type type, std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes) {
+OSAL::Element::Element(Type type, const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes) {
 	setValues(type, name, attributes);
 }
 
-OSAL::Element::Element(std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes) {
+OSAL::Element::Element(const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes) {
 	char type = name.at(0) == '#' ? 2 : (name.at(0) == '.' ? 1 : 0);
 	setValues((Type) type, name.substr(type == 0 ? 0 : 1), attributes);
 }
 
-void OSAL::Element::setValues(Type type, std::string name, std::unordered_map<std::u16string, std::vector<Attribute>> attributes) {
+void OSAL::Element::setValues(Type type, const std::string& name, const std::unordered_map<std::u16string, std::vector<Attribute>>& attributes) {
 	this->type = type;
 	this->name = name;
 	this->attributes = attributes;
@@ -38,7 +38,7 @@ std::string OSAL::Element::getName() {
 	return name;
 }
 
-std::vector<OSAL::Attribute> OSAL::Element::getAttributes(std::u16string profile) {
+std::vector<OSAL::Attribute> OSAL::Element::getAttributes(const std::u16string& profile) {
 	std::unordered_map<std::u16string, std::vector<Attribute>>::iterator it = attributes.find(profile);
 	if (it != attributes.end()) {
 		return it->second;
@@ -47,7 +47,7 @@ std::vector<OSAL::Attribute> OSAL::Element::getAttributes(std::u16string profile
 	return std::vector<OSAL::Attribute>();
 }
 
-OSAL::Attribute OSAL::Element::getAttribute(std::string name, std::u16string profile) {
+OSAL::Attribute OSAL::Element::getAttribute(const std::string& name, const std::u16string& profile) {
 	std::unordered_map<std::u16string, std::vector<Attribute>>::iterator it = attributes.find(profile);
 	if (it != attributes.end()) {
 		std::vector<Attribute> attrs = it->second;

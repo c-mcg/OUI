@@ -4,11 +4,11 @@
 
 std::unordered_map<std::string, oui::AttributeSubstitution> oui::AttributeSubstitution::attributeSubs = std::unordered_map<std::string, oui::AttributeSubstitution>();
 
-void oui::AttributeSubstitution::addSubstitution(std::string name, std::string replacement, SubstitutionType type) {
+void oui::AttributeSubstitution::addSubstitution(const std::string& name, const std::string& replacement, SubstitutionType type) {
 	addSubstitution(name, std::vector<std::string>({replacement}), type);
 }
 
-void oui::AttributeSubstitution::addSubstitution(std::string name, std::vector<std::string> subAttributes, SubstitutionType type) {
+void oui::AttributeSubstitution::addSubstitution(const std::string& name, const std::vector<std::string>& subAttributes, SubstitutionType type) {
 
 	auto subIt = attributeSubs.find(name);
 
@@ -26,11 +26,11 @@ void oui::AttributeSubstitution::addSubstitution(std::string name, std::vector<s
 	attributeSubs.insert({name, AttributeSubstitution{subAttributes, type}});
 }
 
-bool oui::AttributeSubstitution::hasSubstitution(std::string name) {
+bool oui::AttributeSubstitution::hasSubstitution(const std::string& name) {
 	return attributeSubs.find(name) != attributeSubs.end();
 }
 
-bool oui::AttributeSubstitution::applySubstitution(std::string name, OSAL::Attribute value, AttributeProfile* profile) {
+bool oui::AttributeSubstitution::applySubstitution(const std::string& name, OSAL::Attribute value, AttributeProfile* profile) {
 
 	auto subIt = attributeSubs.find(name);
 

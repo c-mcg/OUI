@@ -29,7 +29,7 @@ oui::SDLGraphics::SDLGraphics(int width, int height, SDL_Renderer* renderer) : G
 	this->setSize(width, height);
 }
 
-oui::Image* oui::SDLGraphics::loadImage(std::u16string path, Window* window) {
+oui::Image* oui::SDLGraphics::loadImage(const std::u16string& path, Window* window) {
     SDL_Surface* loadedSurface = IMG_Load(std::string("data/img/" + convertUTF16toUTF8(path)).c_str());
 	if(loadedSurface == NULL) {
 		printf("Unable to load image %s! SDL_image Error: %s\n", convertUTF16toUTF8(path).c_str(), IMG_GetError());
@@ -48,7 +48,7 @@ oui::Image* oui::SDLGraphics::loadImage(std::u16string path, Window* window) {
     return img;
 
 }
-oui::Font* oui::SDLGraphics::loadFont(std::u16string name, int size, Window* window) {
+oui::Font* oui::SDLGraphics::loadFont(const std::u16string& name, int size, Window* window) {
     TTF_Font* mFont = TTF_OpenFont(std::string("data/fonts/" + convertUTF16toUTF8(name) + ".ttf").c_str(), size);
 	if (mFont == NULL) {
 		std::cout << "Error loading font: " << convertUTF16toUTF8(name).c_str() << " " << TTF_GetError() << std::endl;
@@ -148,7 +148,7 @@ void oui::SDLGraphics::drawImage(Image* image, int x, int y) {
 	SDL_RenderCopy(renderer, sdlImg->getBaseImage(), NULL, &dst);
 }
 
-void oui::SDLGraphics::drawText(std::u16string text, int x, int y) {
+void oui::SDLGraphics::drawText(const std::u16string& text, int x, int y) {
 	if (text.length() == 0) {
 		return;
 	}

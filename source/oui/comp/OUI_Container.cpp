@@ -18,7 +18,7 @@ oui::Container::~Container() {
 	}
 }
 
-oui::Container::Container(std::string tag, std::string name, std::string classes, bool needsProcessing) : Component(tag, name, classes, needsProcessing) {
+oui::Container::Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing) : Component(tag, name, classes, needsProcessing) {
 	this->styleSheet = NULL;
 }
 
@@ -43,7 +43,7 @@ void oui::Container::onProcessableChildRemoved(Component* removedChild) {
 	}
 }
 
-void oui::Container::setProfile(std::u16string profile) {
+void oui::Container::setProfile(const std::u16string& profile) {
 	int w = getWidth(), h = getHeight();
 	Component::setProfile(profile);
 	if (w != graphics->getWidth() || h != graphics->getHeight()) {
@@ -148,7 +148,7 @@ oui::Component* oui::Container::getComponentAt(int x, int y) {
 	}
 	//std::sort(zIndexes.begin(), zIndexes.end(), std::less<int>());
 	std::unordered_map<int, std::vector<Component*>>::iterator it;
-	for(it = zIndexes.begin(); it != zIndexes.end(); it++) {
+	for(it = zIndexes.begin(); it != zIndexes.end(); ++it) {
 		std::vector<Component*> comps = it->second;
 		for(unsigned int i = 0; i < comps.size(); i++) {
 			if(comps.at(i)->contains(x - (isWindow() ? 0 : this->getX()), y - (isWindow() ? 0 : this->getY()))) {
@@ -162,7 +162,7 @@ break_outer_loop:
 	return component != NULL ? component: this;
 }
 
-int oui::Container::getIndexOf(std::string name) {
+int oui::Container::getIndexOf(const std::string& name) {
 	for (unsigned int i = 0; i < children.size(); i++) {
 		if (children.at(i)->getName() == name) {
 			return i;
@@ -196,18 +196,17 @@ bool oui::Container::isContainer() {
 			 continue;
 		 }
 
-		 //Remove the child if it's not permanent
-		 Component* c = removeChild(permanentOffset, shouldDelete);
+		// Remove the child if it's not permanent
+		removeChild(permanentOffset, shouldDelete);
 	}
 }
 
-oui::Component* oui::Container::removeChild(std::string name, bool shouldDelete) {
+oui::Component* oui::Container::removeChild(const std::string& name, bool shouldDelete) {
 	int index = getIndexOf(name);
 	return index == -1 ? NULL : removeChild(index, shouldDelete);
 }
 oui::Component* oui::Container::removeChild(Component* child, bool shouldDelete) {
 
-	std::vector<Component*>::iterator it;
 	for (int i = 0; i < children.size(); i++) {
 		if (children.at(i) == child) {
 			return removeChild(i, shouldDelete);
@@ -223,8 +222,6 @@ oui::Component* oui::Container::removeChild(int index, bool shouldDelete) {
 
 	Component* c = children.at(index);
 	if (!c->getCurrentProfile()->getBool("permanent")) {
-
-		Component* c = children.at(index);
 
 		if (c->needsProcessing) {
 			onProcessableChildRemoved(c);
@@ -243,7 +240,7 @@ oui::Component* oui::Container::removeChild(int index, bool shouldDelete) {
 	return c;
 }
 
-bool oui::Container::isDuplicateName(std::string name, Component* ignore) {
+bool oui::Container::isDuplicateName(const std::string& name, Component* ignore) {
 	for (unsigned int i = 0; i < children.size(); i++) {
 		if (children.at(i) != ignore && children.at(i)->getName() == name) {
 			return true;
@@ -270,7 +267,7 @@ bool oui::Container::addChild(Component* child) {
 	return true;
 }
 
-oui::Component* oui::Container::getChild(std::string name) {
+oui::Component* oui::Container::getChild(const std::string& name) {
 	for (unsigned int i = 0; i < children.size(); i++) {
 		if (children.at(i)->getName() == name) {
 			return getChild(i);
@@ -283,7 +280,7 @@ oui::Component* oui::Container::getChild(int index) {
 	return children.at(index);
 }
 
-oui::Container* oui::Container::getChildCont(std::string name) {
+oui::Container* oui::Container::getChildCont(const std::string& name) {
 	Component* c = getChild(name);
 	if (c != NULL && c->isContainer()) {
 		return (Container*) c;
@@ -332,7 +329,7 @@ void oui::Container::redrawChildren() {
 	//std::sort(zIndexes.begin(), zIndexes.end(), std::less<int>());
 
 	std::unordered_map<int, std::vector<Component*>>::iterator it;
-	for(it = zIndexes.begin(); it != zIndexes.end(); it++) {
+	for(it = zIndexes.begin(); it != zIndexes.end(); ++it) {
 		std::vector<Component*> comps = it->second;
 		for(unsigned int i = 0; i < comps.size(); i++) {
 			Component* c = comps.at(i);
@@ -362,7 +359,7 @@ void oui::Container::setMouseDown(bool mouseDown) {
 	} 
 }
 
-void oui::Container::addOSALStyle(std::u16string sheet) {
+void oui::Container::addOSALStyle(const std::u16string& sheet) {
 	OSAL::Sheet sheet2 = OSAL::parseSheet(sheet);
 	addOSALStyle(sheet2);
 }

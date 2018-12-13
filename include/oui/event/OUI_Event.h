@@ -26,7 +26,7 @@ namespace oui {
 
 		public: bool defaultPrevented;
 
-		public: Event(char type);
+		public: explicit Event(char type);
 
 		public: virtual bool isMouseEvent();
 		public: virtual bool isKeyEvent();
@@ -54,7 +54,7 @@ namespace oui {
 		
         public: int getButton();
 
-		public: bool isMouseEvent();
+		public: bool isMouseEvent() override;
 
 	};
 
@@ -64,7 +64,7 @@ namespace oui {
 
 		public: KeyEvent(char type, int keyCode, char keyChar);
 
-		public: bool isKeyEvent();
+		public: bool isKeyEvent() override;
 
 		public: int getKeyCode();
 		public: char getKeyChar();
@@ -73,7 +73,7 @@ namespace oui {
 	class OUI_API ScrollEvent : public Event {
 		private: int scroll;
 
-		public: ScrollEvent(int scroll);
+		public: explicit ScrollEvent(int scroll);
 
 		public: int getScroll();
 	};
@@ -82,7 +82,7 @@ namespace oui {
 		private: int index;
 		private: std::u16string option;
 
-		public: MenuEvent(int index, std::u16string option);
+		public: MenuEvent(int index, const std::u16string& option);
 
 		public: int getIndex();
 		public: std::u16string getOption();
@@ -90,8 +90,8 @@ namespace oui {
 
 	class OUI_API WindowEvent : public Event {
 
-		public: WindowEvent(char type);
-		public: bool isWindowEvent();
+		public: explicit WindowEvent(char type);
+		public: bool isWindowEvent() override;
 
 	};
 

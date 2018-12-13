@@ -5,6 +5,6 @@ oui::Panel::~Panel() {
 
 }
 
-oui::Panel::Panel(std::string name, std::string classes) : Container("panel", name, classes) {
+oui::Panel::Panel(const std::string& name, const std::string& classes) : Container("panel", name, classes) {
 
 }

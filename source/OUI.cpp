@@ -61,31 +61,31 @@ int oui::initialize() {
 		return false;
 	}
 
-	ComponentLoader::addTag("button", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("button", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new Button(name, classes);
 	});
 
-	ComponentLoader::addTag("panel", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("panel", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new Panel(name, classes);
 	});
 
-	ComponentLoader::addTag("drawpanel", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("drawpanel", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new DrawablePanel(name, classes);
 	});
 
-	ComponentLoader::addTag("label", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("label", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new Label(name, classes);
 	});
 
-	ComponentLoader::addTag("textfield", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("textfield", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new TextField(name, classes);
 	});
 
-	ComponentLoader::addTag("men", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("men", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new Menu(name, classes);
 	});
 
-	ComponentLoader::addTag("scrollpanel", [](std::string name, std::string classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("scrollpanel", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new ScrollPanel(name, classes);
 	});
 

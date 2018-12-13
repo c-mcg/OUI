@@ -14,10 +14,10 @@ namespace oui {
 		private: bool autoSize;
 
 		public: ~Label();
-		public: Label(std::string name, std::string classes);
+		public: Label(const std::string& name, const std::string& classes);
 
-		public: virtual void setProfile(std::u16string profile);
-		public: virtual void redraw();
+		public: void setProfile(const std::u16string& profile) override;
+		public: void redraw() override;
 
 	};
 }

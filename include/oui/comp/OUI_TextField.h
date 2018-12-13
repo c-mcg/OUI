@@ -31,22 +31,22 @@ namespace oui {
 		private: int drawX;
 
 		public: ~TextField();
-		public: TextField(std::string name, std::string classes);
+		public: TextField(const std::string& name, const std::string& classes);
 
-		public: virtual void addedToContainer(Container* container);
+		public: void addedToContainer(Container* container) override;
 
-		public: virtual int process();
+		public: int process() override;
 
-		public: virtual void setProfile(std::u16string profile);
-		public: virtual std::vector<std::u16string> getRightClickOptions();
+		public: void setProfile(const std::u16string& profile) override;
+		public: std::vector<std::u16string> getRightClickOptions() override;
 
-		public: virtual void redraw();
-		public: virtual void handleEvent(Event& e);
-		public: virtual void setSelected(bool selected);
+		public: void redraw() override;
+		public: void handleEvent(Event& e) override;
+		public: void setSelected(bool selected) override;
 
-		public: void setText(std::u16string text);
+		public: void setText(const std::u16string& text);
 
-		public: void insertString(std::u16string string);
+		public: void insertString(const std::u16string& string);
 		public: void insertChar(char c);
 		public: void deleteChar(bool backspace);
 		public: void moveCarat(bool right);

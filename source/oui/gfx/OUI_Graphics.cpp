@@ -44,10 +44,10 @@ oui::Font* oui::Graphics::getFont() {
 	return font;
 }
 
-oui::Image* oui::Graphics::loadImage(std::u16string path, Window* window) {
+oui::Image* oui::Graphics::loadImage(const std::u16string& path, Window* window) {
     return NULL;
 }
-oui::Font* oui::Graphics::loadFont(std::u16string name, int size, Window* window) {
+oui::Font* oui::Graphics::loadFont(const std::u16string& name, int size, Window* window) {
     return NULL;
 }
 
@@ -76,7 +76,7 @@ void oui::Graphics::drawImage(Image* image, int x, int y) {
 
 	
 
-void oui::Graphics::drawText(std::u16string text, int x, int y) {
+void oui::Graphics::drawText(const std::u16string& text, int x, int y) {
 }
 
 void oui::Graphics::setAlpha(int alpha) {

@@ -6,7 +6,9 @@ oui::Label::~Label() {
 	font = NULL;
 }
 
-oui::Label::Label(std::string name, std::string classes) : Component("label", name, classes) {
+oui::Label::Label(const std::string& name, const std::string& classes) : 
+	autoSize{true}, font{NULL},
+	Component("label", name, classes) {
 	setAttribute("text", u"");
 	parseAttribute("font", u"notoserif 12");
 	parseAttribute("bg-color", u"0 0 0 0");
@@ -14,7 +16,7 @@ oui::Label::Label(std::string name, std::string classes) : Component("label", na
 	setAttribute("auto-size", true);
 }
 
-void oui::Label::setProfile(std::u16string profileName) {
+void oui::Label::setProfile(const std::u16string& profileName) {
 
 	AttributeProfile* profile = style->getProfile(profileName);
 	if (profile != NULL) {

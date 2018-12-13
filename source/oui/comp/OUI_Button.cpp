@@ -65,13 +65,12 @@ oui::Button::~Button() {
 	//TODO
 }
 
-oui::Button::Button(std::string name, std::string classes) : Component("button", name, classes) {
-	image = NULL;
-	font = NULL;
-	loadImg = false;
+oui::Button::Button(const std::string& name, const std::string& classes) : 
+	centerText{false}, loadImg{false}, font{NULL}, image{NULL},
+	Component("button", name, classes) {
 }
 
-void oui::Button::setProfile(std::u16string profileName) {
+void oui::Button::setProfile(const std::u16string& profileName) {
 	Component::setProfile(profileName);
 
 	AttributeProfile* profile = style->getProfile(profileName);

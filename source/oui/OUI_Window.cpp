@@ -25,16 +25,22 @@ oui::Window::~Window() {
 	rightClickedComponent = NULL;
 }
 
-oui::Window::Window(int width, int height) : Container("window", "window", "window") {//TODO let you set a name
+oui::Window::Window(int width, int height) :
+	context{NULL}, visible{false}, title{u""},
+	shutdown{false}, focused{false}, globalMouseX{0}, globalMouseY{0},
+	moving{false}, moveOffX{0}, moveOffY{0}, resizing{false}, resizeX{0}, resizeY{0},
+	maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0},
+	ctrlDown{false}, shiftDown{false}, altDown{false}, editIndex{0},
+	selectedComponent{NULL}, rightClickedComponent{NULL},
+	cursor{-1}, cursorType{CURSOR_DEFAULT},
+	Container("window", "window", "window") {//TODO let you set a name
 }
 
 void oui::Window::initializeWindow(int width, int height) {
-    
     graphics = createGraphics(width, height);
     graphics->setFont(Font::getFont(u"notoserif", 12, this));
     window = this;
 
-	this->context = NULL;
 
 	AttributeProfile* profile = style->getOrCreateProfile(u"default");//This should definitely be default at this point
 
@@ -44,23 +50,7 @@ void oui::Window::initializeWindow(int width, int height) {
 	setAttribute("height-offset", height);
 	int widthOffset = profile->getInt("width-offset");
 	int heightOffset = profile->getInt("height-offset");
-	this->title = u"";
-	this->visible = false;
-	this->selectedComponent = NULL;
-	this->rightClickedComponent = NULL;
-	this->cursor = -1;
-	this->shutdown = false;
-	this->focused = false;
-	this->cursorType = CURSOR_DEFAULT;
-	this->editIndex = 0;
-
-	this->maximized = false;
-	this->moving = false;
-	this->resizing = false;
-
-	this->shiftDown = false;
-	this->ctrlDown = false;
-	this->altDown = false;
+	
 
 	Panel* windowBar = new Panel("windowBar", "");
 	windowBar->setAttribute("cursor", u"pointer");
@@ -159,7 +149,7 @@ oui::Context* oui::Window::getContext() {
 	return this->context;
 }
 
-void oui::Window::setProfile(std::u16string profileName) {
+void oui::Window::setProfile(const std::u16string& profileName) {
 	bool wasVisible = this->visible;
 	int w = getWidth(), h = getHeight(), x = getX(), y = getY();
 
@@ -447,7 +437,7 @@ void oui::Window::setTimeout(int delay, std::function<void()> func) {
 	queuedEvents.push_back(evnt);
 }
 
-void oui::Window::setTitle(std::u16string title) {
+void oui::Window::setTitle(const std::u16string& title) {
 	if (this->title == title) {
 		return;
 	}
@@ -476,7 +466,7 @@ bool oui::Window::hasFocus() {
 void oui::Window::addEditEvent(EditEvent* e, bool append) {
 	if (editIndex != editEvents.size() - 1) {
 		std::vector<EditEvent*>::iterator it;
-		for (it = editEvents.begin() + editIndex; it != editEvents.end(); it++) {
+		for (it = editEvents.begin() + editIndex; it != editEvents.end(); ++it) {
 			delete *it;
 		}
 		editEvents.erase(editEvents.begin() + editIndex, editEvents.end());
@@ -613,7 +603,7 @@ void oui::Window::minimize() {
     handleEvent(e);
 }
 
-void oui::Window::setClipboardText(std::u16string text) {
+void oui::Window::setClipboardText(const std::u16string& text) {
 	SDL_SetClipboardText(convertUTF16toUTF8(text).c_str());//TODO clipboar should support wstring
 }
 

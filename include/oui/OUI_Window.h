@@ -71,18 +71,18 @@ namespace oui {
 		public: void setContext(Context* context);
 		public: Context* getContext();
 
-		public: virtual void setProfile(std::u16string profile);
+		public: virtual void setProfile(const std::u16string& profile) override;
 
-		public: virtual bool isWindow();
+		public: virtual bool isWindow() override;
 
-		public: virtual int process();
+		public: virtual int process() override;
 		public: Graphics* getGraphics();
 
         public: void handleMouseMoveEvent(MouseEvent event);
         public: void handleMouseDownEvent(MouseEvent event);
         public: void handleMouseUpEvent(MouseEvent event);
 		public: virtual void handleEvent(Event e);
-		public: virtual void redraw();
+		public: virtual void redraw() override;
 
 		public: void setTimeout(int delay, std::function<void()> func);
 
@@ -104,13 +104,13 @@ namespace oui {
 
 
 		//TODO move to own file (with other functions, sleep, etc.)
-		public: void setClipboardText(std::u16string text);
+		public: void setClipboardText(const std::u16string& text);
 		public: std::u16string getClipboardText();
 		public: bool hasClipboardText();
 
         public: void close();
         public: void setVisible(bool visible);
-		public: virtual Window* getWindow();
+		public: virtual Window* getWindow() override;
 
         // Abstract methods
         public: virtual Graphics* createGraphics(int width, int height);
@@ -118,7 +118,7 @@ namespace oui {
         public: virtual void render();
         public: virtual void showWindow();
         public: virtual void hideWindow();
-        public: virtual void setTitle(std::u16string title);
+        public: virtual void setTitle(const std::u16string& title);
         public: virtual void setSize(int width, int height);
         public: virtual void setPosition(int x, int y);
         public: virtual bool setCursor(int cursor);

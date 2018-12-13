@@ -10,15 +10,17 @@ oui::Image::~Image() {
 }
 
 oui::Image::Image() {
+	width = 0;
+	height = 0;
 }
 
-oui::Image* oui::Image::loadImage(std::u16string path, Window* window) {
+oui::Image* oui::Image::loadImage(const std::u16string& path, Window* window) {
 
 	auto it = cachedImages.find(window);
 	if (it != cachedImages.end()) {
 		std::unordered_map<std::u16string, oui::Image*> imgs = it->second;
-		std::unordered_map<std::u16string, oui::Image*>::iterator it2;
-		if (imgs.find(path) != imgs.end()) {
+		auto it2 = imgs.find(path);
+		if (it2 != imgs.end()) {
 			return it2->second;
 		}
 	} else {
@@ -29,7 +31,7 @@ oui::Image* oui::Image::loadImage(std::u16string path, Window* window) {
 	return window->getGraphics()->loadImage(path, window);
 }
 
-void oui::Image::cacheImage(Window* window, std::u16string path, Image* image) {
+void oui::Image::cacheImage(Window* window, const std::u16string path, Image* image) {
     auto it = cachedImages.find(window);
     
     std::unordered_map<std::u16string, oui::Image*> imgs;

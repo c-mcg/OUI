@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-oui::Context::Context() {
-	windows = std::vector<Window*>();
+oui::Context::Context() :
+	windows{std::vector<Window*>()}, lastEvent{0} {
 }
 
 int oui::Context::process() {
@@ -15,7 +15,6 @@ int oui::Context::process() {
 		std::cout << "No windows" << std::endl;
 		return -1;
 	}
-	long long now = currentTimeMillis();
 
 	std::vector<Window*>::iterator it;
 	for (it = windows.begin(); it != windows.end();) {//TODO make a safe(er) loop like the queuedEvents
@@ -39,7 +38,7 @@ int oui::Context::process() {
 	return 0;
 }
 
-oui::Window* oui::Context::getWindow(std::string name) {
+oui::Window* oui::Context::getWindow(const std::string& name) {
 	for (unsigned int i = 0; i < windows.size(); i++) {
 		if (windows.at(i)->getName() == name) {
 			return windows.at(i);
@@ -65,7 +64,7 @@ bool oui::Context::removeWindow(Window* window) {
 	}
 	return false;
 }
-bool oui::Context::deleteWindow(std::string name) {
+bool oui::Context::deleteWindow(const std::string& name) {
 	for (unsigned int i = 0; i < windows.size(); i++) {
 		if (windows.at(i)->getName() == name) {
 			delete windows.at(i);

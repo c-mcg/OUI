@@ -21,11 +21,11 @@ namespace OSAL {
 		This function parses the specified file into a Sheet
 		Sheet's name is "null" on error
 	*/
-	static Sheet parseSheet(std::u16string fileName) {
+	static Sheet parseSheet(const std::u16string& fileName) {
 		
 		std::ifstream stream(convertUTF16toUTF8(fileName));
 		if(!stream.good()) {//File doesnt exist
-			std::cout << "Could not find file: " << convertUTF16toUTF8(fileName.c_str()) << ".osal" << std::endl;
+			std::cout << "Could not find file: " << convertUTF16toUTF8(fileName).c_str() << ".osal" << std::endl;
 			return Sheet(u"null", {});
 		}
 		std::string str = std::string(std::istreambuf_iterator<char>(stream),
@@ -60,7 +60,7 @@ namespace OSAL {
 					if(c == '.' || c == '#' || isalpha(c)) {//found letter
 						currToken = c;
 						state = STATE_START_SELECTORS;
-					} else if(WHITE_SPACE.find(c) == -1) {//Invalid char
+					} else if(!isspace(c)) {//Invalid char
 						error = true;
 					}
 					break;
@@ -76,7 +76,7 @@ namespace OSAL {
 						currElements.push_back(currToken);
 						currToken = u"";
 						state = STATE_START_ATTRS;
-					} else if(WHITE_SPACE.find(c) != -1) {//continue if white space
+					} else if(isspace(c)) {//continue if white space
 						currElements.push_back(currToken);
 						currToken = u"";
 						state = STATE_BUILD_SELECTORS;
@@ -90,7 +90,7 @@ namespace OSAL {
 						state = STATE_START_ATTRS;
 					} else if(c == ',') {//Adding another element
 						state = STATE_NONE;
-					} else if(WHITE_SPACE.find(c) == -1) {//Invalid char
+					} else if(!isspace(c)) {//Invalid char
 						error = true;
 					}
 					break;
@@ -101,8 +101,8 @@ namespace OSAL {
 						state = STATE_ATTR_NAME;
 					} else if(c == '}') {//Adding element(s) and continue search
 						if(attributes.size() > 0) {
-							for(unsigned int i = 0; i < currElements.size(); i++) {
-								std::u16string curr = currElements.at(i);
+							for(unsigned int j = 0; j < currElements.size(); j++) {
+								std::u16string curr = currElements.at(j);
 								int colonPos = curr.find(u":");
 								std::string element = convertUTF16toUTF8(colonPos == std::u16string::npos ? curr : curr.substr(0, colonPos));
 								std::u16string profile = colonPos == std::string::npos ? u"default" : curr.substr(colonPos + 1, curr.size() - colonPos);
@@ -114,7 +114,7 @@ namespace OSAL {
 
 								bool found = false;
 								std::vector<OSAL::Element>::iterator it;
-								for (it = elements.begin(); it != elements.end(); it++) {
+								for (it = elements.begin(); it != elements.end(); ++it) {
 									if (it->getName() == e.getName()) {
 										it->combine(e);
 										found = true;
@@ -129,7 +129,7 @@ namespace OSAL {
 						currElements = {};
 						currAttribute = "";
 						state = STATE_NONE;
-					} else if(WHITE_SPACE.find(c) == -1) {//Invalid char
+					} else if(!isspace(c)) {//Invalid char
 						error = true;
 					}
 					break;
@@ -137,7 +137,7 @@ namespace OSAL {
 				case STATE_ATTR_NAME://Building an attribute name
 					if(isValidChar(c)) {
 						currToken += c;
-					} else if(WHITE_SPACE.find(c) != -1) {//White space after attribute name
+					} else if(isspace(c)) {//White space after attribute name
 						state = STATE_ATTR_COLON;
 					} else if(c == ':') {//Found ':'
 						state = STATE_START_ATTR_VAL;
@@ -152,17 +152,17 @@ namespace OSAL {
 						state = STATE_START_ATTR_VAL;
 						currAttribute = convertUTF16toUTF8(currToken);
 						currToken = u"";
-					} else if(WHITE_SPACE.find(c) == -1) {//Invalid char
+					} else if(!isspace(c)) {//Invalid char
 						error = true;
 					}
 					break;
 
 				case STATE_START_ATTR_VAL://Looking for attribute value
-					if(NUMBERS.find(c) != -1) {//Start building value
+					if(isdigit(c)) {//Start building value
 						state = STATE_BUILD_ATTR_VAL;
 						currToken = c;
 						type = Attribute::INT;
-					} else if(LETTERS.find(c) != -1) {//Start building value
+					} else if(isalpha(c)) {//Start building value
 						state = STATE_BUILD_ATTR_VAL;
 						currToken = c;
 						type = Attribute::STRING;
@@ -171,7 +171,7 @@ namespace OSAL {
 						currToken = c;
 						stringLiteral = c == '\'' ? 1 : 2;
 						type = Attribute::STRING;
-					} else if(WHITE_SPACE.find(c) == -1) {//Invalid char
+					} else if(!isspace(c)) {//Invalid char
 						error = true;
 					}
 					//currToken = c;
@@ -183,7 +183,7 @@ namespace OSAL {
 					} else if(c == '"' && stringLiteral != 1) {
 						if(stringLiteral == 2) {
 							stringLiteral = 0;
-						} else if(WHITE_SPACE.find(lastChar) != -1) {
+						} else if(isspace(lastChar)) {
 							stringLiteral = 2;
 							type = Attribute::STRING;
 						} else {
@@ -193,14 +193,14 @@ namespace OSAL {
 					} else if(c == '\'' && stringLiteral != 2) {
 						if(stringLiteral == 1) {
 							stringLiteral = 0;
-						} else if(WHITE_SPACE.find(lastChar) != -1) {
+						} else if(isspace(lastChar)) {
 							stringLiteral = 1;
 							type = Attribute::STRING;
 						} else {
 							error = true;
 						}
 						currToken += c;
-					} else if(NUMBERS.find(c) != -1 || (c == '.' && (type == -1 || type == Attribute::INT || type == Attribute::DOUBLE)))  {//Add character
+					} else if(isdigit(c) || (c == '.' && (type == -1 || type == Attribute::INT || type == Attribute::DOUBLE)))  {//Add character
 						if(c == '.' && type == Attribute::INT) {
 							type = Attribute::DOUBLE;
 						}
@@ -216,7 +216,7 @@ namespace OSAL {
 							varTypes.push_back((char) type);
 							type = -1;//This should make it so multiple types are allowed
 						}
-					} else if(c != '\n' && WHITE_SPACE.find(c) != -1) {
+					} else if(c != '\n' && isspace(c)) {
 						currToken += c;
 						lastChar = c;
 					} else if(c == ';') {//Time to look for another attribute

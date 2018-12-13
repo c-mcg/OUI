@@ -6,9 +6,8 @@
 #include "osal/OSAL_Constants.h"
 #include "util/OUI_StringUtil.h"
 
-OSAL::Attribute::Attribute(std::string name, std::u16string value) {
-	this->originalString = value;
-	this->name = name;
+OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value) :
+	originalString{value}, name{name} {
 
 	std::vector<std::u16string> tokens;
 	std::u16string token = u"";

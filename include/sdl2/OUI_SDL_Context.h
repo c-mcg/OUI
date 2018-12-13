@@ -16,7 +16,7 @@ namespace oui {
 
         protected: Window* createWindow(int width=0, int height=0);
 
-        protected: virtual bool pollEvents();
+        protected: bool pollEvents() override;
 
 		private: SDLWindow* getWindow(int sdlID);
 

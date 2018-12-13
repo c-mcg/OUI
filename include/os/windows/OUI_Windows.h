@@ -13,11 +13,11 @@ namespace oui {
 
         public: WindowsOS();
         
-        public: virtual bool initialize();
+        public: bool initialize() override;
 
-        public: virtual bool getGlobalMousePos(Window* window, int &x, int &y);
+        public: bool getGlobalMousePos(Window* window, int &x, int &y) override;
 
-        public: virtual bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height);
+        public: bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height) override;
 
     };
 

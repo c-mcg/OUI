@@ -5,6 +5,7 @@
 
 #include <iostream>
 oui::SDLContext::SDLContext() : Context() {
+	lastSDLEvent = 0;
 	std::cout << "created sdl context" << std::endl;
 }
 

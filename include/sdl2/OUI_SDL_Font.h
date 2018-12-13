@@ -13,18 +13,16 @@ namespace oui {
 
 	class SDLFont : public Font {
 
-		private: static Font* loadFont(std::u16string name, int size);
+		private: static Font* loadFont(const std::u16string& name, int size);
 
 		private: TTF_Font* baseFont;
 
-		public: SDLFont(std::u16string name, int size, TTF_Font* baseFont);
+		public: SDLFont(const std::u16string& name, int size, TTF_Font* baseFont);
 
 		public: TTF_Font* getBaseFont();
 
-        //This method should not be run from another thread
-		public: virtual int getStringHeight(std::u16string string);
-		//This method should not be run from another thread
-		public: virtual int getStringWidth(std::u16string string);
+		public: int getStringHeight(const std::u16string& string) override;
+		public: int getStringWidth(const std::u16string& string) override;
 
 
 	};

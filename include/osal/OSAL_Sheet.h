@@ -12,14 +12,14 @@ namespace OSAL {
 		private: std::vector<Element> elements;//The elements in the sheet
 
 		public: Sheet();
-		public: Sheet(std::u16string name, std::vector<Element> elements);
+		public: Sheet(const std::u16string& name, const std::vector<Element>& elements);
 
 		public: Sheet combine(Sheet sheet);
 		public: bool isValid();
 
 		public: std::u16string getName();
-		public: Element getElement(Element::Type type, std::string name);
-		public: Element getElement(std::string name);//prefix with '#', '.' or nothing
+		public: Element getElement(Element::Type type, const std::string& name);
+		public: Element getElement(const std::string& name);//prefix with '#', '.' or nothing
 
 		public: std::vector<Element> getElements();
 

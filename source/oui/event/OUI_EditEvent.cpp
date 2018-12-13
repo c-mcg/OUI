@@ -2,12 +2,9 @@
 #include "oui/event/OUI_EditEvent.h"
 #include "util/OUI_StringUtil.h"
 
-oui::EditEvent::EditEvent(std::function<void()> undoHandler, std::function<void()> redoHandler, bool hasPerformed, bool appendable, Component* source) {
-	this->undoHandler = undoHandler;
-	this->redoHandler = redoHandler;
-	this->performed = hasPerformed;
-	this->appendable = appendable;
-	this->source = source;
+oui::EditEvent::EditEvent(std::function<void()> undoHandler, std::function<void()> redoHandler, bool hasPerformed, bool appendable, Component* source)
+	: undoHandler{undoHandler}, redoHandler{redoHandler},
+	performed{hasPerformed}, appendable{appendable}, source{source} {
 	if (appendable && source == NULL) {
 		//error
 	}

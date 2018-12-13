@@ -13,15 +13,15 @@ namespace oui {
 
 		public: Style();
 
-		public: void addProfile(std::u16string name, AttributeProfile* profile);
+		public: void addProfile(const std::u16string& name, AttributeProfile* profile);
 
-		public: bool hasProfile(std::u16string name);
+		public: bool hasProfile(const std::u16string& name);
         
         public: std::vector<std::u16string> getProfileNames();
 
-		public: AttributeProfile* getProfile(std::u16string name);
+		public: AttributeProfile* getProfile(const std::u16string& name);
 
-		public: AttributeProfile* getOrCreateProfile(std::u16string profile);
+		public: AttributeProfile* getOrCreateProfile(const std::u16string& profile);
 
 		//Adds the specified styles profiles and attributes to this style
 		//Overwrites if `overwrite` is true

@@ -24,7 +24,7 @@ namespace OSAL {
 		private: std::vector<char> types;//The type of the value
 		private: std::u16string originalString;
 
-		public: Attribute(std::string name, std::u16string);
+		public: Attribute(const std::string& name, const std::u16string& value);
 
 		public: std::string getName();
 		public: int getNumValues();//Returns the size of the value vector

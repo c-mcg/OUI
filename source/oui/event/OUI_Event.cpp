@@ -1,8 +1,8 @@
 
 #include "oui/event/OUI_Event.h"
 
-oui::Event::Event(char type) {
-	this->type = type;
+oui::Event::Event(char type)
+	: type{type}, defaultPrevented{false} {
 }
 
 bool oui::Event::isMouseEvent() {
@@ -82,9 +82,8 @@ int oui::ScrollEvent::getScroll() {
 	return scroll;
 }
 
-oui::MenuEvent::MenuEvent(int index, std::u16string option) : Event(MENU_CLICKED) {
-	this->index = index;
-	this->option = option;
+oui::MenuEvent::MenuEvent(int index, const std::u16string& option)
+ : index{index}, option{option}, Event(MENU_CLICKED) {
 }
 
 int oui::MenuEvent::getIndex() {

@@ -5,8 +5,9 @@
 oui::DrawablePanel::~DrawablePanel() {
 }
 
-oui::DrawablePanel::DrawablePanel(std::string name, std::string classes) : Container("drawpanel", name, classes) {
-	this->draw = [](Graphics* g, Component* c) {};
+oui::DrawablePanel::DrawablePanel(const std::string& name, const std::string& classes) : 
+	draw{[](Graphics* g, Component* c) {}}, // No op
+	Container("drawpanel", name, classes) {
 	parseAttribute("bg-color", u"0 0 0 0");
 }
 

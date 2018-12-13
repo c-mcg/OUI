@@ -13,7 +13,7 @@
 
 std::unordered_map<std::string, std::function<oui::Component*(std::string, std::string, std::vector<std::string>, std::vector<std::u16string>)>>  oui::ComponentLoader::tags;
 
-bool oui::ComponentLoader::addTag(std::string tag, std::function < Component*(std::string, std::string, std::vector<std::string>, std::vector<std::u16string>)> createComponent) {
+bool oui::ComponentLoader::addTag(const std::string& tag, std::function < Component*(std::string, std::string, std::vector<std::string>, std::vector<std::u16string>)> createComponent) {
 	auto it = tags.find(tag);
 	if (it != tags.end()) {
 		return false;
@@ -22,14 +22,14 @@ bool oui::ComponentLoader::addTag(std::string tag, std::function < Component*(st
 	return true;
 }
 
-oui::ComponentLoader::ComponentLoader() {
-	components = std::vector<oui::Component*>();
+oui::ComponentLoader::ComponentLoader() :
+	components{std::vector<oui::Component*>()} {
 }
 
-bool oui::ComponentLoader::loadComponents(std::u16string path) {
+bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
 	std::ifstream stream(convertUTF16toUTF8(path));
 	if(!stream.good()) {//File doesnt exist
-		std::cout << "Could not find file: " << convertUTF16toUTF8(path.c_str()) << std::endl;
+		std::cout << "Could not find file: " << convertUTF16toUTF8(path).c_str() << std::endl;
 		return false;
 	}
 	std::string str =  std::string(std::istreambuf_iterator<char>(stream),
@@ -51,7 +51,7 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 			endTag = false;
 			if(c == '<') {
 				state = 1;
-			} else if(WHITE_SPACE.find(c) == -1) {
+			} else if(!isspace(c)) {
 				//TODO error
 			}
 		} else if(state == 1) {//Looking for tag
@@ -63,7 +63,7 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 				state = 2;
 			} else if(c == '/') {
 				endTag = true;
-			} else if(WHITE_SPACE.find(c) == -1) {
+			} else if(!isspace(c)) {
 				//TODO error
 			}
 		} else if(state == 2) {//Building tag
@@ -78,7 +78,7 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 				} else {
 					//TODO error
 				}
-			} else if(WHITE_SPACE.find(c) != -1) {
+			} else if(isspace(c)) {
 				state = 3;
 			} else {
 				//TODO error
@@ -124,7 +124,7 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 					}
 				}
 				state = 0;
-			} else if (WHITE_SPACE.find(c) != -1) {
+			} else if (isspace(c)) {
 				//TODO error
 			}
 		} else if(state == 4) {//Building attribute name
@@ -132,14 +132,14 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 				attributeName += c;
 			} else if (c == '=') {
 				state = 5;
-			} else if (WHITE_SPACE.find(c) != -1) {
+			} else if (isspace(c)) {
 				//TODO error
 			}
 		} else if(state == 5) {//Found '=' looking for '"'
 			if (c == '"') {
 				attributeValue = u"";
 				state = 6;
-			} else if (WHITE_SPACE.find(c) != -1) {
+			} else if (isspace(c)) {
 				//TODO error
 			}
 		} else if(state == 6) {//building attribute value
@@ -159,19 +159,6 @@ bool oui::ComponentLoader::loadComponents(std::u16string path) {
 	return false;
 }
 
-bool oui::ComponentLoader::applyAttributes(std::u16string path) {
-	OSAL::Sheet sheet = OSAL::parseSheet(path);
-	for(unsigned int i = 0; i < components.size(); i++) {
-		Component* c = components.at(i);
-		//c->applyAttributes(sheet);
-	}
-	if(!attributes.isValid()) {
-		attributes = sheet;
-	} else {
-		attributes = attributes.combine(sheet);
-	}
-	return false;
-}
 
 oui::Panel* oui::ComponentLoader::toPanel() {
 	Panel* panel = new Panel("loadedpanel", "");

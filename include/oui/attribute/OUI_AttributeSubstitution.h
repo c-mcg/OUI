@@ -40,18 +40,18 @@ namespace oui {
 		private: static std::unordered_map<std::string, AttributeSubstitution> attributeSubs;
 
 		//Adds a single substitution for the specified attribute
-		public: static void addSubstitution(std::string attribute, std::string replacement, SubstitutionType type = APPLY_RESPECTIVELY);
+		public: static void addSubstitution(const std::string& name, const std::string& replacement, SubstitutionType type = APPLY_RESPECTIVELY);
 
 		//Adds multiple substitutions for the specified attribute
-		public: static void addSubstitution(std::string attribute, std::vector<std::string> subAttributes, SubstitutionType type = APPLY_RESPECTIVELY);
+		public: static void addSubstitution(const std::string& attribute, const std::vector<std::string>& subAttributes, SubstitutionType type = APPLY_RESPECTIVELY);
 
 		//Returns true if substitution exists, false if not
-		public: static bool hasSubstitution(std::string name);
+		public: static bool hasSubstitution(const std::string& name);
 
-		//public: static AttributeSubstitution getSubstitution(std::u16string name);//This is weird because we need to throw an error
+		//public: static AttributeSubstitution getSubstitution(const std::u16string& name);//This is weird because we need to throw an error
 
 		//Performs a substitution and adds the new attributes to the attribute profile
-		public: static bool applySubstitution(std::string name, OSAL::Attribute value, AttributeProfile* profile);
+		public: static bool applySubstitution(const std::string& name, OSAL::Attribute value, AttributeProfile* profile);
 
 //Instance members
 

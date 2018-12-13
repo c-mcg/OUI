@@ -23,6 +23,7 @@ oui::SDLWindow::SDLWindow(int width, int height) : Window(width, height) {
 	}
 
 	this->baseWindowId = SDL_GetWindowID(baseWindow);
+	this->baseCursor = NULL;
 
     SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 
@@ -37,7 +38,7 @@ oui::Graphics* oui::SDLWindow::createGraphics(int width, int height) {
 void oui::SDLWindow::render() {
 	SDL_RenderPresent(renderer);
 }
-void oui::SDLWindow::setTitle(std::u16string title) {
+void oui::SDLWindow::setTitle(const std::u16string& title) {
     Window::setTitle(title);
     SDL_SetWindowTitle(baseWindow, convertUTF16toUTF8(title).c_str());
 }

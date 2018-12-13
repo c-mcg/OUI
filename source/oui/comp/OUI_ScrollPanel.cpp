@@ -8,7 +8,7 @@ oui::ScrollPanel::~ScrollPanel() {
 
 }
 
-oui::ScrollPanel::ScrollPanel(std::string name, std::string classes) : Container("scrollpanel", name, classes, true) {
+oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classes) : Container("scrollpanel", name, classes, true) {
 	createScrollBar(true);
 	createScrollBar(false);
 }
@@ -184,7 +184,7 @@ void oui::ScrollPanel::removeAllChildren(bool shouldDelete) {
 	childrenChanged = true;
 }
 
-void oui::ScrollPanel::setProfile(std::u16string profileName) {
+void oui::ScrollPanel::setProfile(const std::u16string& profileName) {
 	int w = graphics->getWidth(), h = graphics->getHeight();
 
 	Component::setProfile(profileName);
@@ -219,10 +219,8 @@ void oui::ScrollPanel::redraw() {
 	if (scrollingX || scrollingY || resetX || resetY) {//TODO out of window scrolling (getglobalmousedown)
 		//TODO move this to process (calculating bar position)
 
-		bool vertical = scrollingY;
 		if (scrollingY || resetY) {//TODO resizing is kinda glitchy sometimes (visibility check here is a cheaphax fix)
 			Component* c = getChildCont("verticalScrollBar")->getChild("bar");
-			Component* c2 = getChildCont("horizontalScrollBar")->getChild("bar");
 			if (!c->getParent()->getCurrentProfile()->getBool("visible")) {
 				scrollPosY = 0;
 				resetY = true;
@@ -258,7 +256,6 @@ void oui::ScrollPanel::redraw() {
 		}
 		if (scrollingX || resetX) {
 			Component* c = getChildCont("horizontalScrollBar")->getChild("bar");
-			Component* c2 = getChildCont("verticalScrollBar")->getChild("bar");
 			if (!c->getParent()->getCurrentProfile()->getBool("visible")) {
 				scrollPosX = 0;
 				resetX = true;

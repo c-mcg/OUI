@@ -35,8 +35,8 @@ namespace oui {
 		public: int getAlpha();
 
         //Abstract
-        public: virtual Image* loadImage(std::u16string path, Window* window);
-        public: virtual Font* loadFont(std::u16string path, int size, Window* window);
+        public: virtual Image* loadImage(const std::u16string& path, Window* window);
+        public: virtual Font* loadFont(const std::u16string& path, int size, Window* window);
 
 		public: virtual void setAlpha(int alpha);
 
@@ -51,9 +51,7 @@ namespace oui {
 		public: virtual void fillVerticalGradient(int x, int y, int w, int h, Color color1, Color color2);
 		public: virtual void drawImage(Image* image, int x, int y);
 		public: virtual void drawImage(Image* image, int x, int y, int width, int height);
-		public: virtual void drawText(std::u16string text, int x, int y);
-
-
+		public: virtual void drawText(const std::u16string& text, int x, int y);
 	};
 
 }

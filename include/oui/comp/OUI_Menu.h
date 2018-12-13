@@ -22,23 +22,23 @@ namespace oui {
 		
 
 		public: ~Menu();
-		public: Menu(std::string name, std::string classes);
+		public: Menu(const std::string& name, const std::string& classes);
 
-		public: virtual void setProfile(std::u16string profile);
+		public: void setProfile(const std::u16string& profile) override;
 
 		//Used to disable adding children traditionally
-		public: virtual bool addChild(Component* child);
+		public: bool addChild(Component* child) override;
 
 		//Used to override the disabled addChild above
 		private: bool _addChild(Button* child);
 
 		//TODO remove these
-		private: Button* addOption(std::u16string option);
-		private: Button* addOption(std::u16string option, int index);
-		private: std::vector<Button*> addOptions(std::vector<std::u16string> options);
-		private: std::vector<Button*> addOptions(std::vector<std::u16string> options, int index);
-		private: bool removeOption(int index);
-		public: std::vector<Button*> setOptions(std::vector<std::u16string> options);
+		private: Button* addOption(const std::u16string& option);
+		private: Button* addOption(const std::u16string& option, int index);
+		private: std::vector<Button*> addOptions(const std::vector<std::u16string>& options);
+		private: std::vector<Button*> addOptions(const std::vector<std::u16string>& options, int index);
+		public: bool removeOption(int index);
+		public: std::vector<Button*> setOptions(const std::vector<std::u16string>&  options);
 
 		/*Returns the width of the longest string*/
 		private: int resetOptions(int startIndex = 0);

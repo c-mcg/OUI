@@ -12,11 +12,11 @@ namespace oui {
 
 		public: ~DrawablePanel();
 
-		public: DrawablePanel(std::string name, std::string classes);
+		public: DrawablePanel(const std::string& name, const std::string& classes);
 
 		public: void setDraw(std::function<void(Graphics*, Component*)> draw);
 
-		public: virtual void redraw();
+		public: void redraw() override;
 
 	};
 }
