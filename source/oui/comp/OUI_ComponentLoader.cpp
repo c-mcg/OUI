@@ -90,12 +90,12 @@ bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
 			} else if(c == '>') {
 				std::string name = "";
 				std::string classes = "";
-				for (int i = 0; i < attributeNames.size(); i++) {
-					if (attributeNames.at(i) == "name") {
-						name = convertUTF16toUTF8(attributes.at(i));
+				for (int j = 0; j < attributeNames.size(); j++) {
+					if (attributeNames.at(j) == "name") {
+						name = convertUTF16toUTF8(attributes.at(j));
 					}
-					if (attributeNames.at(i) == "class") {
-						classes = convertUTF16toUTF8(attributes.at(i));
+					if (attributeNames.at(j) == "class") {
+						classes = convertUTF16toUTF8(attributes.at(j));
 					}
 				}
 				if (name == "") {
@@ -109,9 +109,9 @@ bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
 				}
 
 				if(c != NULL) {
-					for (int i = 0; i < attributeNames.size(); i++) {
-						if (attributeNames.at(i) != "name" && attributeNames.at(i) != "class") {
-							c->parseAttribute(attributeNames.at(i), attributes.at(i));
+					for (int j = 0; j < attributeNames.size(); j++) {
+						if (attributeNames.at(j) != "name" && attributeNames.at(j) != "class") {
+							c->parseAttribute(attributeNames.at(j), attributes.at(j));
 						}
 					}
 					if(currContainer != NULL) {

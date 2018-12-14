@@ -540,9 +540,6 @@ void oui::Component::flagGraphicsUpdate(bool flagParent) {
 		parent->flagGraphicsUpdate();
 	}
 }
-void oui::Component::clearGraphicsUpdate() {
-	this->graphicsUpdate = false;
-}
 bool oui::Component::needsGraphicsUpdate() {
 	return graphicsUpdate;
 }
@@ -657,11 +654,6 @@ std::vector<std::u16string> oui::Component::getRightClickOptions() {
 		options.push_back(profile->getString("right-click-options_" + std::to_string(i)));
 	}
 	return options;
-}
-
-std::u16string oui::Component::getCurrentProfileName() {
-	//TODO should there be a null check here?
-	return currentProfileName;
 }
 
 oui::AttributeProfile* oui::Component::getCurrentProfile() {

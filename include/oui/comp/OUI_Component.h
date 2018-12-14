@@ -172,7 +172,6 @@ namespace oui {
 	//Graphics
 		public: Graphics* getGraphics();
 		public: void flagGraphicsUpdate(bool flagParent = true);
-		public: void clearGraphicsUpdate();
 		public: bool needsGraphicsUpdate();
 		public: void flagProfileUpdate();
 		public: bool needsProfileUpdate();
@@ -197,7 +196,6 @@ namespace oui {
 		public: virtual Style* createStyle(StyleSheet* sheet = NULL);
 		public: int getCursor();//TODO replace with Attribute value substitution (auto change string value to int value when attribute is added)
 		public: virtual std::vector<std::u16string> getRightClickOptions();
-		public: std::u16string getCurrentProfileName();
 		public: AttributeProfile* getCurrentProfile();
 		public: virtual void updateStyle();
 		public: virtual Style* getDefaultStyle();
