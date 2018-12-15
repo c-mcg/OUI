@@ -35,3 +35,5 @@ target_link_libraries(
 	${SDL2_TTF_LIBRARY}
 	${SDL2_IMAGE_LIBRARIES}
 )
+
+add_subdirectory (tests)
