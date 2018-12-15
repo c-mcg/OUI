@@ -1,3 +1,6 @@
+#ifndef OUI_PARSERSTATE_H
+#define OUI_PARSERSTATE_H
+
 #include "OUI_Export.h"
 
 namespace oui {
@@ -11,6 +14,9 @@ namespace oui {
 
         ParserState();
 
+        public: bool operator== (const ParserState& c1) const;
+        public: bool operator!= (const ParserState& c1) const;
     };
-
 }
+
+#endif
