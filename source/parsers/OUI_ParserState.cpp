@@ -4,7 +4,7 @@ oui::ParserState::ParserState() {
     charIndex = 0;
     lineIndex = 0;
     lineCharIndex = 0;
-    state = 0;
+    name = "";
     token = u"";
 }
 
@@ -12,7 +12,7 @@ bool oui::ParserState::operator== (const ParserState& other) const {
     return other.charIndex == charIndex &&
         other.lineIndex == lineIndex &&
         other.lineCharIndex == lineCharIndex &&
-        other.state == state &&
+        other.name == name &&
         other.token == token;
 }
 

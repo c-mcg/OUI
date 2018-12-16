@@ -2,23 +2,23 @@
 #define OUI_XMLPARSER_H
 
 #include "OUI_Export.h"
+#include <unordered_map>
 
-#include "parsers/OUI_ParserState.h"
+#include "parsers/xml/OUI_XMLParserState.h"
 
 namespace oui {
 
-    enum OUI_API XMLParserState {
-        NONE,
-        
-    };
-
     class OUI_API XMLParser {
-        private: ParserState state;
 
-        public: XMLParser();
-        public: XMLParser(const ParserState& state);
+        private: std::u16string source;
+        private: XMLParserState state;
 
-        public: ParserState getState();
+        public: XMLParser(const std::u16string& source);
+        public: XMLParser(const std::u16string& source, const XMLParserState& state);
+
+        // start, pause, step, stop
+
+        public: XMLParserState getState();
 
     };
 

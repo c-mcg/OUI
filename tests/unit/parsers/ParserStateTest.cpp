@@ -1,7 +1,6 @@
-#include "gtest/gtest.h"
+#include "TestUtil.h"
 
 #include "parsers/OUI_ParserState.h"
-#include "util/OUI_StringUtil.h"
 
 TEST(ParserState, itCanBeCreated)
 {
@@ -9,8 +8,8 @@ TEST(ParserState, itCanBeCreated)
     EXPECT_EQ(state.charIndex, 0);
     EXPECT_EQ(state.lineIndex, 0);
     EXPECT_EQ(state.lineCharIndex, 0);
-    EXPECT_EQ(state.state, 0);
-    EXPECT_STREQ(convertUTF16toUTF8(state.token).c_str(), "");
+    EXPECT_EQ(state.name, "");
+    EXPECT_STR16_EQUAL(state.token, u"");
 }
 
 TEST(ParserState, itCanBeEqual)
@@ -44,10 +43,10 @@ TEST(ParserState, itBeUnequal_lineCharIndex)
     EXPECT_NE(state1, state2);
 }
 
-TEST(ParserState, itBeUnequal_state)
+TEST(ParserState, itBeUnequal_name)
 {
     oui::ParserState state1;
-    state1.state = 1;
+    state1.name = "1";
     oui::ParserState state2;
     EXPECT_NE(state1, state2);
 }

@@ -9,7 +9,7 @@ namespace oui {
         int charIndex;
         int lineIndex;
         int lineCharIndex;
-        int state;
+        std::string name;
         std::u16string token;
 
         ParserState();
