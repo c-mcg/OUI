@@ -2,6 +2,7 @@
 #define OUI_XMLOBJECT_H
 
 #include <unordered_map>
+#include <vector>
 
 #include "OUI_Export.h"
 
