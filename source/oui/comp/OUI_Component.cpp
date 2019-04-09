@@ -414,7 +414,7 @@ std::string oui::Component::getTag() {
 	return tag;
 }
 bool oui::Component::compareTag(const std::string& tag) {
-	return strcmp(this->tag.c_str(), tag.c_str()) == 0;
+	return this->tag.compare(tag) == 0;
 }
 bool oui::Component::setName(const std::string& name) {
 	if (parent != NULL) {

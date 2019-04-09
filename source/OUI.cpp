@@ -7,6 +7,7 @@
 #include "os/OUI_OS.h"
 
 #ifdef __linux__//LINUX
+	#include "os/linux/OUI_Linux.h"
 #elif defined __APPLE__
 	#include "TargetConditionals.h"
 	#ifdef TARGET_OS_MAC//MAC
@@ -19,14 +20,15 @@
 oui::OperatingSystem* oui::OS() {
 	#ifdef __linux__//LINUX
 
-	//LINUX IMPORTS HERE
+		return new oui::OperatingSystem();
+		// return new LinuxOS();
 
 	#elif defined __APPLE__
 
 		#include "TargetConditionals.h"
 		#ifdef TARGET_OS_MAC//MAC
 
-			return new oui::OSX();
+			return new OSX();
 
 		#endif
 
@@ -41,8 +43,6 @@ oui::OperatingSystem* oui::OS() {
 // #define _DEBUG
 
 int oui::initialize() {
-
-	
 
 	if((SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)==-1)) { 
         printf("Could not initialize SDL: %s.\n", SDL_GetError());
