@@ -78,7 +78,7 @@ void oui::Window::initializeWindow(int width, int height) {
 		resizing = false;
 	});
 
-	Label* titleLbl = new Label("titleLbl", "windowText");
+	Label* titleLbl = new Label("windowBar-title", "windowText");
 	titleLbl->parseAttribute("location", u"0 50 4 0");
 	titleLbl->parseAttribute("font", u"notoserif 14");
 	titleLbl->setAttribute("centered-y", true);
