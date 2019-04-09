@@ -16,7 +16,7 @@ std::unordered_map<std::string, std::function<oui::Component*(std::string, std::
 bool oui::ComponentLoader::addTag(const std::string& tag, std::function < Component*(std::string, std::string, std::vector<std::string>, std::vector<std::u16string>)> createComponent) {
 	auto it = tags.find(tag);
 	if (it != tags.end()) {
-		return false;
+		tags.erase(it);
 	}
 	tags.insert({tag, createComponent});
 	return true;

@@ -52,7 +52,8 @@ void oui::Window::initializeWindow(int width, int height) {
 	int heightOffset = profile->getInt("height-offset");
 	
 
-	Panel* windowBar = new Panel("windowBar", "");
+	Panel* windowBar = new Panel("window-bar", "");
+	windowBar->setAttribute("permanent", true);
 	windowBar->setAttribute("cursor", u"pointer");
 	windowBar->setAttribute("cursor", u"pointer");
 	windowBar->parseAttribute("size", u"100 0 0 26");
@@ -78,14 +79,14 @@ void oui::Window::initializeWindow(int width, int height) {
 		resizing = false;
 	});
 
-	Label* titleLbl = new Label("windowBar-title", "windowText");
+	Label* titleLbl = new Label("window-title", "windowText");
 	titleLbl->parseAttribute("location", u"0 50 4 0");
 	titleLbl->parseAttribute("font", u"notoserif 14");
 	titleLbl->setAttribute("centered-y", true);
 	titleLbl->setAttribute("auto-size", true);
 	titleLbl->setAttribute("interactable", false);
 
-	Button* minimizeBtn = new Button("minimizeBtn", "windowButton");
+	Button* minimizeBtn = new Button("minimizeBtn", "window-button");
 
 	minimizeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
 		minimize();
@@ -96,7 +97,7 @@ void oui::Window::initializeWindow(int width, int height) {
 	minimizeBtn->setAttribute("border-style", u"solid");
 	minimizeBtn->setAttribute("image", u"minimize-btn.png");
 
-	Button* maximizeBtn = new Button("maximizeBtn", "windowButton");
+	Button* maximizeBtn = new Button("maximizeBtn", "window-button");
 
 	maximizeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
 		maximize();
@@ -107,7 +108,7 @@ void oui::Window::initializeWindow(int width, int height) {
 	maximizeBtn->setAttribute("border-style", u"solid");
 	maximizeBtn->setAttribute("image", u"maximize-btn1.png");
 
-	Button* closeBtn = new Button("closeBtn", "windowButton");
+	Button* closeBtn = new Button("closeBtn", "window-button");
 	closeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
 		WindowEvent windowEvt = WindowEvent(Event::WINDOW_CLOSED);
 		handleEvent(windowEvt);
@@ -443,8 +444,8 @@ void oui::Window::setTitle(const std::u16string& title) {
 	}
 	this->title = title;
 	
-	if (getChild("windowBar") != NULL) {
-		Label* titleLbl = ((Label*) ((Container*) getChild("windowBar"))->getChild("titleLbl"));
+	if (getChild("window-bar") != NULL) {
+		Label* titleLbl = ((Label*) ((Container*) getChild("window-bar"))->getChild("window-title"));
 		if (titleLbl != NULL) {
 			titleLbl->setAttribute("text", title);
 		}
@@ -541,7 +542,7 @@ void oui::Window::close() {
 }
 
 void oui::Window::maximize() {
-	Button* maximizeBtn = ((Button*) ((Container*) getChild("windowBar"))->getChild("maximizeBtn"));
+	Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
 	if (maximizeBtn != NULL) {
 		maximizeBtn->setAttribute("image", u"maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
 	}
