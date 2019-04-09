@@ -159,17 +159,17 @@ void oui::Component::addedToContainer(Container* parent) {
 
 	window = (Window*) (parent->isWindow() ? parent : parent->window);
 	this->parent = parent;
-	//createStyle();
+	createStyle();
 	if (window != NULL) {
-
 		graphics = window->createGraphics(getWidth(), getHeight());
-        flagProfileUpdate();
 	}
 
     if (graphics != NULL) {
         Component::setProfile(u"default");//TODO this needs to be here to ensure graphics are initialized but why?
 	    setProfile(u"default");
     }
+
+    flagProfileUpdate();
 }
 
 /* END OF PROCESSING */
