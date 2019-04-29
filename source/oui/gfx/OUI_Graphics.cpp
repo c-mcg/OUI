@@ -79,6 +79,9 @@ void oui::Graphics::drawImage(Image* image, int x, int y) {
 void oui::Graphics::drawText(const std::u16string& text, int x, int y) {
 }
 
+void oui::Graphics::drawTextLine(const std::u16string& text, int x, int y) {
+}
+
 void oui::Graphics::setAlpha(int alpha) {
 	this->alpha = alpha;
 }

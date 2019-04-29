@@ -81,7 +81,7 @@ int oui::initialize() {
 		return new TextField(name, classes);
 	});
 
-	ComponentLoader::addTag("men", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
+	ComponentLoader::addTag("menu", [](const std::string& name, const std::string& classes, std::vector<std::string>, std::vector<std::u16string>) {
 		return new Menu(name, classes);
 	});
 

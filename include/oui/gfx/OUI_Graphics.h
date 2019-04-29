@@ -52,6 +52,7 @@ namespace oui {
 		public: virtual void drawImage(Image* image, int x, int y);
 		public: virtual void drawImage(Image* image, int x, int y, int width, int height);
 		public: virtual void drawText(const std::u16string& text, int x, int y);
+		public: virtual void drawTextLine(const std::u16string& text, int x, int y);
 	};
 
 }

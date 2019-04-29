@@ -149,6 +149,44 @@ void oui::SDLGraphics::drawImage(Image* image, int x, int y) {
 }
 
 void oui::SDLGraphics::drawText(const std::u16string& text, int x, int y) {
+	auto lines = std::vector<std::u16string>();
+
+	std::u16string currLine = u"";
+	bool lastCharWasBackslash = false;
+	for (int i = 0; i < text.length(); i++) {
+		char c = text.at(i);
+
+		if (lastCharWasBackslash) {
+			if (c == 'n') {
+				lines.push_back(currLine);
+				currLine = u"";
+			} else if (c == '\\') {
+				currLine += c;
+			}
+
+			lastCharWasBackslash = false;
+			continue;
+		}
+
+		if (c == '\\') {
+			lastCharWasBackslash = true;
+			continue;
+		}
+
+		currLine += c;
+	}
+
+	if (currLine.length() > 0) {
+		lines.push_back(currLine);
+	}
+
+	int lineHeight = this->font->getStringHeight(u"A");
+	for(int i = 0; i < lines.size(); i++) {
+		this->drawTextLine(lines[i], x, y + (lineHeight * i));
+	}
+ }
+
+void oui::SDLGraphics::drawTextLine(const std::u16string& text, int x, int y) {
 	if (text.length() == 0) {
 		return;
 	}

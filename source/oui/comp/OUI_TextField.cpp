@@ -111,7 +111,7 @@ void oui::TextField::redraw() {
 	if (text != u"") {
 		graphics->setColor(textColor);
 		graphics->setFont(font);
-		graphics->drawText(text, -drawX + borderWidth + 1, getHeight() / 2 - font->getStringHeight(text) / 2);
+		graphics->drawTextLine(text, -drawX + borderWidth + 1, getHeight() / 2 - font->getStringHeight(text) / 2);
 	}
 	if (isSelected()) {
 		if (caratVisible) {

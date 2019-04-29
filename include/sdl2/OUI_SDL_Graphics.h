@@ -38,8 +38,7 @@ namespace oui {
 		public: void drawImage(Image* image, int x, int y) override;
 		public: void drawImage(Image* image, int x, int y, int width, int height) override;
 		public: void drawText(const std::u16string& text, int x, int y) override;
-
-
+		public: void drawTextLine(const std::u16string& text, int x, int y) override;
 	};
 
 }

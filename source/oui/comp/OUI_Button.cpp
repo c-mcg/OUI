@@ -133,7 +133,7 @@ void oui::Button::redraw() {
 	if (text != u"") {
 		graphics->setColor(textColor);
 		graphics->setFont(font);
-		graphics->drawText(text, centerText ? getWidth() / 2 - font->getStringWidth(text) / 2 : 0, getHeight() / 2 - font->getStringHeight(text) / 2 - 1);
+		graphics->drawTextLine(text, centerText ? getWidth() / 2 - font->getStringWidth(text) / 2 : 0, getHeight() / 2 - font->getStringHeight(text) / 2 - 1);
 	} else {
 		//std::cout << "button text was blank! " << getName() << std::endl;
 	}
