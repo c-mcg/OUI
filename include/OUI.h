@@ -18,13 +18,13 @@
 
 namespace oui {
 
-	int OUI_API initialize();
+    int OUI_API initialize();
     int OUI_API shutdown();
-	void OUI_API sleep(int milliseconds);
-	long long OUI_API currentTimeMillis();
-	long long OUI_API currentTimeNanos();
+    void OUI_API sleep(int milliseconds);
+    long long OUI_API currentTimeMillis();
+    long long OUI_API currentTimeNanos();
 
-	OUI_API OperatingSystem* OS();
+    OUI_API OperatingSystem* OS();
 
 }
 

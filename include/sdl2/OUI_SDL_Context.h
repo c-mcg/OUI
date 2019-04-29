@@ -8,19 +8,19 @@
 
 namespace oui {
 
-	class SDLContext : public Context {
+    class SDLContext : public Context {
 
-		private: long long lastSDLEvent;
+        private: long long lastSDLEvent;
 
-		public: SDLContext();
+        public: SDLContext();
 
         protected: Window* createWindow(int width=0, int height=0);
 
         protected: bool pollEvents() override;
 
-		private: SDLWindow* getWindow(int sdlID);
+        private: SDLWindow* getWindow(int sdlID);
 
-	};
+    };
 
 }
 

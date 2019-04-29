@@ -17,10 +17,10 @@ namespace oui {
     class SDLWindow : public Window {
 
         public: int baseWindowId;
-		protected: SDL_Window* baseWindow;
-		protected: SDL_Renderer* renderer;
+        protected: SDL_Window* baseWindow;
+        protected: SDL_Renderer* renderer;
 
-		protected: SDL_Cursor* baseCursor;
+        protected: SDL_Cursor* baseCursor;
 
         public: ~SDLWindow();
         public: SDLWindow(int width=0, int height=0);

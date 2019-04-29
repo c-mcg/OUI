@@ -7,25 +7,25 @@
 
 namespace oui {
 
-	class OUI_API EditEvent {
+    class OUI_API EditEvent {
 
-		protected: bool performed;
-		protected: std::function<void()> undoHandler;
-		protected: std::function<void()> redoHandler;
+        protected: bool performed;
+        protected: std::function<void()> undoHandler;
+        protected: std::function<void()> redoHandler;
 
-		private: bool appendable;
-		private: Component* source;
+        private: bool appendable;
+        private: Component* source;
 
-		public: EditEvent(std::function<void()> undoHandler, std::function<void()> redoHandler, bool hasPerformed = false, bool appendable = false, Component* source = NULL);
+        public: EditEvent(std::function<void()> undoHandler, std::function<void()> redoHandler, bool hasPerformed = false, bool appendable = false, Component* source = NULL);
 
-		public: void combine(EditEvent e);
-		public: bool hasPerformed();
-		public: void performUndo();
-		public: void performRedo();
-		public: bool isAppendable();
-		public: Component* getSource();
+        public: void combine(EditEvent e);
+        public: bool hasPerformed();
+        public: void performUndo();
+        public: void performRedo();
+        public: bool isAppendable();
+        public: Component* getSource();
 
-	};
+    };
 
 }
 #endif

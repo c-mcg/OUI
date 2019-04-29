@@ -7,23 +7,23 @@
 
 namespace oui {
 
-	class OUI_API Color {
-		public: static Color BLACK;
+    class OUI_API Color {
+        public: static Color BLACK;
 
-		private:uint32_t rgba;
+        private:uint32_t rgba;
 
-		public: Color();
-		public: explicit Color(uint32_t rgba);
-		public: Color(int r, int g, int b, int a = 255);
+        public: Color();
+        public: explicit Color(uint32_t rgba);
+        public: Color(int r, int g, int b, int a = 255);
 
-		public:int getARGB();
-		public:int getA();
-		public:int getR();
-		public:int getG();
-		public:int getB();
+        public:int getARGB();
+        public:int getA();
+        public:int getR();
+        public:int getG();
+        public:int getB();
 
-		public: bool equals(Color c);
-	};
+        public: bool equals(Color c);
+    };
 
 }
 

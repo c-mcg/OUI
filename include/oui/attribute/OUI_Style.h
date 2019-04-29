@@ -6,30 +6,30 @@
 
 namespace oui {
 
-	class OUI_API Style {
-		private: std::unordered_map<std::u16string, AttributeProfile*> profiles;
+    class OUI_API Style {
+        private: std::unordered_map<std::u16string, AttributeProfile*> profiles;
 
-		public: ~Style();
+        public: ~Style();
 
-		public: Style();
+        public: Style();
 
-		public: void addProfile(const std::u16string& name, AttributeProfile* profile);
+        public: void addProfile(const std::u16string& name, AttributeProfile* profile);
 
-		public: bool hasProfile(const std::u16string& name);
+        public: bool hasProfile(const std::u16string& name);
         
         public: std::vector<std::u16string> getProfileNames();
 
-		public: AttributeProfile* getProfile(const std::u16string& name);
+        public: AttributeProfile* getProfile(const std::u16string& name);
 
-		public: AttributeProfile* getOrCreateProfile(const std::u16string& profile);
+        public: AttributeProfile* getOrCreateProfile(const std::u16string& profile);
 
-		//Adds the specified styles profiles and attributes to this style
-		//Overwrites if `overwrite` is true
-		public: void combineStyle(Style* style, bool overwrite = false);
+        //Adds the specified styles profiles and attributes to this style
+        //Overwrites if `overwrite` is true
+        public: void combineStyle(Style* style, bool overwrite = false);
 
-		public: bool equals(Style* other);
-		public: Style* clone();
-	};
+        public: bool equals(Style* other);
+        public: Style* clone();
+    };
 
 }
 

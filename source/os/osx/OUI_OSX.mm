@@ -1,7 +1,7 @@
 #if __APPLE__
-	#include "TargetConditionals.h"
+    #include "TargetConditionals.h"
 
-	#ifdef TARGET_OS_MAC
+    #ifdef TARGET_OS_MAC
 
 #include <ApplicationServices/ApplicationServices.h>
 #import <Foundation/Foundation.h>
@@ -22,8 +22,8 @@ bool oui::OSX::initialize() {
 
 void oui::OSX::onAddWindow(Window* window) {
     window->setTimeout(500, [this]() {//TODO thi could go in initialize
-		this->enableInertiaScrolling();
-	});
+        this->enableInertiaScrolling();
+    });
 }
 
 void oui::OSX::enableInertiaScrolling() {

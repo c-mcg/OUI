@@ -6,42 +6,42 @@
 #include <iostream>
 
 oui::Graphics::~Graphics() {
-	font = NULL;
+    font = NULL;
 }
 
 oui::Graphics::Graphics(int width, int height) {
     this->width = width;
-	this->height = height;
-	this->alpha = 255;
-	this->font = NULL;
+    this->height = height;
+    this->alpha = 255;
+    this->font = NULL;
 }
 
 void oui::Graphics::setSize(int width, int height) {
-	this->width = width;
-	this->height = height;
+    this->width = width;
+    this->height = height;
 }
 
 int oui::Graphics::getWidth() {
-	return width;
+    return width;
 }
 int oui::Graphics::getHeight() {
-	return height;
+    return height;
 }
 
 void oui::Graphics::setColor(Color color) {
-	this->currentColor = color;
+    this->currentColor = color;
 }
 
 oui::Color oui::Graphics::getColor() {
-	return currentColor;
+    return currentColor;
 }
 
 void oui::Graphics::setFont(Font* font) {
-	this->font = font;
+    this->font = font;
 }
 
 oui::Font* oui::Graphics::getFont() {
-	return font;
+    return font;
 }
 
 oui::Image* oui::Graphics::loadImage(const std::u16string& path, Window* window) {
@@ -74,7 +74,7 @@ void oui::Graphics::drawImage(Image* image, int x, int y, int width, int height)
 void oui::Graphics::drawImage(Image* image, int x, int y) {
 }
 
-	
+    
 
 void oui::Graphics::drawText(const std::u16string& text, int x, int y) {
 }
@@ -83,11 +83,11 @@ void oui::Graphics::drawTextLine(const std::u16string& text, int x, int y) {
 }
 
 void oui::Graphics::setAlpha(int alpha) {
-	this->alpha = alpha;
+    this->alpha = alpha;
 }
 
 int oui::Graphics::getAlpha() {
-	return alpha;
+    return alpha;
 }
 
 void oui::Graphics::renderToGraphics(int x, int y, Graphics* target) {

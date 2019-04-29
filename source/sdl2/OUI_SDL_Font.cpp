@@ -15,23 +15,23 @@ oui::SDLFont::SDLFont(const std::u16string& name, int size, TTF_Font* baseFont) 
 }
 
 TTF_Font* oui::SDLFont::getBaseFont() {
-	return baseFont;
+    return baseFont;
 }
 
 
 //TODO font sizes shoul support utf16
 int oui::SDLFont::getStringHeight(const std::u16string& string) {
-	int w, h;
-	if (TTF_SizeText(baseFont, convertUTF16toUTF8(string).c_str(), &w, &h) != -1) {
-		return h;
-	}
-	return 0;
+    int w, h;
+    if (TTF_SizeText(baseFont, convertUTF16toUTF8(string).c_str(), &w, &h) != -1) {
+        return h;
+    }
+    return 0;
 }
 int oui::SDLFont::getStringWidth(const std::u16string& string) {
-	//std::cout << "Get String width: '" << string.c_str() << "'" << std::endl;
-	int w, h;
-	if (TTF_SizeText(baseFont, convertUTF16toUTF8(string).c_str(), &w, &h) != -1) {
-		return w;
-	}
-	return 0;
+    //std::cout << "Get String width: '" << string.c_str() << "'" << std::endl;
+    int w, h;
+    if (TTF_SizeText(baseFont, convertUTF16toUTF8(string).c_str(), &w, &h) != -1) {
+        return w;
+    }
+    return 0;
 }

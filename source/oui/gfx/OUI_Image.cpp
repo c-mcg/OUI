@@ -10,25 +10,25 @@ oui::Image::~Image() {
 }
 
 oui::Image::Image() {
-	width = 0;
-	height = 0;
+    width = 0;
+    height = 0;
 }
 
 oui::Image* oui::Image::loadImage(const std::u16string& path, Window* window) {
 
-	auto it = cachedImages.find(window);
-	if (it != cachedImages.end()) {
-		std::unordered_map<std::u16string, oui::Image*> imgs = it->second;
-		auto it2 = imgs.find(path);
-		if (it2 != imgs.end()) {
-			return it2->second;
-		}
-	} else {
-		std::unordered_map<std::u16string, oui::Image*> imgs;
-		cachedImages.insert({window, imgs});
-	}
+    auto it = cachedImages.find(window);
+    if (it != cachedImages.end()) {
+        std::unordered_map<std::u16string, oui::Image*> imgs = it->second;
+        auto it2 = imgs.find(path);
+        if (it2 != imgs.end()) {
+            return it2->second;
+        }
+    } else {
+        std::unordered_map<std::u16string, oui::Image*> imgs;
+        cachedImages.insert({window, imgs});
+    }
 
-	return window->getGraphics()->loadImage(path, window);
+    return window->getGraphics()->loadImage(path, window);
 }
 
 void oui::Image::cacheImage(Window* window, const std::u16string path, Image* image) {
@@ -44,9 +44,9 @@ void oui::Image::cacheImage(Window* window, const std::u16string path, Image* im
 }
 
 int oui::Image::getWidth() {
-	return width;
+    return width;
 }
 
 int oui::Image::getHeight() {
-	return height;
+    return height;
 }

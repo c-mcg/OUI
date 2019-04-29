@@ -7,26 +7,26 @@
 
 namespace oui {
 
-	class OUI_API Context {
+    class OUI_API Context {
 
-		protected: std::vector<Window*> windows;
+        protected: std::vector<Window*> windows;
 
-		protected: long long lastEvent;
+        protected: long long lastEvent;
 
-		public: Context();
+        public: Context();
 
-		public: int process();
+        public: int process();
 
         protected: virtual bool pollEvents();
 
         public: virtual Window* createWindow(int width, int height);
 
-		public: Window* getWindow(const std::string& name);
-		public: Window* addWindow(Window* window);
-		public: bool removeWindow(Window* window);
-		public: bool deleteWindow(const std::string& name);
+        public: Window* getWindow(const std::string& name);
+        public: Window* addWindow(Window* window);
+        public: bool removeWindow(Window* window);
+        public: bool deleteWindow(const std::string& name);
 
-	};
+    };
 
 }
 

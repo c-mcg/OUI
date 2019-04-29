@@ -40,18 +40,18 @@ oui::Font* oui::Font::getFont(const std::u16string& name, int size, Window* wind
         cachedFonts.insert({window, fontVec});
     }
 
-	Font* font = window->getGraphics()->loadFont(name, size, window);
-	fontNameVec.push_back(name);
-	fontSizeVec.push_back(size);
-	fontVec.push_back(font);
+    Font* font = window->getGraphics()->loadFont(name, size, window);
+    fontNameVec.push_back(name);
+    fontSizeVec.push_back(size);
+    fontVec.push_back(font);
 
-	return font;
+    return font;
 }
 
 //TODO font sizes shoul support utf16
 int oui::Font::getStringHeight(const std::u16string& string) {
-	return 0;
+    return 0;
 }
 int oui::Font::getStringWidth(const std::u16string& string) {
-	return 0;
+    return 0;
 }

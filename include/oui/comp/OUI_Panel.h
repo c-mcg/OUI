@@ -6,11 +6,11 @@
 
 namespace oui {
 
-	class OUI_API Panel : public Container {
+    class OUI_API Panel : public Container {
 
-		public: ~Panel();
-		public: Panel(const std::string& name, const std::string& classes);
+        public: ~Panel();
+        public: Panel(const std::string& name, const std::string& classes);
 
-	};
+    };
 }
 #endif
