@@ -41,7 +41,7 @@ find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 
-add_library (OUI_lib SHARED ${OUI_src} ${OUI_src2} ${OUI_src3})
+add_library (OUI SHARED ${OUI_src} ${OUI_src2} ${OUI_src3})
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -51,7 +51,7 @@ include_directories(
 )
 
 target_link_libraries(
-	OUI_lib
+	OUI
 	${SDL2_LIBRARY}
 	${SDL2_TTF_LIBRARY}
 	${SDL2_IMAGE_LIBRARIES}

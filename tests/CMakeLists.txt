@@ -10,4 +10,4 @@ include_directories(
 )
 
 add_executable(Test-OUI-engine ${TEST_SOURCE_FILES})
-target_link_libraries(Test-OUI-engine gtest gtest_main OUI_lib)
+target_link_libraries(Test-OUI-engine gtest gtest_main OUI)
