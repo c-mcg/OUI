@@ -104,12 +104,10 @@ def build():
 
     outputFolder = common.WINDOWS_OUTPUT_FOLDER
 
-    print('\n Copying OUI headers')
-    copyAllWithExt(
-        path='include',
-        ext='h',
-        outputPath='{}/include'.format(outputFolder)
-    )
+    print('\nCopying OUI headers')
+    if os.path.isdir("{}/include".format(outputFolder)):
+        os.unlink("{}/include".format(outputFolder))
+    shutil.copytree("include", "{}/include".format(outputFolder))
 
     print("\nCopying OUI binaries")
     copyAllWithExt(
