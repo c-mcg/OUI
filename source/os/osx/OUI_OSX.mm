@@ -39,14 +39,6 @@ void oui::OSX::enableInertiaScrolling() {
     [appDefaults release];
 }
 
-bool oui::OSX::getGlobalMousePos(oui::Window* window, int &x, int &y) {
-    CGEventRef event = CGEventCreate(NULL);
-    CGPoint cursor = CGEventGetLocation(event);
-    CFRelease(event);
-    x = (int) cursor.x;
-    y = (int) cursor.y;
-    return true;
-}
 bool oui::OSX::getMaximizeSize(oui::Window* window, int &x, int &y, int &width, int &height) {
     SDL_DisplayMode DM;
     SDL_GetCurrentDisplayMode(0, &DM);

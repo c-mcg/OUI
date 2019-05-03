@@ -16,7 +16,7 @@ namespace oui {
 
         public: virtual bool initialize();
 
-        public: virtual bool getGlobalMousePos(Window* window, int &x, int &y);
+        public: bool getGlobalMousePos(Window* window, int &x, int &y);
 
         public: virtual bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height);
 

@@ -20,8 +20,7 @@
 oui::OperatingSystem* oui::OS() {
     #ifdef __linux__//LINUX
 
-        return new oui::OperatingSystem();
-        // return new LinuxOS();
+        return new LinuxOS();
 
     #elif defined __APPLE__
 

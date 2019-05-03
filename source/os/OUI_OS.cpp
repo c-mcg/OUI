@@ -3,6 +3,7 @@
 #include "oui/OUI_Window.h"
 #include "sdl2/OUI_SDL_Context.h"
 
+#include <SDL.h>
 
 oui::OperatingSystem::OperatingSystem() {
 
@@ -16,8 +17,7 @@ bool oui::OperatingSystem::initialize() {
 }
 
 bool oui::OperatingSystem::getGlobalMousePos(Window* window, int &x, int &y) {
-    x = 0;
-    y = 0;
+    SDL_GetGlobalMouseState(&x, &y);
     return true;
 }
 bool oui::OperatingSystem::getMaximizeSize(Window* window, int &x, int &y, int &width, int &height) {

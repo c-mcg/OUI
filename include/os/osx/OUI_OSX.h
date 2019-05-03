@@ -18,8 +18,6 @@ namespace oui {
         
         public: bool initialize();
 
-        public: bool getGlobalMousePos(Window* window, int &x, int &y);
-
         public: bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height);
 
     };

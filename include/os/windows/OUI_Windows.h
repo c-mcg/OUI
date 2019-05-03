@@ -15,8 +15,6 @@ namespace oui {
         
         public: bool initialize() override;
 
-        public: bool getGlobalMousePos(Window* window, int &x, int &y) override;
-
         public: bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height) override;
 
     };

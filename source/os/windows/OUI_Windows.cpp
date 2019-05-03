@@ -21,13 +21,6 @@ bool oui::WindowsOS::initialize() {
     return true;
 }
 
-bool oui::WindowsOS::getGlobalMousePos(oui::Window* window, int &x, int &y) {
-    POINT globalMousePos;//TODO check for possible errors and return false
-    GetCursorPos(&globalMousePos);
-    x = (int) globalMousePos.x;
-    y = (int) globalMousePos.y;
-    return true;
-}
 bool oui::WindowsOS::getMaximizeSize(oui::Window* window, int &x, int &y, int &width, int &height) {
     int taskBarHeight = 0;
     RECT rect;
