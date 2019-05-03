@@ -53,6 +53,8 @@ def get_visual_studio_version():
     return version
 
 def copyAllWithExt(path, ext, outputPath, excludeFolders = []):
+    if not os.path.isdir(outputPath):
+        os.makedirs('{}/'.format(outputPath), exist_ok=True)
     for root, dir, filenames in os.walk(path):
         dir[:] = [d for d in dir if d not in excludeFolders]
         for filename in filenames:
@@ -102,8 +104,12 @@ def build():
 
     outputFolder = common.WINDOWS_OUTPUT_FOLDER
 
-    if not os.path.isdir(outputFolder):
-        os.makedirs(outputFolder, exist_ok=True)
+    print('\n Copying OUI headers')
+    copyAllWithExt(
+        path='include',
+        ext='h',
+        outputPath='{}/include'.format(outputFolder)
+    )
 
     print("\nCopying OUI binaries")
     copyAllWithExt(
