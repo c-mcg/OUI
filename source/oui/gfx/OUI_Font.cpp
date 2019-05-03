@@ -20,13 +20,13 @@ oui::Font* oui::Font::getFont(const std::u16string& name, int size, Window* wind
     auto sizeIt = fontSizes.find(window);
     auto fontIt = cachedFonts.find(window);
 
-    bool newWindow = nameIt != fontNames.end() || sizeIt != fontSizes.end() || fontIt != cachedFonts.end();
+    bool windowExists = nameIt != fontNames.end() || sizeIt != fontSizes.end() || fontIt != cachedFonts.end();
 
-    std::vector<std::u16string> fontNameVec = newWindow ? nameIt->second : std::vector<std::u16string>();
-    std::vector<int> fontSizeVec = newWindow ? sizeIt->second : std::vector<int>();
-    std::vector<oui::Font*> fontVec = newWindow ? fontIt->second : std::vector<Font*>();
+    std::vector<std::u16string> fontNameVec = windowExists ? nameIt->second : std::vector<std::u16string>();
+    std::vector<int> fontSizeVec = windowExists ? sizeIt->second : std::vector<int>();
+    std::vector<oui::Font*> fontVec = windowExists ? fontIt->second : std::vector<Font*>();
 
-    if (!newWindow) {
+    if (windowExists) {
         for (unsigned int i = 0; i < fontNameVec.size(); i++) {
             std::u16string fontName = fontNameVec.at(i);
             int fontSize = fontSizeVec.at(i);
