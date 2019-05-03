@@ -52,14 +52,11 @@ oui::Font* oui::SDLGraphics::loadFont(const std::u16string& name, int size, Wind
     TTF_Font* mFont = TTF_OpenFont(std::string("data/fonts/" + convertUTF16toUTF8(name) + ".ttf").c_str(), size);
     if (mFont == NULL) {
         std::cout << "Error loading font: " << convertUTF16toUTF8(name).c_str() << " " << TTF_GetError() << std::endl;
-        if (name != u"notoserif") {
-            auto font =  Font::getFont(u"notoserif", size, window);
-            if (font == NULL) {
-                throw "Could not load notoserif";
-            }
-            return font;
+        auto font =  Font::getFont(u"notoserif", size, window);
+        if (font == NULL) {
+            throw "Could not load notoserif";
         }
-        return NULL;
+        return font;
     }
     int w, h;
     TTF_SizeText(mFont, "YO", &w, &h);
