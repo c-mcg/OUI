@@ -107,22 +107,17 @@ def build():
 
     print("\nCopying OUI binaries")
     copyAllWithExt(
-        path='{}/OUI-engine/{}'.format(GEN_PATH, build_type),
+        path='{}/{}'.format(GEN_PATH, build_type),
         ext='dll',
         outputPath=outputFolder
     )
     copyAllWithExt(
-        path='{}/OUI-engine/tests/{}'.format(GEN_PATH, build_type),
-        ext='exe',
+        path='{}/{}'.format(GEN_PATH, build_type),
+        ext='lib',
         outputPath=outputFolder
     )
     copyAllWithExt(
-        path='{}/OUI-runtime/{}'.format(GEN_PATH, build_type),
-        ext='exe',
-        outputPath=outputFolder
-    )
-    copyAllWithExt(
-        path='{}/OUI-runtime/tests/{}'.format(GEN_PATH, build_type),
+        path='{}/tests/{}'.format(GEN_PATH, build_type),
         ext='exe',
         outputPath=outputFolder
     )
