@@ -1,4 +1,4 @@
-###### Note: This repository is for the C++ library. For JavaScript application development see: [Engine](https://github.com/nik-m2/OUI-engine)
+###### Note: This repository is for the C++ library. For JavaScript application development see: [Runtime](https://github.com/nik-m2/OUI-runtime)
 
 # OUI
 
