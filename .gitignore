@@ -4,6 +4,7 @@ x64/
 Debug/
 Release/
 lib/
+gen/
 
 .vscode
 
@@ -70,6 +71,7 @@ artifacts/
 
 # StyleCop
 StyleCopReport.xml
+
 
 # Files built by Visual Studio
 *_i.c
