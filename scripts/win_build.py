@@ -1,5 +1,5 @@
 import os, subprocess, shutil, uuid, hashlib
-import common, win_setup
+import common, setup, file_util
 
 common.check_requests_package()
 import requests
@@ -52,26 +52,10 @@ def get_visual_studio_version():
 
     return version
 
-def copyAllWithExt(path, ext, outputPath, excludeFolders = []):
-    if not os.path.isdir(outputPath):
-        os.makedirs('{}/'.format(outputPath), exist_ok=True)
-    for root, dir, filenames in os.walk(path):
-        dir[:] = [d for d in dir if d not in excludeFolders]
-        for filename in filenames:
-            if filename.endswith("." + ext):
-                filepath = os.path.join(root, filename)
-                print("Copying {} to {}".format(filepath, outputPath))
-                shutil.copy2(filepath, outputPath)
-
 def build():
 
-    if not os.path.isdir('{}/windows'.format(common.LIB_PATH)):
-        win_setup.setup()
-
-    common.exec(["cmake", "--version"],
-        errorMessage="You must install CMake 3.14 or above",
-        showOutput=False
-    )
+    if common.needs_setup():
+        setup.setup()
 
     # Will show our "no Visual Studio" error instead of CMake's
     msbuild_location = find_ms_build()
@@ -102,32 +86,32 @@ def build():
         '/p:Platform=x64'
     ], "Could not build project")
 
-    outputFolder = common.WINDOWS_OUTPUT_FOLDER
+    outputFolder = "{}/windows".format(common.OUTPUT_FOLDER)
 
     print('\nCopying OUI headers')
-    if os.path.isdir("{}/include".format(outputFolder)):
-        os.unlink("{}/include".format(outputFolder))
-    shutil.copytree("include", "{}/include".format(outputFolder))
+    if os.path.isdir("{}/include".format(common.OUTPUT_FOLDER)):
+        shutil.rmtree("{}/include".format(common.OUTPUT_FOLDER))
+    shutil.copytree("include", "{}/include".format(common.OUTPUT_FOLDER))
 
     print("\nCopying OUI binaries")
-    copyAllWithExt(
+    file_util.copyAllWithExt(
         path='{}/{}'.format(GEN_PATH, build_type),
         ext='dll',
         outputPath=outputFolder
     )
-    copyAllWithExt(
+    file_util.copyAllWithExt(
         path='{}/{}'.format(GEN_PATH, build_type),
         ext='lib',
         outputPath=outputFolder
     )
-    copyAllWithExt(
+    file_util.copyAllWithExt(
         path='{}/tests/{}'.format(GEN_PATH, build_type),
         ext='exe',
         outputPath=outputFolder
     )
 
     print("\nCopying SDL binaries")
-    copyAllWithExt(
+    file_util.copyAllWithExt(
         path='{}/windows'.format(common.LIB_PATH),
         ext='dll',
         outputPath=outputFolder,
