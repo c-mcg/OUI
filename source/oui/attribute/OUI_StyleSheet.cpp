@@ -49,6 +49,7 @@ oui::Style* oui::StyleSheet::getStyle(ElementType type, const std::string& ident
             return getByName(identifier);
             break;
     }
+	return NULL;
 }
 
 void oui::StyleSheet::addStyle(ElementType type, std::string identifier, Style* style) {

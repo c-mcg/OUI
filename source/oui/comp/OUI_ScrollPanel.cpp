@@ -8,7 +8,10 @@ oui::ScrollPanel::~ScrollPanel() {
 
 }
 
-oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classes) : Container("scrollpanel", name, classes, true) {
+oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classes) : Container("scrollpanel", name, classes, true), 
+	childWidth{0}, childHeight{0}, clickStartX{0}, clickStartY{0}, resetX{0}, resetY{0},
+	scrollPosX{0}, scrollPosY{0}, scrollingX{false}, scrollingY{false}, childrenChanged{false}
+{
     createScrollBar(true);
     createScrollBar(false);
 }
@@ -232,7 +235,7 @@ void oui::ScrollPanel::redraw() {
 
             int barY = c->getWindow()->getMouseY() - c->getParent()->getY() - clickStartY;
             if (resetY && pageDifference != 0 && barDifference != 0) {
-                barY = scrollPosY / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE;
+                barY = (int) (scrollPosY / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE);
             }
             if (barY < SCROLLBAR_SIZE ) {
                 barY = SCROLLBAR_SIZE;
@@ -242,7 +245,7 @@ void oui::ScrollPanel::redraw() {
             }
             c->parseAttribute("location", u"0 0 0 " + intToString(barY));
 
-            int scrollPosY = barDifference == 0 ? 0 : (barY - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference);
+            int scrollPosY = (int) (barDifference == 0 ? 0 : (barY - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference));
             for (unsigned int i = 0; i < children.size(); i++) {
                 Component* target = children.at(i);
                 if (!target->compareTag("scrollbar")) {
@@ -267,7 +270,7 @@ void oui::ScrollPanel::redraw() {
 
             int barX = c->getWindow()->getMouseX() - c->getParent()->getX() - clickStartX;
             if (resetX && pageDifference != 0 && barDifference != 0) {
-                barX = scrollPosX / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE;
+                barX = (int) (scrollPosX / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE);
             }
             if (barX < SCROLLBAR_SIZE) {
                 barX = SCROLLBAR_SIZE;
@@ -277,7 +280,7 @@ void oui::ScrollPanel::redraw() {
             }
             c->parseAttribute("location", u"0 0 " + intToString(barX).append(u" 0"));
 
-            int scrollPosX = barDifference == 0 ? 0 : (barX - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference);
+            int scrollPosX = (int) (barDifference == 0 ? 0 : (barX - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference));
             for (unsigned int i = 0; i < children.size(); i++) {
                 Component* target = children.at(i);
                 if (!target->compareTag("scrollbar")) {

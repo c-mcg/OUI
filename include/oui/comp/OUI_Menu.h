@@ -7,7 +7,7 @@
 
 namespace oui {
 
-    class OUI_API Menu : public Container {
+    class Menu : public Container {
 
         private: int numOptions;//TODO this is harder than it looks to remove
         private: std::vector<std::u16string> options;
@@ -21,13 +21,13 @@ namespace oui {
         private: int padding;
         
 
-        public: ~Menu();
-        public: Menu(const std::string& name, const std::string& classes);
+        public: OUI_API ~Menu();
+        public: OUI_API Menu(const std::string& name, const std::string& classes);
 
-        public: void setProfile(const std::u16string& profile) override;
+        public: OUI_API void setProfile(const std::u16string& profile) override;
 
         //Used to disable adding children traditionally
-        public: bool addChild(Component* child) override;
+        public: OUI_API bool addChild(Component* child) override;
 
         //Used to override the disabled addChild above
         private: bool _addChild(Button* child);

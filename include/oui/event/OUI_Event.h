@@ -38,60 +38,60 @@ namespace oui {
 
     };
 
-    class OUI_API MouseEvent : public Event {
+    class MouseEvent : public Event {
 
         private: int x, y;
         private: int globalX, globalY;
         private: int button;
 
-        public: MouseEvent(char type, int x, int y, int globalX, int globalY, int button=-1);
+        public: OUI_API MouseEvent(char type, int x, int y, int globalX, int globalY, int button=-1);
 
-        public: int getX();
-        public: int getY();
+        public: OUI_API int getX();
+        public: OUI_API int getY();
 
-        public: int getGlobalX();
-        public: int getGlobalY();
+        public: OUI_API int getGlobalX();
+        public: OUI_API int getGlobalY();
         
-        public: int getButton();
+        public: OUI_API int getButton();
 
-        public: bool isMouseEvent() override;
+        public: OUI_API bool isMouseEvent() override;
 
     };
 
-    class OUI_API KeyEvent : public Event {
+    class KeyEvent : public Event {
         private: int keyCode;
         private: char keyChar;
 
-        public: KeyEvent(char type, int keyCode, char keyChar);
+        public: OUI_API KeyEvent(char type, int keyCode, char keyChar);
 
-        public: bool isKeyEvent() override;
+        public: OUI_API bool isKeyEvent() override;
 
-        public: int getKeyCode();
-        public: char getKeyChar();
+        public: OUI_API int getKeyCode();
+        public: OUI_API char getKeyChar();
     };
 
-    class OUI_API ScrollEvent : public Event {
+    class ScrollEvent : public Event {
         private: int scroll;
 
-        public: explicit ScrollEvent(int scroll);
+        public: OUI_API explicit ScrollEvent(int scroll);
 
-        public: int getScroll();
+        public: OUI_API int getScroll();
     };
 
-    class OUI_API MenuEvent : public Event {
+    class MenuEvent : public Event {
         private: int index;
         private: std::u16string option;
 
-        public: MenuEvent(int index, const std::u16string& option);
+        public: OUI_API MenuEvent(int index, const std::u16string& option);
 
-        public: int getIndex();
-        public: std::u16string getOption();
+        public: OUI_API int getIndex();
+        public: OUI_API std::u16string getOption();
     };
 
-    class OUI_API WindowEvent : public Event {
+    class WindowEvent : public Event {
 
-        public: explicit WindowEvent(char type);
-        public: bool isWindowEvent() override;
+        public: OUI_API explicit WindowEvent(char type);
+        public: OUI_API bool isWindowEvent() override;
 
     };
 

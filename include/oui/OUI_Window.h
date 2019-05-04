@@ -21,7 +21,7 @@ namespace oui {
         std::function<void()> func;
     };
 
-    class OUI_API Window: public Container {
+    class Window: public Container {
         
 
         private: Context* context;
@@ -63,67 +63,67 @@ namespace oui {
         private: Component* selectedComponent;
         private: Component* rightClickedComponent;
 
-        public: ~Window();
-        public: Window(int width=0, int height=0);
+        public: OUI_API ~Window();
+        public: OUI_API Window(int width=0, int height=0);
 
         protected: void initializeWindow(int width, int height);
 
-        public: void setContext(Context* context);
-        public: Context* getContext();
+        public: OUI_API void setContext(Context* context);
+        public: OUI_API Context* getContext();
 
-        public: virtual void setProfile(const std::u16string& profile) override;
+        public: OUI_API virtual void setProfile(const std::u16string& profile) override;
 
-        public: virtual bool isWindow() override;
+        public: OUI_API virtual bool isWindow() override;
 
-        public: virtual int process() override;
-        public: Graphics* getGraphics();
+        public: OUI_API virtual int process() override;
+        public: OUI_API Graphics* getGraphics();
 
-        public: void handleMouseMoveEvent(MouseEvent event);
-        public: void handleMouseDownEvent(MouseEvent event);
-        public: void handleMouseUpEvent(MouseEvent event);
-        public: virtual void handleEvent(Event e);
-        public: virtual void redraw() override;
+        public: OUI_API void handleMouseMoveEvent(MouseEvent event);
+        public: OUI_API void handleMouseDownEvent(MouseEvent event);
+        public: OUI_API void handleMouseUpEvent(MouseEvent event);
+        public: OUI_API virtual void handleEvent(Event e);
+        public: OUI_API virtual void redraw() override;
 
-        public: void setTimeout(int delay, std::function<void()> func);
+        public: OUI_API void setTimeout(int delay, std::function<void()> func);
 
-        public: std::u16string getTitle();
-        public: bool hasFocus();
+        public: OUI_API std::u16string getTitle();
+        public: OUI_API bool hasFocus();
 
-        public: void addEditEvent(EditEvent* e, bool append = false);
-        public: void undo();
-        public: void redo();
+        public: OUI_API void addEditEvent(EditEvent* e, bool append = false);
+        public: OUI_API void undo();
+        public: OUI_API void redo();
         
-        public:bool isShiftDown();
-        public: bool isCtrlDown();
-        public: bool isAltDown();
+        public: OUI_API bool isShiftDown();
+        public: OUI_API bool isCtrlDown();
+        public: OUI_API bool isAltDown();
 
-        public: void setSelectedComponent(Component* component);
-        public: Component* getSelectedComponent();
-        public: void setRightClickedComponent(Component* component);
-        public: Component* getRightClickedComponent();
+        public: OUI_API void setSelectedComponent(Component* component);
+        public: OUI_API Component* getSelectedComponent();
+        public: OUI_API void setRightClickedComponent(Component* component);
+        public: OUI_API Component* getRightClickedComponent();
 
 
         //TODO move to own file (with other functions, sleep, etc.)
-        public: void setClipboardText(const std::u16string& text);
-        public: std::u16string getClipboardText();
-        public: bool hasClipboardText();
+        public: OUI_API void setClipboardText(const std::u16string& text);
+        public: OUI_API std::u16string getClipboardText();
+        public: OUI_API bool hasClipboardText();
 
-        public: void close();
-        public: void setVisible(bool visible);
-        public: virtual Window* getWindow() override;
+        public: OUI_API void close();
+        public: OUI_API void setVisible(bool visible);
+        public: OUI_API virtual Window* getWindow() override;
 
         // Abstract methods
-        public: virtual Graphics* createGraphics(int width, int height);
+        public: OUI_API virtual Graphics* createGraphics(int width, int height);
 
-        public: virtual void render();
-        public: virtual void showWindow();
-        public: virtual void hideWindow();
-        public: virtual void setTitle(const std::u16string& title);
-        public: virtual void setSize(int width, int height);
-        public: virtual void setPosition(int x, int y);
-        public: virtual bool setCursor(int cursor);
-        public: virtual void minimize();
-        public: virtual void maximize();
+        public: OUI_API virtual void render();
+        public: OUI_API virtual void showWindow();
+        public: OUI_API virtual void hideWindow();
+        public: OUI_API virtual void setTitle(const std::u16string& title);
+        public: OUI_API virtual void setSize(int width, int height);
+        public: OUI_API virtual void setPosition(int x, int y);
+        public: OUI_API virtual bool setCursor(int cursor);
+        public: OUI_API virtual void minimize();
+        public: OUI_API virtual void maximize();
     };
 
 }

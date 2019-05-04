@@ -18,7 +18,7 @@ namespace oui {
         int left, right;
     };
 
-    class OUI_API Component {
+    class Component {
 
 /* START OF VARIABLES */
 
@@ -100,105 +100,103 @@ namespace oui {
 /* START OF METHODS */
 
     //Constructor/Destructor
-        public: ~Component();
+        public: OUI_API ~Component();
 
         //Default attributes are not loaded until the component is added, so do not attempt to get attribute values in the constructor
-        public: Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false);
+        public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false);
 
         public: void setAttribute(const std::string& name, Attribute val, const std::u16string& profile=u"default");
-        public: Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
+        public: OUI_API Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
 
     //Processing and Drawing
-        public: virtual int process();
-        public: virtual void redraw();
-        public: void drawBorder(); 
-        public: virtual void addedToContainer(Container* container);
+        public: OUI_API virtual int process();
+        public: OUI_API virtual void redraw();
+        public: OUI_API void drawBorder();
+        public: OUI_API virtual void addedToContainer(Container* container);
 
     //Events
-        public: virtual void handleEvent(Event&);
+        public: OUI_API virtual void handleEvent(Event&);
 
-        public: void addEventListener(char type, std::function<void(MouseEvent, Component*)> handler);
-        public: void addEventListener(char type, std::function<void(KeyEvent, Component*)> handler);
-        public: void addEventListener(char type, std::function<void(WindowEvent, Component*)> handler);
-        public: void addEventListener(char type, std::function<void(ScrollEvent, Component*)> handler);
-        public: void addEventListener(char type, std::function<void(MenuEvent, Component*)> handler);
+        public: OUI_API void addEventListener(char type, std::function<void(MouseEvent, Component*)> handler);
+        public: OUI_API void addEventListener(char type, std::function<void(KeyEvent, Component*)> handler);
+        public: OUI_API void addEventListener(char type, std::function<void(WindowEvent, Component*)> handler);
+        public: OUI_API void addEventListener(char type, std::function<void(ScrollEvent, Component*)> handler);
+        public: OUI_API void addEventListener(char type, std::function<void(MenuEvent, Component*)> handler);
         //TODO removeEventListener
         
     //Usage functions
         //This parses a value as if it were an OSAL attribute
         //This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("bg-color", u"0 0 0 255")"
-        public: void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
-        public: virtual void setProfile(const std::u16string& profile);
-        public: bool contains(int localX, int localY);
+        public: OUI_API void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
+        public: OUI_API virtual void setProfile(const std::u16string& profile);
+        public: OUI_API bool contains(int localX, int localY);
 
     //Containers
-        public: virtual bool isWindow();
-        public: virtual bool isContainer();
-        public: virtual Window* getWindow();
-        public: virtual Container* getParent();
+        public: OUI_API virtual bool isWindow();
+        public: OUI_API virtual bool isContainer();
+        public: OUI_API virtual Window* getWindow();
+        public: OUI_API virtual Container* getParent();
         //Recursively checks parents for the specified component
-        public: bool isChildOf(Component* c);
+        public: OUI_API bool isChildOf(Component* c);
         //Recursively looks for a parent with the specified tag
-        public: bool isChildOf(const std::string& tag);
+        public: OUI_API bool isChildOf(const std::string& tag);
 
     //Identification
-        public: std::string getTag();
-        public: bool compareTag(const std::string& tag);
-        public: virtual bool setName(const std::string& name);
-        public: std::string getName();
-        public: void addClass(std::string _class);
-        public: bool removeClass(const std::string& _class);
-        public: void setClasses(const std::string& classes);
-        public: void setClasses(std::vector<std::string> classes);
-        public: std::vector<std::string> getClasses();
+        public: OUI_API std::string getTag();
+        public: OUI_API bool compareTag(const std::string& tag);
+        public: OUI_API virtual bool setName(const std::string& name);
+        public: OUI_API std::string getName();
+        public: OUI_API void addClass(std::string _class);
+        public: OUI_API bool removeClass(const std::string& _class);
+        public: OUI_API void setClasses(const std::string& classes);
+        public: OUI_API void setClasses(std::vector<std::string> classes);
+        public: OUI_API std::vector<std::string> getClasses();
 
     //Size & Location
-        public: bool isDependantOnParent();
-        public: int getWidth();
-        public: int getHeight();
-        public: int calculateWidth();
-        public: int calculateHeight();
-        public: int calculateX();
-        public: int calculateY();
-        public: int calculateScreenX();
-        public: int calculateScreenY();
-        public: int getX();
-        public: int getY();
-        public: int getScreenX();
-        public: int getScreenY();
-        public: void setScrollOffsetX(int scrollOffsetX);
-        public: void setScrollOffsetY(int scrollOffsetY);
+        public: OUI_API bool isDependantOnParent();
+        public: OUI_API int getWidth();
+        public: OUI_API int getHeight();
+        public: OUI_API int calculateWidth();
+        public: OUI_API int calculateHeight();
+        public: OUI_API int calculateX();
+        public: OUI_API int calculateY();
+        public: OUI_API int calculateScreenX();
+        public: OUI_API int calculateScreenY();
+        public: OUI_API int getX();
+        public: OUI_API int getY();
+        public: OUI_API int getScreenX();
+        public: OUI_API int getScreenY();
+        public: OUI_API void setScrollOffsetX(int scrollOffsetX);
+        public: OUI_API void setScrollOffsetY(int scrollOffsetY);
 
     //Graphics
-        public: Graphics* getGraphics();
-        public: void flagGraphicsUpdate(bool flagParent = true);
-        public: bool needsGraphicsUpdate();
-        public: void flagProfileUpdate();
-        public: bool needsProfileUpdate();
-        public: void clearProfileUpdate();
+        public: OUI_API Graphics* getGraphics();
+        public: OUI_API void flagGraphicsUpdate(bool flagParent = true);
+        public: OUI_API bool needsGraphicsUpdate();
+        public: OUI_API void flagProfileUpdate();
+        public: OUI_API bool needsProfileUpdate();
+        public: OUI_API void clearProfileUpdate();
         
     //State
-        public: int getMouseX();
-        public: int getMouseY();
+        public: OUI_API int getMouseX();
+        public: OUI_API int getMouseY();
         //Sets this as the active component in the window
-        public: virtual void setSelected(bool selected);//TODO make this change the window as well, and make it so comps are deselected when added to window
-        public: bool isSelected();
+        public: OUI_API virtual void setSelected(bool selected);//TODO make this change the window as well, and make it so comps are deselected when added to window
+        public: OUI_API bool isSelected();
         //This is used to distinguish a click from a release
-        public: virtual void setMouseDown(bool mouseDown);
-        public: bool isMouseDown();
-        public: virtual void setHovered(bool hovered);
-        public: virtual bool isHovered();
+        public: OUI_API virtual void setMouseDown(bool mouseDown);
+        public: OUI_API bool isMouseDown();
+        public: OUI_API virtual void setHovered(bool hovered);
+        public: OUI_API virtual bool isHovered();
 
-    
-        
     //Styling
         //Creates a new StyleSheet via `Component::getAllStyleSheets()` and applies them to this component
-        public: virtual Style* createStyle(StyleSheet* sheet = NULL);
-        public: int getCursor();//TODO replace with Attribute value substitution (auto change string value to int value when attribute is added)
-        public: virtual std::vector<std::u16string> getRightClickOptions();
-        public: AttributeProfile* getCurrentProfile();
-        public: virtual void updateStyle();
-        public: virtual Style* getDefaultStyle();
+        public: OUI_API virtual Style* createStyle(StyleSheet* sheet = NULL);
+        public: OUI_API int getCursor();//TODO replace with Attribute value substitution (auto change string value to int value when attribute is added)
+        public: OUI_API virtual std::vector<std::u16string> getRightClickOptions();
+        public: OUI_API AttributeProfile* getCurrentProfile();
+        public: OUI_API virtual void updateStyle();
+        public: OUI_API virtual Style* getDefaultStyle();
 
 /* END OF METHODS */
         

@@ -79,7 +79,8 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     visible{true}, profileUpdate{false}, graphicsUpdate{true}, currentProfileName{u"default"},
     hovered{false}, selected{false}, mouseDown{false}, interactable{false},
     cursor{CURSOR_DEFAULT}, mouseX{0}, mouseY{0},
-    opacity{255}, centeredX{false}, centeredY{false}, borderWidth{0} {
+	opacity{255}, centeredX{false}, centeredY{false}, borderWidth{0}, borderStyle{BORDER_NONE} 
+{
 
     this->classes = std::vector<std::string>();
     std::istringstream iss(classes.c_str());
@@ -494,23 +495,23 @@ int oui::Component::getScreenY() {
 }
 
 int oui::Component::calculateWidth() {//TODO cache width
-    int width = parent == NULL ? widthOffset : ((float) widthPercent / 100.0) * parent->calculateWidth() + widthOffset;
-    return width < minWidth ? minWidth : width;
+    auto width = parent == NULL ? widthOffset : ((float) widthPercent / 100.0) * parent->calculateWidth() + widthOffset;
+    return (int) (width < minWidth ? minWidth : width);
 }
 int oui::Component::calculateHeight() {//TODO cache height
-    int height = parent == NULL ? heightOffset : ((float) heightPercent / 100.0) * parent->calculateHeight() + heightOffset;
-    return height < minHeight ? minHeight : height;
+    auto height = parent == NULL ? heightOffset : ((float) heightPercent / 100.0) * parent->calculateHeight() + heightOffset;
+    return (int) (height < minHeight ? minHeight : height);
 }
 
 int oui::Component::calculateX() {
     //TODO percent based on screen size for Window class
-    int offset = (int) (xOffset - (centeredX ? calculateWidth() / 2 : 0));
+    auto offset = (int) (xOffset - (centeredX ? calculateWidth() / 2 : 0));
     return (int) (parent == NULL ? offset : ((float) (xPercent) / 100.0) * parent->calculateWidth() + offset - scrollOffsetX);
 }
 int oui::Component::calculateY() {
     //TODO percent based on screen size for Window class
-    int offset = (int) (yOffset - (centeredY ? calculateHeight() / 2 : 0));
-    return parent == NULL ? offset : ((float) (yPercent) / 100.0) * parent->calculateHeight() + offset - scrollOffsetY;
+    auto offset = (int) (yOffset - (centeredY ? calculateHeight() / 2 : 0));
+    return (int) (parent == NULL ? offset : ((float) (yPercent) / 100.0) * parent->calculateHeight() + offset - scrollOffsetY);
 }
 
 int oui::Component::calculateScreenX() {

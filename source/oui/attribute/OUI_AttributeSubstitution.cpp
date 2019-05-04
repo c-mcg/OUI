@@ -4,6 +4,12 @@
 
 std::unordered_map<std::string, oui::AttributeSubstitution> oui::AttributeSubstitution::attributeSubs = std::unordered_map<std::string, oui::AttributeSubstitution>();
 
+oui::AttributeSubstitution::AttributeSubstitution(SubstitutionType type, std::vector<std::string> substitutions) {
+	this->type = type;
+	this->substitutions = substitutions;
+}
+
+
 void oui::AttributeSubstitution::addSubstitution(const std::string& name, const std::string& replacement, SubstitutionType type) {
     addSubstitution(name, std::vector<std::string>({replacement}), type);
 }
@@ -23,7 +29,7 @@ void oui::AttributeSubstitution::addSubstitution(const std::string& name, const 
     }
 
     //Add substitution to list
-    attributeSubs.insert({name, AttributeSubstitution{subAttributes, type}});
+    attributeSubs.insert({name, AttributeSubstitution(type, subAttributes)});
 }
 
 bool oui::AttributeSubstitution::hasSubstitution(const std::string& name) {

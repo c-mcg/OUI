@@ -113,7 +113,7 @@ void oui::Container::addedToContainer(Container* parent) {
 }
 
 int oui::Container::getNumChildren() {
-    return children.size();
+    return (int) children.size();
 }
 
 void oui::Container::setSelected(bool selected) {

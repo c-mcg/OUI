@@ -159,7 +159,7 @@ void oui::SDLGraphics::drawText(const std::u16string& text, int x, int y) {
     std::u16string currLine = u"";
     bool lastCharWasBackslash = false;
     for (int i = 0; i < text.length(); i++) {
-        char c = text.at(i);
+        char c = (char) text.at(i);
 
         if (lastCharWasBackslash) {
             if (c == 'n') {

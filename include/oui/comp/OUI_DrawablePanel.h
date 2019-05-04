@@ -6,17 +6,17 @@
 
 namespace oui {
 
-    class OUI_API DrawablePanel : public Container {
+    class DrawablePanel : public Container {
 
         private: std::function<void(Graphics*, Component*)> draw;
 
-        public: ~DrawablePanel();
+        public: OUI_API ~DrawablePanel();
 
-        public: DrawablePanel(const std::string& name, const std::string& classes);
+        public: OUI_API DrawablePanel(const std::string& name, const std::string& classes);
 
-        public: void setDraw(std::function<void(Graphics*, Component*)> draw);
+        public: OUI_API void setDraw(std::function<void(Graphics*, Component*)> draw);
 
-        public: void redraw() override;
+        public: OUI_API void redraw() override;
 
     };
 }

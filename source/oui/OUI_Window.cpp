@@ -257,7 +257,7 @@ void oui::Window::handleMouseMoveEvent(MouseEvent event) {
     //std::cout << "Component: name=" << getName() << " mX=" << mouseX << " mY=" << mouseY << std::endl;
     if (c->getParent() != NULL) {
         Container* parent = (Container*) c->getParent();
-        for (unsigned int i = 0; i < getNumChildren(); i++) {
+        for (int i = 0; i < getNumChildren(); i++) {
             Component* comp = getChild(i);
             if (comp != NULL) {
                 if (comp != c && !c->isChildOf(comp)) {
@@ -265,7 +265,7 @@ void oui::Window::handleMouseMoveEvent(MouseEvent event) {
                 }
             }
         }
-        for (unsigned int i = 0; i < parent->getNumChildren(); i++) {
+        for (int i = 0; i < parent->getNumChildren(); i++) {
             Component* comp = parent->getChild(i);
             if (comp != NULL) {
                 comp->setHovered(false);
@@ -273,7 +273,7 @@ void oui::Window::handleMouseMoveEvent(MouseEvent event) {
         }
         if (c->isContainer()) {
             Container* cont = (Container*) c;
-            for (unsigned int i = 0; i < cont->getNumChildren(); i++) {
+            for (int i = 0; i < cont->getNumChildren(); i++) {
                 Component* comp = cont->getChild(i);
                 if (comp != NULL) {
                     comp->setHovered(false);
@@ -314,7 +314,7 @@ void oui::Window::handleMouseDownEvent(MouseEvent event) {
             menu->setAttribute("visible", false);
         }
         if (event.getButton() == 1) {//Left Click
-            for (unsigned int i = 0; i < getNumChildren(); i++) {
+            for (int i = 0; i < getNumChildren(); i++) {
                 Component* comp = getChild(i);
                 if (comp != NULL) {
                     if (comp != c && !c->isChildOf(comp)) {
@@ -324,7 +324,7 @@ void oui::Window::handleMouseDownEvent(MouseEvent event) {
             }
             if (c->isContainer()) {
                 Container* cont = (Container*) c;
-                for (unsigned int i = 0; i < cont->getNumChildren(); i++) {
+                for (int i = 0; i < cont->getNumChildren(); i++) {
                     Component* comp = cont->getChild(i);
                     if (comp != NULL) {
                         comp->setMouseDown(false);
@@ -333,7 +333,7 @@ void oui::Window::handleMouseDownEvent(MouseEvent event) {
             }
             if (c->getParent() != NULL) {
                 Container* parent = (Container*) c->getParent();
-                for (unsigned int i = 0; i < parent->getNumChildren(); i++) {
+                for (int i = 0; i < parent->getNumChildren(); i++) {
                     Component* comp = parent->getChild(i);
                     if (comp != NULL && comp != c) {
                         comp->setMouseDown(false);
@@ -478,7 +478,7 @@ void oui::Window::addEditEvent(EditEvent* e, bool append) {
         delete e;
     } else {
         editEvents.push_back(e);
-        editIndex = editEvents.size() - 1;
+        editIndex = (int) editEvents.size() - 1;
     }
 }
 void oui::Window::undo() {
@@ -495,7 +495,7 @@ void oui::Window::redo() {
         editEvents.at(editIndex)->performRedo();
         editIndex++;
         if (editIndex > editEvents.size() - 1) {
-            editIndex = editEvents.size() - 1;
+            editIndex = (int) editEvents.size() - 1;
         }
     }
 }

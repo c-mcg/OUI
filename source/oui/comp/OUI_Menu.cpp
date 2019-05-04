@@ -122,7 +122,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     b->addEventListener(Event::CLICKED, [](MouseEvent e, Component* c) {
 
         std::string name = c->getName();
-        int numIndex = name.find_last_of("_") + 1;
+        auto numIndex = name.find_last_of("_") + 1;
 
         //Create event to pass to menu handler
         MenuEvent menuEvt = MenuEvent(std::atoi(name.substr(numIndex, name.length() - numIndex).c_str()), c->getCurrentProfile()->getString("text"));
@@ -197,7 +197,7 @@ std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string
 
 std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options, int index) {
     std::vector<Button*> buttons;
-    for (int i = options.size() - 1; i >= 0; i--) {
+    for (int i = (int) options.size() - 1; i >= 0; i--) {
         buttons.push_back(addOption(options.at(i), index));
     }
     return buttons;

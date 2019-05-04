@@ -87,7 +87,7 @@ std::string OSAL::Attribute::getName() {
 }
 
 int OSAL::Attribute::getNumValues() {
-    return value.size();
+    return (int) value.size();
 }
 
 char OSAL::Attribute::getType(int index) {

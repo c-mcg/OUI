@@ -7,7 +7,7 @@ namespace oui {
 
     //This class represents a complete style sheet that can represent multiple elements with profiles
     //This class is used to store a loaded style sheet, ready to be applied to elements
-    class OUI_API StyleSheet {
+    class StyleSheet {
         typedef OSAL::Element::Type ElementType;
 
         //The lists of elements, organized by type
@@ -15,42 +15,42 @@ namespace oui {
         private: std::unordered_map<std::string, Style*> classes;
         private: std::unordered_map<std::string, Style*> names;
 
-        public: ~StyleSheet();
-        public: StyleSheet();
+        public: OUI_API ~StyleSheet();
+        public: OUI_API StyleSheet();
 
         //Returns true if the specified type and identifier exits, false if not
         //Identifier is the tag/class/name of the element
-        public: bool hasStyle(ElementType type, const std::string& identifier);
+        public: OUI_API bool hasStyle(ElementType type, const std::string& identifier);
 
         //Returns the style assocciated with the specified type and identifier, NULL if not found
         //Identifier is the tag/class/name of the element
-        public: Style* getStyle(ElementType type, const std::string& identifier);
+        public: OUI_API Style* getStyle(ElementType type, const std::string& identifier);
 
         //Adds an element of the specified type and itentifier
         //Identifier is the tag/class/name of the element
-        public: void addStyle(ElementType type, std::string identifier, Style* style);
+        public: OUI_API void addStyle(ElementType type, std::string identifier, Style* style);
 
         //Returns the style associated with the specified tag, NULL if not found
-        public: Style* getByTag(const std::string& tag);
+        public: OUI_API Style* getByTag(const std::string& tag);
         //Returns the style associated with the specified class, NULL if not found
-        public: Style* getByClass(const std::string& className);
+        public: OUI_API Style* getByClass(const std::string& className);
         //Returns the style associated with the specified name, NULL if not found
-        public: Style* getByName(const std::string& name);
+        public: OUI_API Style* getByName(const std::string& name);
 
         //Adds the new StyleSheet's attributes to this one
         //Any common attributes are overwritten
-        public: void combineStyleSheet(StyleSheet* sheet, bool overwrite  = false);
+        public: OUI_API void combineStyleSheet(StyleSheet* sheet, bool overwrite  = false);
 
         //TODO make a clone function
         
         //Converts an OSAL sheet into a new OUI stylesheet
-        public: static StyleSheet* fromOSAL(OSAL::Sheet sheet);
+        public: OUI_API static StyleSheet* fromOSAL(OSAL::Sheet sheet);
 
-        public: bool isEmpty();
+        public: OUI_API bool isEmpty();
 
-        public: bool equals(StyleSheet* other);
+        public: OUI_API bool equals(StyleSheet* other);
 
-        public: StyleSheet* clone();
+        public: OUI_API StyleSheet* clone();
 
     };
 

@@ -320,7 +320,7 @@ void oui::TextField::deleteChar(bool backspace) {
         if (text == u"" || (caratIndex == 0 && backspace) || (caratIndex == text.length() && !backspace)) {
             //return;
         } else {
-            text.erase(caratIndex + (backspace ? -1 : 0));
+            text.erase(caratIndex + (size_t) (backspace ? -1 : 0));
             if (backspace) {
                 moveCarat(false);
             } else {
@@ -371,12 +371,12 @@ void oui::TextField::updateTextPosition() {
 int oui::TextField::getIndexAt(int x) {
     int borderWidth = getCurrentProfile()->getInt("border-width");
     int lastWidth = font->getStringWidth(std::u16string(text));
-    for (int i = text.length() - 1; i >= 0; i--) {
+    for (int i = (int) text.length() - 1; i >= 0; i--) {
         std::u16string testStr = text.substr(0, i);
         int strWidth = font->getStringWidth(testStr);
         int halfPoint = strWidth + (lastWidth - strWidth) / 2 + borderWidth + 1;
         if (x + drawX > halfPoint) {
-            return i + 1;
+            return (int) i + 1;
         }
         lastWidth = strWidth;
     }

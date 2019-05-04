@@ -6,7 +6,7 @@
 
 namespace oui {
 
-    class OUI_API Button : public Component {
+    class Button : public Component {
 
         public: static Style* defaultStyle;
         public: static Style* getDefaultButtonStyle();
@@ -20,19 +20,19 @@ namespace oui {
 
         private: std::u16string text;
 
-        public: ~Button();
-        public: Button(const std::string& name, const std::string& classes);
+        public: OUI_API ~Button();
+        public: OUI_API Button(const std::string& name, const std::string& classes);
 
-        public: void setProfile(const std::u16string& profile) override;
+        public: OUI_API void setProfile(const std::u16string& profile) override;
 
-        public: void redraw() override;
+        public: OUI_API void redraw() override;
 
-        public: void addedToContainer(Container* container) override;
+        public: OUI_API void addedToContainer(Container* container) override;
 
-        public: void setImage(Image* image);
-        public: Image* getImage();
+        public: OUI_API void setImage(Image* image);
+        public: OUI_API Image* getImage();
 
-        public: Style* getDefaultStyle() override;
+        public: OUI_API Style* getDefaultStyle() override;
 
     };
 }

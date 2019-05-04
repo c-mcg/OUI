@@ -10,7 +10,7 @@ namespace oui {
 
     class Window;
 
-    class OUI_API Image {
+    class Image {
         private: static std::unordered_map<Window*, std::unordered_map<std::u16string, Image*>> cachedImages;
         public: static Image* loadImage(const std::u16string& path, Window* window);
         public: static void cacheImage(Window* window, std::u16string path, Image* image);
@@ -18,12 +18,12 @@ namespace oui {
         protected: int width;
         protected: int height;
 
-        public: ~Image();
+        public: OUI_API ~Image();
 
-        protected: Image();
+        protected: OUI_API Image();
         
-        public: int getWidth();
-        public: int getHeight();
+        public: OUI_API int getWidth();
+        public: OUI_API int getHeight();
     
     };
 

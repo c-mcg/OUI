@@ -6,18 +6,18 @@
 
 namespace oui {
 
-    class OUI_API Label : public Component {
+    class Label : public Component {
 
         private: std::u16string text;
         private: Font* font;
         private: Color textColor;
         private: bool autoSize;
 
-        public: ~Label();
-        public: Label(const std::string& name, const std::string& classes);
+        public: OUI_API ~Label();
+        public: OUI_API Label(const std::string& name, const std::string& classes);
 
-        public: void setProfile(const std::u16string& profile) override;
-        public: void redraw() override;
+        public: OUI_API void setProfile(const std::u16string& profile) override;
+        public: OUI_API void redraw() override;
 
     };
 }

@@ -103,7 +103,7 @@ namespace OSAL {
                         if(attributes.size() > 0) {
                             for(unsigned int j = 0; j < currElements.size(); j++) {
                                 std::u16string curr = currElements.at(j);
-                                int colonPos = curr.find(u":");
+                                auto colonPos = curr.find(u":");
                                 std::string element = convertUTF16toUTF8(colonPos == std::u16string::npos ? curr : curr.substr(0, colonPos));
                                 std::u16string profile = colonPos == std::string::npos ? u"default" : curr.substr(colonPos + 1, curr.size() - colonPos);
 
@@ -240,8 +240,8 @@ namespace OSAL {
         }
 
         //Remove path and extension from file name
-        int fpos = fileName.find('/');
-        int lpos = fileName.find('.');
+        auto fpos = fileName.find('/');
+        auto  lpos = fileName.find('.');
         std::u16string name;
         if(fpos != -1) {
             if(lpos != -1) {
