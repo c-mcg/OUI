@@ -7,11 +7,12 @@ def cleanup():
     if os.path.isdir('./temp'):
         shutil.rmtree('./temp')
 
-def log(message, add_spacing=True):
-    if add_spacing:
+def log(message, is_title=True):
+    if is_title:
         print()
-    print("## {}".format(message))
-    if add_spacing:
+    prefix = "## " if is_title else ""
+    print("{} {}".format(prefix, message))
+    if is_title:
         print()
     sys.stdout.flush()
 
