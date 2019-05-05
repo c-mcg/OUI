@@ -1,6 +1,6 @@
 {
     'variables': {
-        'SDL_PATH': '/SDL2'
+        'SDL2_WIN_PATH': 'lib/windows'
     },
     'includes': [],
     'target_defaults': {},
@@ -23,28 +23,28 @@
             # }],
             ['OS=="win"', {
                 'libraries': [
-                    '<(SDL_PATH)/SDL2/lib/x64/SDL2',
-                    '<(SDL_PATH)/SDL2_image/lib/x64/SDL2_image',
-                    '<(SDL_PATH)/SDL2_ttf/lib/x64/SDL2_ttf',
+                    '../<(SDL2_WIN_PATH)/SDL2/lib/x64/SDL2',
+                    '../<(SDL2_WIN_PATH)/SDL2_image/lib/x64/SDL2_image',
+                    '../<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/SDL2_ttf',
                 ],
                 'include_dirs': [
-                    '<(SDL_PATH)/SDL2/include',
-                    '<(SDL_PATH)/SDL2_image/include',
-                    '<(SDL_PATH)/SDL2_ttf/include',
+                    '<(SDL2_WIN_PATH)/SDL2/include',
+                    '<(SDL2_WIN_PATH)/SDL2_image/include',
+                    '<(SDL2_WIN_PATH)/SDL2_ttf/include',
                 ],
                 'copies': [
                     {
                         'destination': '<(PRODUCT_DIR)',
                         'files': [
-                            '<(SDL_PATH)/SDL2/lib/x64/SDL2.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/SDL2_image.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/libjpeg-9.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/libpng16-16.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/libtiff-5.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/libwebp-7.dll',
-                            '<(SDL_PATH)/SDL2_image/lib/x64/zlib1.dll',
-                            '<(SDL_PATH)/SDL2_ttf/lib/x64/SDL2_ttf.dll',
-                            '<(SDL_PATH)/SDL2_ttf/lib/x64/libfreetype-6.dll',
+                            '<(SDL2_WIN_PATH)/SDL2/lib/x64/SDL2.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/SDL2_image.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/libjpeg-9.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/libpng16-16.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/libtiff-5.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/libwebp-7.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_image/lib/x64/zlib1.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/SDL2_ttf.dll',
+                            '<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/libfreetype-6.dll',
                         ]
                     },
                 ],
