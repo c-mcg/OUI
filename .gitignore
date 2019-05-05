@@ -6,6 +6,7 @@ Release/
 lib/
 gen/
 temp
+build
 
 .vscode
 
