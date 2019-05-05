@@ -23,9 +23,9 @@
             # }],
             ['OS=="win"', {
                 'libraries': [
-                    '../<(SDL2_WIN_PATH)/SDL2/lib/x64/SDL2',
-                    '../<(SDL2_WIN_PATH)/SDL2_image/lib/x64/SDL2_image',
-                    '../<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/SDL2_ttf',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2/lib/x64/SDL2',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2_image/lib/x64/SDL2_image',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/SDL2_ttf',
                 ],
                 'include_dirs': [
                     '<(SDL2_WIN_PATH)/SDL2/include',
