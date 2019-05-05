@@ -26,14 +26,12 @@ WIN_LIB_SDL2_INFO = [
     }
 ]
 
-GTEST_LIB_INFO = [
-    {
-        'extract_path': '{}/gtest'.format(common.LIB_PATH),
-        'inner_folder': 'googletest-release-1.8.1',
-        'url': "https://github.com/google/googletest/archive/release-1.8.1.zip",
-        'hash': '927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7'
-    },
-]
+GTEST_LIB_INFO = {
+    'extract_path': '{}/gtest'.format(common.LIB_PATH),
+    'inner_folder': 'googletest-release-1.8.1',
+    'url': "https://github.com/google/googletest/archive/release-1.8.1.zip",
+    'hash': '927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7'
+}
 
 
 def download_gtest():
