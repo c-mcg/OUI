@@ -7,7 +7,7 @@ def cleanup():
     if os.path.isdir('./temp'):
         shutil.rmtree('./temp')
 
-def log(message, add_spacing=False):
+def log(message, add_spacing=True):
     if add_spacing:
         print()
     print("## {}".format(message))
@@ -20,7 +20,7 @@ def exit_error():
     sys.exit(1)
 
 def exec(command, errorMessage="", showOutput=True):
-    log(command)
+    log(command, False)
     sys.stdout.flush()
     try:
         result = subprocess.call(command)
@@ -28,7 +28,7 @@ def exec(command, errorMessage="", showOutput=True):
         result = True
     if (result != 0):
         if errorMessage is not "":
-            log(errorMessage)
+            log(errorMessage, False)
         exit_error()
 
 def check_requests_package():
