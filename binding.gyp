@@ -1,6 +1,6 @@
 {
     'variables': {
-        'SDL2_WIN_PATH': 'lib/windows'
+        'SDL2_WIN_PATH': '<(PRODUCT_DIR)/../../lib/windows'
     },
     'includes': [],
     'target_defaults': {},
