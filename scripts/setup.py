@@ -1,7 +1,10 @@
-import platform, os
+import os, subprocess, platform
 import common, file_util
 
-LIB_INFO = [
+common.check_requests_package()
+import requests
+
+WIN_LIB_SDL2_INFO = [
     {
         'extract_path': '{}/SDL2'.format(common.WINDOWS_LIB_PATH),
         'inner_folder': 'SDL2-2.0.9',
@@ -23,46 +26,33 @@ LIB_INFO = [
     }
 ]
 
-GTEST_DOWNLOAD_INFO = {
-    'extract_path': '{}/gtest'.format(common.LIB_PATH),
-    'inner_folder': 'googletest-release-1.8.1',
-    'url': "https://github.com/google/googletest/archive/release-1.8.1.zip",
-    'hash': '927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7'
-}
+GTEST_LIB_INFO = [
+    {
+        'extract_path': '{}/gtest'.format(common.LIB_PATH),
+        'inner_folder': 'googletest-release-1.8.1',
+        'url': "https://github.com/google/googletest/archive/release-1.8.1.zip",
+        'hash': '927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7'
+    },
+]
+
 
 def download_gtest():
-    if not os.path.isdir("{}/gtest".format(common.LIB_PATH)):
-        file_util.download_and_unzip(GTEST_DOWNLOAD_INFO)
+    print("Downloading Google Test")
+    file_util.download_and_unzip(GTEST_LIB_INFO)
 
-def setup_windows():
+def download_sdl_win_binaries():
     print("Downloading SDL binaries")
-    for binary_info in LIB_INFO:
-        file_util.download_and_unzip(binary_info)
-
-def setup_linux():
-    common.exec([
-        'sudo',
-        'apt-get',
-        'install',
-        'libsdl2-2.0',
-        'libsdl2-dev',
-        'libsdl2-image-2.0-0',
-        'libsdl2-image-dev',
-        'libsdl2-ttf-2.0-0',
-        'libsdl2-ttf-dev'
-    ])
-
-def setup_osx():
-    pass
+    for lib_info in WIN_LIB_SDL2_INFO:
+        file_util.download_and_unzip(lib_info)
 
 def setup():
-    download_gtest()
-
     os_name = platform.system()
-    if os_name == "Windows":
-        setup_windows()
-    elif os_name == "Linux":
-        setup_linux()
+
+    if not os.path.isdir("{}/gtest".format(common.LIB_PATH)):
+        download_gtest()
+
+    if os_name == "Windows" and not os.path.isdir(common.WINDOWS_LIB_PATH):
+        download_sdl_win_binaries()
 
     common.cleanup()
 
