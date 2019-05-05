@@ -35,11 +35,11 @@ GTEST_LIB_INFO = {
 
 
 def download_gtest():
-    print("Downloading Google Test")
+    common.log("Downloading Google Test")
     file_util.download_and_unzip(GTEST_LIB_INFO)
 
 def download_sdl_win_binaries():
-    print("Downloading SDL binaries")
+    common.log("Downloading SDL binaries")
     for lib_info in WIN_LIB_SDL2_INFO:
         file_util.download_and_unzip(lib_info)
 
