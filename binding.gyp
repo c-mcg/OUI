@@ -28,9 +28,9 @@
                     '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2_ttf/lib/x64/SDL2_ttf',
                 ],
                 'include_dirs': [
-                    '<(SDL2_WIN_PATH)/SDL2/include',
-                    '<(SDL2_WIN_PATH)/SDL2_image/include',
-                    '<(SDL2_WIN_PATH)/SDL2_ttf/include',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2/include',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2_image/include',
+                    '<(PRODUCT_DIR)/../../<(SDL2_WIN_PATH)/SDL2_ttf/include',
                 ],
                 'copies': [
                     {
