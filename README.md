@@ -31,8 +31,8 @@
 ## Supported Platforms
 
 - [x] Windows
+- [-] Linux (In development)
 - [ ] MacOS/OSX (Supported, but no build scripts provided in this repo)
-- [ ] Linux (In development)
 - [ ] Android (Coming soon)
 - [ ] iOS (Coming soon)
 - [ ] Web Browsers
