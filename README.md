@@ -31,24 +31,34 @@
 ## Supported Platforms
 
 - [x] Windows
+- [x] Linux (Small font cache fix needed to prevent frequent crashing)
 - [ ] MacOS/OSX (Supported, but no build scripts provided in this repo)
-- [ ] Linux (In development)
 - [ ] Android (Coming soon)
 - [ ] iOS (Coming soon)
 - [ ] Web Browsers
 
-## Usage
+## Building
+
+To download dependencies run
+```bash
+python3 scripts/setup.py
+```
+
+`node-gyp` is needed to build OUI
+```bash
+npm install -g node-gyp
+```
+
+then while in the `OUI-engine` directory:
+```bash
+node-gyp configure
+node-gyp build
+```
+
+This will generate binaries for the library in `build/Release/` or `build/`
 
 
-
-## Contributing
-
-### Building
-
-`python scripts/win_setup.py` to download dependencies (SDL2, GTest, OUI-engine, OUI-runtime)
-
-`python scripts/win_build.py` to build to `./bin` folder (This will run setup if it has not been done)
-
+<!--
 ### Running tests
 
 `python scripts/win_test.py [project|test_suite] [test_suite]` To run tests
@@ -64,3 +74,4 @@ Examples:
 `python scripts/win_test.py engine ParserState`
 
 `python scripts/win_test.py ParserState`
+-->

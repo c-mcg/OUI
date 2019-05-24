@@ -11,6 +11,7 @@ namespace oui {
         public: static Style* defaultStyle;
         public: static Style* getDefaultButtonStyle();
 
+        private: std::u16string link;
         private: std::u16string imageString;
         private: Image* image;
         private: bool loadImg;
