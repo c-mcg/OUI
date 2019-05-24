@@ -3,20 +3,7 @@
         'SDL2_WIN_PATH': '<(PRODUCT_DIR)/../../lib/windows'
     },
     'includes': [],
-    'target_defaults': {},
-    'targets': [
-      {
-        'target_name': 'OUI',
-        'type': '<(library)',
-        # 'dependencies': [],
-        # 'defines': [],
-        'include_dirs': [
-          'include/',
-        ],
-        'sources': [
-          'source/**/*.cpp',
-        ],
-
+    'target_defaults': {
         'conditions': [
             # ['OS=="mac"', {
             #     'libraries': ['lib/OUI-engine/bin/mac/libOUI.so']
