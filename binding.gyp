@@ -37,6 +37,31 @@
                 ],
             }],
         ],
+    },
+    'targets': [
+      {
+        'target_name': 'OUI',
+        'type': '<(library)',
+        # 'dependencies': [],
+        # 'defines': [],
+        'include_dirs': [
+          'include/',
+        ],
+        'sources': [
+          'source/**/*.cpp',
+        ],
+      },
+      {
+        'target_name': 'OUI-tests-unit',
+        'type': 'executable',
+        'dependencies': ["OUI"],
+        'include_dirs': [
+          'include/',
+          'tests/',
+        ],
+        'sources': [
+          'tests/unit/**/*.cpp',
+        ],
       },
     ],
   }
