@@ -110,6 +110,7 @@ namespace oui {
 
         public: OUI_API void close();
         public: OUI_API void setVisible(bool visible);
+        public: OUI_API void setPage(std::u16string path);
         public: OUI_API virtual Window* getWindow() override;
 
         // Abstract methods

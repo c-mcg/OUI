@@ -9,6 +9,7 @@
 #include "oui/comp/OUI_ScrollPanel.h"
 #include "util/OUI_StringUtil.h"
 #include "os/OUI_OS.h"
+#include "oui/comp/OUI_ComponentLoader.h"
 
 
 #ifdef _DEBUG
@@ -597,6 +598,14 @@ void oui::Window::setVisible(bool visible) {
     }
 
     setAttribute("visible", true);
+}
+
+
+void oui::Window::setPage(std::u16string path) {
+	oui::ComponentLoader cl;
+	cl.loadComponents(path);
+	this->removeAllChildren();
+	this->addChild(cl.toPanel());
 }
 
 void oui::Window::minimize() {

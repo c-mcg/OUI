@@ -68,6 +68,12 @@ oui::Button::~Button() {
 oui::Button::Button(const std::string& name, const std::string& classes) : 
     centerText{false}, loadImg{false}, font{NULL}, image{NULL},
     Component("button", name, classes) {
+        addEventListener(Event::CLICKED, [this](MouseEvent e, Component* b) {
+		if (this->window == NULL || this->link.compare(u"") == 0) {
+			return;
+		}
+		this->window->setPage(this->link);
+	});
 }
 
 void oui::Button::setProfile(const std::u16string& profileName) {
@@ -76,20 +82,23 @@ void oui::Button::setProfile(const std::u16string& profileName) {
     AttributeProfile* profile = style->getProfile(profileName);
     if (profile != NULL) {
 
-        //Image
+        // Image
         imageString = profile->getString("image");
 
-        //Text
+        // Text
         text = profile->getString("text");
 
-        //Font
+        // Font
         font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), window);
 
-        //Text-color
+        // Text-color
         textColor = Color(profile->getInt("text-color-r"), profile->getInt("text-color-g"), profile->getInt("text-color-b"), profile->getInt("text-color-a"));
 
-        //Center-text
+        // Center-text
         centerText = profile->getBool("center-text");
+
+        // Page Link
+        link = profile->getString("link");
 
     }
 }
