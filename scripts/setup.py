@@ -1,10 +1,7 @@
-import os, subprocess, platform
+import platform, os
 import common, file_util
 
-common.check_requests_package()
-import requests
-
-WIN_LIB_SDL2_INFO = [
+LIB_INFO = [
     {
         'extract_path': '{}/SDL2'.format(common.WINDOWS_LIB_PATH),
         'inner_folder': 'SDL2-2.0.9',
@@ -26,31 +23,46 @@ WIN_LIB_SDL2_INFO = [
     }
 ]
 
-GTEST_LIB_INFO = {
+GTEST_DOWNLOAD_INFO = {
     'extract_path': '{}/gtest'.format(common.LIB_PATH),
     'inner_folder': 'googletest-release-1.8.1',
     'url': "https://github.com/google/googletest/archive/release-1.8.1.zip",
     'hash': '927827c183d01734cc5cfef85e0ff3f5a92ffe6188e0d18e909c5efebf28a0c7'
 }
 
-
 def download_gtest():
-    common.log("Downloading Google Test")
-    file_util.download_and_unzip(GTEST_LIB_INFO)
+    if not os.path.isdir("{}/gtest".format(common.LIB_PATH)):
+        file_util.download_and_unzip(GTEST_DOWNLOAD_INFO)
 
-def download_sdl_win_binaries():
-    common.log("Downloading SDL binaries")
-    for lib_info in WIN_LIB_SDL2_INFO:
-        file_util.download_and_unzip(lib_info)
+def setup_windows():
+    print("Downloading SDL binaries")
+    for binary_info in LIB_INFO:
+        file_util.download_and_unzip(binary_info)
+
+def setup_linux():
+    common.exec([
+        'sudo',
+        'apt-get',
+        'install',
+        'libsdl2-2.0',
+        'libsdl2-dev',
+        'libsdl2-image-2.0-0',
+        'libsdl2-image-dev',
+        'libsdl2-ttf-2.0-0',
+        'libsdl2-ttf-dev'
+    ])
+
+def setup_osx():
+    pass
 
 def setup():
+    download_gtest()
+
     os_name = platform.system()
-
-    if not os.path.isdir("{}/gtest".format(common.LIB_PATH)):
-        download_gtest()
-
-    if os_name == "Windows" and not os.path.isdir(common.WINDOWS_LIB_PATH):
-        download_sdl_win_binaries()
+    if os_name == "Windows":
+        setup_windows()
+    elif os_name == "Linux":
+        setup_linux()
 
     common.cleanup()
 
