@@ -7,12 +7,15 @@ elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif()
 
 set(CMAKE_CXX_STANDARD 17)
-
 cmake_minimum_required (VERSION 3.14.0)
 
 project(OUI)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+set(SDL2_PATH lib/windows/SDL2)
+set(SDL2_IMAGE_PATH lib/windows/SDL2_image)
+set(SDL2_TTF_PATH lib/windows/SDL2_ttf)
 
 file(GLOB_RECURSE OUI_src
     "source/*.cpp"
