@@ -1,7 +1,7 @@
 #ifndef OUI_MENUBAR_H
 #define OUI_MENUBAR_H
 
-#include "comp/OUI_Container.h"
+#include "components/OUI_Container.h"
 
 namespace oui {
 

@@ -1,5 +1,5 @@
 
-#include "comp/OUI_DrawablePanel.h"
+#include "components/OUI_DrawablePanel.h"
 #include "OUI.h"//TODO this was for testing
 
 oui::DrawablePanel::~DrawablePanel() {

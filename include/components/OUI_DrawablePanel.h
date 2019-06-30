@@ -2,7 +2,7 @@
 #define OUI_DRAWABLEPANEL_H
 
 #include "OUI_Export.h"
-#include "comp/OUI_Container.h"
+#include "components/OUI_Container.h"
 
 namespace oui {
 

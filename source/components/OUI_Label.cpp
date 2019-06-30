@@ -1,5 +1,5 @@
 
-#include "comp/OUI_Label.h"
+#include "components/OUI_Label.h"
 #include "util/OUI_StringUtil.h"
 
 oui::Label::~Label() {

@@ -1,5 +1,5 @@
 
-#include "comp/OUI_Panel.h"
+#include "components/OUI_Panel.h"
 
 oui::Panel::~Panel() {
 

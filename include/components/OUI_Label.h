@@ -2,7 +2,7 @@
 #define OUI_LABEL_H
 
 #include "OUI_Export.h"
-#include "comp/OUI_Component.h"
+#include "components/OUI_Component.h"
 
 namespace oui {
 

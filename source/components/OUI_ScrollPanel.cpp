@@ -1,7 +1,7 @@
 #include "OUI_Window.h"
-#include "comp/OUI_Container.h"
-#include "comp/OUI_ScrollPanel.h"
-#include "comp/OUI_Button.h"
+#include "components/OUI_Container.h"
+#include "components/OUI_ScrollPanel.h"
+#include "components/OUI_Button.h"
 #include "util/OUI_StringUtil.h"
 
 oui::ScrollPanel::~ScrollPanel() {

@@ -3,11 +3,11 @@
 
 #include "OUI_Export.h"
 #include "gfx/OUI_Graphics.h"
-#include "comp/OUI_Container.h"
+#include "components/OUI_Container.h"
 #include "event/OUI_Event.h"
-#include "comp/OUI_Button.h"
-#include "comp/OUI_Panel.h"
-#include "comp/OUI_Label.h"
+#include "components/OUI_Button.h"
+#include "components/OUI_Panel.h"
+#include "components/OUI_Label.h"
 #include "event/OUI_EditEvent.h"
 #include <stdint.h>
 

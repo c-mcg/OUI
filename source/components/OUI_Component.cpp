@@ -1,4 +1,4 @@
-#include "comp/OUI_Component.h"
+#include "components/OUI_Component.h"
 #include <sstream>
 #include "OUI_Window.h"
 #include "OUI.h"

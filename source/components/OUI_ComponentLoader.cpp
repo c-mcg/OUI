@@ -1,13 +1,13 @@
 
 #include "osal/OSAL.h"
-#include "comp/OUI_ComponentLoader.h"
-#include "comp/OUI_DrawablePanel.h"
-#include "comp/OUI_Button.h"
-#include "comp/OUI_TextField.h"
-#include "comp/OUI_Menu.h"
-#include "comp/OUI_Panel.h"
-#include "comp/OUI_Label.h"
-#include "comp/OUI_ScrollPanel.h"
+#include "components/OUI_ComponentLoader.h"
+#include "components/OUI_DrawablePanel.h"
+#include "components/OUI_Button.h"
+#include "components/OUI_TextField.h"
+#include "components/OUI_Menu.h"
+#include "components/OUI_Panel.h"
+#include "components/OUI_Label.h"
+#include "components/OUI_ScrollPanel.h"
 
 #include "util/OUI_StringUtil.h"
 

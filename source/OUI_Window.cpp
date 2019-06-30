@@ -5,11 +5,11 @@
 #include <iostream>
 #include <math.h>
 #include "OUI_Constants.h"
-#include "comp/OUI_Menu.h"
-#include "comp/OUI_ScrollPanel.h"
+#include "components/OUI_Menu.h"
+#include "components/OUI_ScrollPanel.h"
 #include "util/OUI_StringUtil.h"
 #include "os/OUI_OS.h"
-#include "comp/OUI_ComponentLoader.h"
+#include "components/OUI_ComponentLoader.h"
 
 
 #ifdef _DEBUG

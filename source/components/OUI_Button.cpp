@@ -1,6 +1,6 @@
 #include "OUI_Window.h"
-#include "comp/OUI_Container.h"
-#include "comp/OUI_Button.h"
+#include "components/OUI_Container.h"
+#include "components/OUI_Button.h"
 #include <iostream>
 #include <sstream>
 #include "OUI_Constants.h"
