@@ -3,7 +3,7 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <thread>
-#include "oui/attribute/OUI_AttributeSubstitution.h"
+#include "attribute/OUI_AttributeSubstitution.h"
 #include "os/OUI_OS.h"
 
 #ifdef __linux__//LINUX

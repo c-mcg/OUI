@@ -2,7 +2,7 @@
 #include "sdl2/OUI_SDL_Font.h"
 #include <SDL_ttf.h>
 #include <iostream>
-#include "oui/OUI_Window.h"
+#include "OUI_Window.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

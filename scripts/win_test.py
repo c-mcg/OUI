@@ -20,11 +20,11 @@ def test():
 
     if option is "" or option == "engine":
         print("\nRunning OUI engine tests")
-        common.exec(['bin\\Test-OUI-engine.exe', suite])
+        common.exec(['bin/windows/Test-OUI-engine.exe', suite])
 
     if option is "" or option == "runtime":
         print("\nRunning OUI runtime tests")
-        common.exec(['bin\\Test-OUI-runtime.exe', suite])
+        common.exec(['bin/windowsTest-OUI-runtime.exe', suite])
     
 if __name__ == "__main__":
     test()

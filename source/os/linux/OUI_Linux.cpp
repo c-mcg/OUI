@@ -2,7 +2,7 @@
 #if defined __linux
 
 #include "os/linux/OUI_Linux.h"
-#include "oui/OUI_Window.h"
+#include "OUI_Window.h"
 
 oui::LinuxOS::LinuxOS() : OperatingSystem() {
 

@@ -1,6 +1,6 @@
 
 #include "sdl2/OUI_SDL_Graphics.h"
-#include "oui/OUI_Window.h"
+#include "OUI_Window.h"
 #include "sdl2/OUI_SDL_Image.h"
 #include "sdl2/OUI_SDL_Font.h"
 #include "util/OUI_StringUtil.h"

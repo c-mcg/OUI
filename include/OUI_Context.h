@@ -2,7 +2,7 @@
 #define OUI_CONTEXT_H
 
 #include "OUI_Export.h"
-#include "oui/OUI_Window.h"
+#include "OUI_Window.h"
 #include <vector>
 
 namespace oui {

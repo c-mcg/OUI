@@ -1,7 +1,7 @@
 #ifndef OUI_SDL_FONT_H
 #define OUI_SDL_FONT_H
 
-#include "oui/gfx/OUI_Font.h"
+#include "gfx/OUI_Font.h"
 
 #include <unordered_map>
 

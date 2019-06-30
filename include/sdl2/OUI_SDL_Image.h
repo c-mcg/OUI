@@ -1,7 +1,7 @@
 #ifndef OUI_SDL_IMAGE_H
 #define OUI_SDL_IMAGE_H
 
-#include "oui/gfx/OUI_Image.h"
+#include "gfx/OUI_Image.h"
 
 
 struct SDL_Texture;
