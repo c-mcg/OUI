@@ -1,7 +1,9 @@
+#include "components/OUI_ScrollPanel.h"
+
 #include "OUI_Window.h"
 #include "components/OUI_Container.h"
-#include "components/OUI_ScrollPanel.h"
 #include "components/OUI_Button.h"
+#include "event/OUI_ScrollEvent.h"
 #include "util/OUI_StringUtil.h"
 
 oui::ScrollPanel::~ScrollPanel() {
@@ -35,11 +37,12 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->parseAttribute("bg-color", u"230 230 230 255");
     scrollBar->setAttribute("z-index", 10);
 
-    scrollBar->addEventListener(Event::MOUSE_WHEEL, [this, vertical](ScrollEvent e, Component* c) {
+    scrollBar->addEventListener("scroll", [this, vertical](ComponentEvent* compEvent) {
+        ScrollEvent* event = (ScrollEvent*) compEvent;
         if (vertical) {
-            scrollY(e.getScroll() * SCROLL_WHEEL_SPEED);
+            scrollY(event->scrollDistance * SCROLL_WHEEL_SPEED);
         } else {
-            scrollX(e.getScroll() * SCROLL_WHEEL_SPEED);
+            scrollX(event->scrollDistance * SCROLL_WHEEL_SPEED);
         }
     });
 
@@ -54,7 +57,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     button1->setAttribute("image", vertical ? "up-arrow.png" : "left-arrow.png");
     button1->parseAttribute("bg-color", u"190 190 190 255", u"hover");
 
-    button1->addEventListener(Event::CLICKED, [this, vertical](MouseEvent e, Component* b) {
+    button1->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
             scrollY(SCROLL_BUTTON_SPEED);
         } else {
@@ -79,7 +82,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     button2->setAttribute("image", vertical ? "down-arrow.png" : "right-arrow.png");
     button2->parseAttribute("bg-color", u"190 190 190 255", u"hover");
 
-    button2->addEventListener(Event::CLICKED, [this, vertical](MouseEvent e, Component* b) {
+    button2->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
             scrollY(-SCROLL_BUTTON_SPEED);
         } else {
@@ -104,18 +107,20 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     bar->parseAttribute("bg-color", u"160 160 160 255", u"hover");
     bar->setAttribute("border-style", u"none");
 
-    bar->addEventListener(Event::MOUSE_DOWN, [this, vertical](MouseEvent e, Component* c) {
+    bar->addEventListener("mousedown", [this, vertical](ComponentEvent* compEvent) {
+        MouseEvent* event = (MouseEvent*) compEvent;
+        auto comp = event->getTarget();
         scrollingY = vertical;
         scrollingX = !vertical;
         if (vertical) {
-            clickStartY = c->getMouseY();
+            clickStartY = event->localY;
         } else {
-            clickStartX = c->getMouseX();
+            clickStartX = event->localX;
         }
-        c->flagGraphicsUpdate();
+        comp->flagGraphicsUpdate();
     });
 
-    bar->addEventListener(Event::MOUSE_UP, [this, vertical](MouseEvent e, Component* c) {
+    bar->addEventListener("mousedown", [this, vertical](ComponentEvent* e) {
         scrollingX = false;
         scrollingY = false;
     });
@@ -123,6 +128,8 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->addChild(bar);
 
     addScrollBar(scrollBar);
+
+    addEventListener("scroll", std::bind(&ScrollPanel::onScroll, this, std::placeholders::_1));
 }
 
 void oui::ScrollPanel::getChildSize(int* w, int* h) {
@@ -143,13 +150,9 @@ void oui::ScrollPanel::getChildSize(int* w, int* h) {
     *h = boundsY;
 }
 
-void oui::ScrollPanel::handleEvent(Event& e) {
-    Component::handleEvent(e);
-
-    if (e.isScrollEvent()) {
-        ScrollEvent scrollEvt = (ScrollEvent&) e;
-        scrollY(scrollEvt.getScroll() * SCROLL_WHEEL_SPEED);
-    }
+void oui::ScrollPanel::onScroll(ComponentEvent* e) {
+    ScrollEvent* scrollEvt = (ScrollEvent*) e;
+    scrollY(scrollEvt->scrollDistance * SCROLL_WHEEL_SPEED);
 }
 
 bool oui::ScrollPanel::addScrollBar(Container* scrollbar) {

@@ -5,6 +5,9 @@
 #include "sdl2/OUI_SDL_Graphics.h"
 #include "OUI_KeyCodes.h"
 
+#include "event/OUI_ScrollEvent.h"
+#include "event/OUI_KeyboardEvent.h"
+
 oui::SDLWindow::~SDLWindow() {
     SDL_DestroyWindow(baseWindow);
     SDL_DestroyRenderer(renderer);
@@ -83,13 +86,11 @@ bool oui::SDLWindow::setCursor(int cursor) {
     this->baseCursor = baseCursor;
     return true;
 }
-void oui::SDLWindow::minimize() {
-    std::cout << "Window minimized" << std::endl;
-    Window::minimize();
+void oui::SDLWindow::onMinimize(ComponentEvent* event) {
     SDL_MinimizeWindow(baseWindow);
 }
-void oui::SDLWindow::maximize() {
-    Window::maximize();
+void oui::SDLWindow::onMaximize(ComponentEvent* event) {
+    SDL_MaximizeWindow(baseWindow);
 }
 
 void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
@@ -137,7 +138,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
                 flagGraphicsUpdateAll();
                 break;
             case SDL_WINDOWEVENT_CLOSE:
-                close();
+                onSystemClose();
                 break;
                 #if SDL_VERSION_ATLEAST(2, 0, 5)
             case SDL_WINDOWEVENT_TAKE_FOCUS:
@@ -159,16 +160,36 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
 
     //TODO native text events: https://wiki.libsdl.org/SDL_TextInputEvent
 
+    if (event->type == SDL_MOUSEMOTION && (event->motion.windowID == baseWindowId || focused)) {
+        MouseEvent* mouseEvent = new MouseEvent("mousemove", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->motion.x, event->motion.x);
+        onSystemMouseMove(mouseEvent);
+        delete mouseEvent;
+    }
+
     if (event->type == SDL_MOUSEBUTTONUP && event->button.windowID == baseWindowId) {
-        handleMouseUpEvent(MouseEvent(Event::MOUSE_UP, event->button.x, event->button.y, globalMouseX, globalMouseY, event->button.button));
+        auto it =  std::find(mouseButtonsDown.begin(), mouseButtonsDown.end(), event->button.button);
+        if (it != mouseButtonsDown.end()) {
+            mouseButtonsDown.erase(it);
+        }
+
+        MouseEvent* mouseEvent = new MouseEvent("mouseup", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
+        onSystemMouseUp(mouseEvent);
+        delete mouseEvent;
+
+        lastMouseX = event->button.x;
+        lastMouseY = event->button.y;
     }
 
     if (event->type == SDL_MOUSEBUTTONDOWN && (event->button.windowID == baseWindowId || focused)) {
-        handleMouseDownEvent(MouseEvent(Event::MOUSE_DOWN, event->button.x, event->button.y, globalMouseX, globalMouseY, event->button.button));
-    }
-
-    if (event->type == SDL_MOUSEMOTION && (event->motion.windowID == baseWindowId || focused)) {
-        handleMouseMoveEvent(MouseEvent(Event::MOUSE_MOVE, event->motion.x, event->motion.y, globalMouseX, globalMouseY));
+        auto it = std::find(mouseButtonsDown.begin(), mouseButtonsDown.end(), event->button.button);
+        if (it == mouseButtonsDown.end()) {
+            mouseButtonsDown.push_back(event->button.button);
+        }
+        MouseEvent* mouseEvent = new MouseEvent("mousedown", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
+        onSystemMouseDown(mouseEvent);
+        delete mouseEvent;
+        lastMouseX = event->button.x;
+        lastMouseY = event->button.y;
     }
 
     if (event->type == SDL_FINGERDOWN) {
@@ -180,77 +201,77 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
     }
 
     if (event->type == SDL_MOUSEWHEEL && (event->wheel.windowID == baseWindowId || focused)) {
-        ScrollEvent e = ScrollEvent(event->wheel.y);
-        Component* c = getComponentAt(mouseX, mouseY);
-
-        c->handleEvent(e);
-        if (!c->compareTag("scrollpanel") && !c->compareTag("scrollbar")) {
-            Component* parent = c->getParent();
-            while (parent != NULL) {
-                if (parent->compareTag("scrollpanel") || parent->compareTag("scrollbar")) {
-                    parent->handleEvent(e);
-                    break;
-                }
-                parent = parent->getParent();
-            }
-        }
+        ScrollEvent* scrollEvent = new ScrollEvent(true, NULL, false, mouseButtonsDown, 0, 0, false, false, 0, 0, globalMouseX, globalMouseY, false, getMouseX(), getMouseY(), event->wheel.y);
+        onSystemScrollWheel(scrollEvent);
+        delete scrollEvent;
     }
 
     if (event->type == SDL_KEYDOWN && (event->key.windowID == baseWindowId || focused)) {
         int code = event->key.keysym.sym;
-        if (code == KEY_CONTROL_LEFT || code == KEY_CONTROL_RIGHT) {
-            ctrlDown = true;
-        }
-        if (code == KEY_SHIFT_LEFT || code == KEY_SHIFT_RIGHT) {
-            shiftDown = true;
-        }
-        if (code == KEY_ALT_LEFT || code == KEY_ALT_RIGHT) {
-            altDown = true;
+        switch(code) {
+            case KEY_CONTROL_LEFT:
+            case KEY_CONTROL_RIGHT:
+                ctrlDown = true;
+                break;
+
+            case KEY_SHIFT_LEFT:
+            case KEY_SHIFT_RIGHT:
+                shiftDown = true;
+                break;
+
+            case KEY_ALT_LEFT:
+            case KEY_ALT_RIGHT:
+                altDown = true;
+                break;
+
+            case KEY_META:
+                metaDown = true;
+                break;
         }
 
-        if (code == KEY_Z && ctrlDown) {
-            undo();
-        } else if (code == KEY_Y && ctrlDown) {
-            redo();
-        } else {
-            Component* c = getSelectedComponent();
-            if (c != NULL) {
-                KeyEvent e = KeyEvent(Event::KEY_TYPED, code, getChar(code, isShiftDown()));
-
-                c->handleEvent(e);
-
-                Container* parent = c->getParent();
-                while (parent != NULL) {
-                    parent->handleEvent(e);
-                    parent = parent->getParent();
-                }
-            }
-        }
+        KeyboardEvent* keyboardEvent = new KeyboardEvent("keydown", true, NULL, false, false, false, false, code);
+        onSystemKeyDown(keyboardEvent);
+        delete keyboardEvent;
     }
     if (event->type == SDL_KEYUP && (event->key.windowID == baseWindowId || focused)) {
         int code = event->key.keysym.sym;
-        if (code == KEY_CONTROL_LEFT || code == KEY_CONTROL_RIGHT) {
-            ctrlDown = false;
-        }
-        if (code == KEY_SHIFT_LEFT || code == KEY_SHIFT_RIGHT) {
-            shiftDown = false;
-        }
-        if (code == KEY_ALT_LEFT || code == KEY_ALT_RIGHT) {
-            altDown = false;
+        switch(code) {
+            case KEY_CONTROL_LEFT:
+            case KEY_CONTROL_RIGHT:
+                ctrlDown = false;
+                break;
+
+            case KEY_SHIFT_LEFT:
+            case KEY_SHIFT_RIGHT:
+                shiftDown = false;
+                break;
+
+            case KEY_ALT_LEFT:
+            case KEY_ALT_RIGHT:
+                altDown = false;
+                break;
+
+            case KEY_META:
+                metaDown = true;
+                break;
         }
 
-        Component* c = getSelectedComponent();
-        if (c != NULL) {
-            KeyEvent e = KeyEvent(Event::KEY_UP, code, getChar(code, isShiftDown()));
-
-            c->handleEvent(e);
-
-            Container* parent = c->getParent();
-            while (parent != NULL) {
-                parent->handleEvent(e);
-                parent = parent->getParent();
-            }
-        }
+        KeyboardEvent* keyboardEvent = new KeyboardEvent("keyup", true, NULL, false, false, false, false, code);
+        onSystemKeyUp(keyboardEvent);
+        delete keyboardEvent;
     }
     
+}
+
+bool oui::SDLWindow::isAltDown() {
+    return altDown;
+}
+bool oui::SDLWindow::isCtrlDown() {
+    return ctrlDown;
+}
+bool oui::SDLWindow::isMetaDown() {
+    return metaDown;
+}
+bool oui::SDLWindow::isShiftDown() {
+    return shiftDown;
 }

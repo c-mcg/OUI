@@ -15,6 +15,9 @@ namespace oui {
         public: OUI_API static const int SCROLL_WHEEL_SPEED = 10;//100 for scroll wheel previously
         public: OUI_API static const int SCROLL_BUTTON_SPEED = 40;
 
+        private:
+            void onScroll(ComponentEvent* e);
+
         private: bool scrollingX, scrollingY;
         private: bool resetX, resetY;
         private: int scrollPosX, scrollPosY;
@@ -36,7 +39,6 @@ namespace oui {
         public: OUI_API void removeAllChildren(bool shouldDelete = false) override;
 
         public: OUI_API void setProfile(const std::u16string& profile) override;
-        public: OUI_API void handleEvent(Event& e) override;
         public: OUI_API int process() override;
         public: OUI_API void redraw() override;
         private: void resize();

@@ -4,11 +4,12 @@
 #include "OUI_Style.h"
 
 namespace oui {
+    typedef OSAL::Element::Type ElementType;
+
 
     //This class represents a complete style sheet that can represent multiple elements with profiles
     //This class is used to store a loaded style sheet, ready to be applied to elements
     class StyleSheet {
-        typedef OSAL::Element::Type ElementType;
 
         //The lists of elements, organized by type
         private: std::unordered_map<std::string, Style*> tags;

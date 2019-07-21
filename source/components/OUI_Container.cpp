@@ -18,7 +18,8 @@ oui::Container::~Container() {
     }
 }
 
-oui::Container::Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing) : Component(tag, name, classes, needsProcessing) {
+oui::Container::Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing, EventDispatcher* eventDispatcher) :
+    Component(tag, name, classes, needsProcessing, eventDispatcher) {
     this->styleSheet = NULL;
 }
 

@@ -71,7 +71,7 @@ oui::Component::~Component() {
     delete graphics;
 }
 
-oui::Component::Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing) : 
+oui::Component::Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing, EventDispatcher* eventDispatcher) : 
     tag{tag}, name{name}, needsProcessing{needsProcessing},
     window{NULL}, graphics{NULL}, parent{NULL},
     x{0}, y{0}, z{0}, screenX{0}, screenY{0}, xPercent{0}, xOffset{0}, yPercent{0}, yOffset{0}, scrollOffsetX{0}, scrollOffsetY{0},
@@ -79,8 +79,10 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     visible{true}, profileUpdate{false}, graphicsUpdate{true}, currentProfileName{u"default"},
     hovered{false}, selected{false}, mouseDown{false}, interactable{false},
     cursor{CURSOR_DEFAULT}, mouseX{0}, mouseY{0},
-	opacity{255}, centeredX{false}, centeredY{false}, borderWidth{0}, borderStyle{BORDER_NONE} 
+	opacity{255}, centeredX{false}, centeredY{false}, borderWidth{0}, borderStyle{BORDER_NONE},
+    eventDispatcher{eventDispatcher}
 {
+    eventDispatcher->setTarget(this);
 
     this->classes = std::vector<std::string>();
     std::istringstream iss(classes.c_str());
@@ -100,6 +102,14 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     style->getOrCreateProfile(u"hover")->componentName = this->name + ":hover";
 
     this->currentProfile = style->getProfile(u"default");
+}
+
+void oui::Component::addEventListener(std::string type, EventHandler handler) {
+    eventDispatcher->addEventListener(type, handler);
+}
+
+void oui::Component::addSystemEventListener(std::string type, EventHandler handler) {
+    eventDispatcher->addSystemEventListener(type, handler);
 }
 
 oui::Attribute oui::Component::getAttribute(const std::string& name, Attribute defaultVal) {
@@ -130,6 +140,10 @@ void oui::Component::redraw() {
     }
 }
 
+oui::EventDispatcher* oui::Component::getEventDispatcher() {
+    return eventDispatcher;
+}
+
 void oui::Component::drawBorder() {
     if(borderStyle != BORDER_NONE) {
         if(borderStyle == BORDER_SOLID) {
@@ -155,9 +169,6 @@ void oui::Component::addedToContainer(Container* parent) {
 
     hoverProfile->addDefaultProfile(defaultProfile);
 
-    
-    
-
     window = (Window*) (parent->isWindow() ? parent : parent->window);
     this->parent = parent;
     createStyle();
@@ -174,106 +185,6 @@ void oui::Component::addedToContainer(Container* parent) {
 }
 
 /* END OF PROCESSING */
-
-
-/* START OF EVENTS */
-
-void oui::Component::handleEvent(Event& e) {
-
-    if (e.isMouseEvent()) {
-        MouseEvent& mouseEvt = (MouseEvent&) e;
-
-        mouseX = mouseEvt.getX();
-        mouseY = mouseEvt.getY();
-        int globalMouseX = mouseEvt.getX();
-        int globalMouseY = mouseEvt.getY();
-
-        auto it = mouseEventHandlers.find(e.type);
-
-        if (it != mouseEventHandlers.end()) {
-
-            auto handlers = it->second;
-
-            for (auto it2 = handlers.begin(); it2 != handlers.end(); it2++) {
-                (*it2)(mouseEvt, this);
-            }
-        }
-
-        if (parent != NULL) {
-            int newX = mouseX + getX();
-            int newY = mouseY + getY();
-            MouseEvent newEvent = MouseEvent(mouseEvt.type, newX, newY, globalMouseX, globalMouseY);
-            parent->handleEvent(newEvent);
-        }
-    } else if (e.isMenuEvent()) {
-
-        MenuEvent& menuEvt = (MenuEvent&) e;
-
-#ifdef _DEBUG
-        if (menuEvt.getOption() == u"Inspect") {
-            //Inspector::showInspector(this, this->window);
-        }
-#endif
-
-        for (auto it = menuEventHandlers.begin(); it != menuEventHandlers.end(); it++) {
-            (*it)(menuEvt, this);
-        }
-
-    } else if (e.isScrollEvent()) {
-
-        ScrollEvent& scrollEvt = (ScrollEvent&) e;
-
-        for (auto it = scrollEventHandlers.begin(); it != scrollEventHandlers.end(); it++) {
-            (*it)(scrollEvt, this);
-        }
-
-    } else if (e.isWindowEvent()) {
-        WindowEvent& windowEvt = (WindowEvent&) e;
-
-        auto it = windowEventHandlers.find(e.type);
-
-        if (it != windowEventHandlers.end()) {
-
-            auto handlers = it->second;
-
-            for (auto it2 = handlers.begin(); it2 != handlers.end(); it2++) {
-                (*it2)(windowEvt, this);
-            }
-        }
-    } else if (e.isKeyEvent()) {
-        KeyEvent& keyEvt = (KeyEvent&) e;
-
-        auto it = keyEventHandlers.find(e.type);
-
-        if (it != keyEventHandlers.end()) {
-
-            auto handlers = it->second;
-
-            for (auto it2 = handlers.begin(); it2 != handlers.end(); it2++) {
-                (*it2)(keyEvt, this);
-            }
-        }
-    }
-
-}
-
-void oui::Component::addEventListener(char type, std::function<void(MouseEvent, Component*)> handler) {
-    mouseEventHandlers[type].push_back(handler);
-}
-void oui::Component::addEventListener(char type, std::function<void(KeyEvent, Component*)> handler) {
-    keyEventHandlers[type].push_back(handler);
-}
-void oui::Component::addEventListener(char type, std::function<void(WindowEvent, Component*)> handler) {
-    windowEventHandlers[type].push_back(handler);
-}
-void oui::Component::addEventListener(char type, std::function<void(ScrollEvent, Component*)> handler) {
-    scrollEventHandlers.push_back(handler);
-}
-void oui::Component::addEventListener(char type, std::function<void(MenuEvent, Component*)> handler) {
-    menuEventHandlers.push_back(handler);
-}
-
-/* END OF EVENTS */
 
 /* START OF USAGE FUNCTIONS */
 

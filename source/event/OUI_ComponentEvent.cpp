@@ -3,8 +3,8 @@
 #include "event/OUI_ComponentEvent.h"
 #include "components/OUI_Component.h"
 
-oui::ComponentEvent::ComponentEvent(Component* originalTarget, std::string type, std::size_t typeHash,  bool bubbles)
-    : Event2(type, typeHash), originalTarget{originalTarget}, target{originalTarget}, bubbles{bubbles}, propagationStopped{false} {
+oui::ComponentEvent::ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, std::size_t typeHash,  bool bubbles)
+    : Event(eventClass, type, typeHash), originalTarget{originalTarget}, target{originalTarget}, bubbles{bubbles}, propagationStopped{false} {
 }
 
 void oui::ComponentEvent::stopPropagation() {

@@ -6,6 +6,8 @@
 #include "OUI_Window.h"
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
+#include "event/OUI_KeyboardEvent.h"
+#include "event/OUI_MenuEvent.h"
 
 oui::TextField::~TextField() {
     font = NULL;
@@ -38,12 +40,13 @@ void oui::TextField::addedToContainer(Container* parent) {
     Component::addedToContainer(parent);
     
     if (window != NULL) {
-        window->addEventListener(Event::MOUSE_UP, [this](MouseEvent e, Component* c) {
+        window->addEventListener("mouseup", [this](ComponentEvent* e) {
             this->highlighting = false;
         });
-        window->addEventListener(Event::MOUSE_MOVE, [this](MouseEvent e, Component* c) {
+        window->addEventListener("mousemove", [this](ComponentEvent* compEvent) {
+            MouseEvent* event = (MouseEvent*) compEvent;
             if (this->highlighting) {
-                setCaratIndex(getIndexAt(e.getGlobalX() - this->getScreenX()));
+                setCaratIndex(getIndexAt(event->localX));
             }
         });
     }
@@ -126,12 +129,9 @@ void oui::TextField::redraw() {
     drawBorder();
 }
 
-void oui::TextField::handleEvent(Event& e) {
-
-    if (e.isMenuEvent()) {
-
-        MenuEvent& menuE = (MenuEvent&) e;
-        std::u16string option = menuE.getOption();
+void oui::TextField::onMenuOption(ComponentEvent* compEvent) {
+		MenuEvent* event = (MenuEvent*) compEvent;
+		std::u16string option = event->option;
         if (option == u"Cut") {
             if (caratIndex != selectStart) {
                 EditEvent* e = new EditEvent(getUndoEvent(), [this] {
@@ -164,112 +164,103 @@ void oui::TextField::handleEvent(Event& e) {
                 ((Window*) window)->addEditEvent(e);
             }
         }
+}
 
-    } else if (e.isMouseEvent()) {
-
-        MouseEvent& mouseEvt = (MouseEvent&) e;
-        int evtX = mouseEvt.getX();
-
-        if (e.type == e.MOUSE_DOWN) {
-            caratVisible = true;
-            selectStart = 0;
-            setCaratIndex(getIndexAt(evtX));
-            selectStart = caratIndex;
-            highlighting = true;
+void oui::TextField::onMouseDown(ComponentEvent* compEvent) {
+    MouseEvent* event = (MouseEvent*) compEvent;
+    caratVisible = true;
+    selectStart = 0;
+    setCaratIndex(getIndexAt(event->localX));
+    selectStart = caratIndex;
+    highlighting = true;
+}
+void oui::TextField::onMouseUp(ComponentEvent* e) {
+    highlighting = false;
+}
+void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
+    KeyboardEvent* event = (KeyboardEvent*) event;
+    int code = event->key;
+    char character = event->character;
+    if (code == KEY_BACKSPACE) {
+        if (caratIndex != 0 || caratIndex != selectStart) {
+            EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
+                deleteChar(true);
+            }, false, true, this);
+            e->performRedo();
+            ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && !typing && !resetInput);
+            typing = false;
+            resetInput = false;
+            lastInput = currentTimeMillis();
         }
-
-        if (e.type == e.MOUSE_UP) {
-            highlighting = false;
+    } else if (code == KEY_DELETE) {
+        if (caratIndex != text.length() || caratIndex != selectStart) {
+            EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
+                deleteChar(false);
+            }, false, !typing && !resetInput, this);
+            e->performRedo();
+            ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512);
+            typing = false;
+            resetInput = false;
+            lastInput = currentTimeMillis();
         }
-
-    } else if (e.isKeyEvent()) {
-        KeyEvent& keyEvt = (KeyEvent&) e;
-
-        if (e.type == e.KEY_TYPED) {
-            int code = keyEvt.getKeyCode();
-            char character = keyEvt.getKeyChar();;
-            if (code == KEY_BACKSPACE) {
-                if (caratIndex != 0 || caratIndex != selectStart) {
-                    EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                        deleteChar(true);
-                    }, false, true, this);
-                    e->performRedo();
-                    ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && !typing && !resetInput);
-                    typing = false;
-                    resetInput = false;
-                    lastInput = currentTimeMillis();
-                }
-            } else if (code == KEY_DELETE) {
-                if (caratIndex != text.length() || caratIndex != selectStart) {
-                    EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                        deleteChar(false);
-                    }, false, !typing && !resetInput, this);
-                    e->performRedo();
-                    ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512);
-                    typing = false;
-                    resetInput = false;
-                    lastInput = currentTimeMillis();
-                }
-            } else if (code == KEY_LEFT) {
-                if (caratIndex != 0 || caratIndex != selectStart) {
-                    moveCarat(false);
-                }
-                resetInput = true;
-            } else if (code == KEY_RIGHT) {
-                if (caratIndex != text.length() || caratIndex != selectStart) {
-                    moveCarat(true);
-                }
-                resetInput = true;
-            } else if (window != NULL && ((Window*) window)->isCtrlDown()) {
-                if (code == KEY_C) {
+    } else if (code == KEY_LEFT) {
+        if (caratIndex != 0 || caratIndex != selectStart) {
+            moveCarat(false);
+        }
+        resetInput = true;
+    } else if (code == KEY_RIGHT) {
+        if (caratIndex != text.length() || caratIndex != selectStart) {
+            moveCarat(true);
+        }
+        resetInput = true;
+    } else if (window != NULL && ((Window*) window)->isCtrlDown()) {
+        if (code == KEY_C) {
+            bool reverse = selectStart > caratIndex;
+            int start = reverse ? caratIndex : selectStart;
+            int end = reverse ? selectStart : caratIndex;
+            if (start != end) {
+                ((Window*) window)->setClipboardText(text.substr(start, end));
+            }
+            resetInput = true;
+        }
+        if (code == KEY_X) {
+            if (caratIndex != selectStart) {
+                EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
                     bool reverse = selectStart > caratIndex;
                     int start = reverse ? caratIndex : selectStart;
                     int end = reverse ? selectStart : caratIndex;
-                    if (start != end) {
-                        ((Window*) window)->setClipboardText(text.substr(start, end));
-                    }
-                    resetInput = true;
-                }
-                if (code == KEY_X) {
-                    if (caratIndex != selectStart) {
-                        EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                            bool reverse = selectStart > caratIndex;
-                            int start = reverse ? caratIndex : selectStart;
-                            int end = reverse ? selectStart : caratIndex;
-                            ((Window*) window)->setClipboardText(text.substr(start, end));
-                            deleteChar(true);
-                        });
-                        e->performRedo();
-                        ((Window*) window)->addEditEvent(e);
-                    }
-                    resetInput = true;
-                }
-                if (code == KEY_V) {
-                    if (((Window*) window)->getClipboardText() != u"") {
-                        EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                            insertString(((Window*) window)->getClipboardText());
-                        });
-                        e->performRedo();
-                        ((Window*) window)->addEditEvent(e);
-                    }
-                    resetInput = true;
-                }
-            } else if (character == ' ' && code != KEY_SPACE) {
-                resetInput = true;
-            } else {
-                EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                    insertChar(character);
-                }, false, true, this);
+                    ((Window*) window)->setClipboardText(text.substr(start, end));
+                    deleteChar(true);
+                });
                 e->performRedo();
-                ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && code != KEY_ENTER && typing && !resetInput);
-                lastInput = currentTimeMillis();
-                typing = true;
-                resetInput = false;
+                ((Window*) window)->addEditEvent(e);
             }
+            resetInput = true;
         }
+        if (code == KEY_V) {
+            if (((Window*) window)->getClipboardText() != u"") {
+                EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
+                    insertString(((Window*) window)->getClipboardText());
+                });
+                e->performRedo();
+                ((Window*) window)->addEditEvent(e);
+            }
+            resetInput = true;
+        }
+    } else if (character == ' ' && code != KEY_SPACE) {
+        resetInput = true;
+    } else {
+        EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
+            insertChar(character);
+        }, false, true, this);
+        e->performRedo();
+        ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && code != KEY_ENTER && typing && !resetInput);
+        lastInput = currentTimeMillis();
+        typing = true;
+        resetInput = false;
     }
-    Component::handleEvent(e);
 }
+
 void oui::TextField::setSelected(bool selected) {
     Component::setSelected(selected);
     if (!selected) {

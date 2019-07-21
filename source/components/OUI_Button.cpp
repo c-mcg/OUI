@@ -68,7 +68,7 @@ oui::Button::~Button() {
 oui::Button::Button(const std::string& name, const std::string& classes) : 
     centerText{false}, font{NULL}, image{NULL},
     Component("button", name, classes) {
-        addEventListener(Event::CLICKED, [this](MouseEvent e, Component* b) {
+        eventDispatcher->addEventListener("click", [this](ComponentEvent* event) {
 		if (this->window == NULL || this->link.compare(u"") == 0) {
 			return;
 		}

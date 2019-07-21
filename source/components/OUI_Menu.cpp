@@ -1,16 +1,18 @@
-
 #include "components/OUI_Menu.h"
-#include "util/OUI_StringUtil.h"
 
 #include <algorithm>
 #include <set>
+
+#include "event/OUI_MenuEvent.h"
+#include "util/OUI_StringUtil.h"
+
 
 oui::Menu::~Menu() {
 
 }
 
 oui::Menu::Menu(const std::string& name, const std::string& classes) : 
-    numOptions{0}, fontSize{0}, minWidth{0}, optionHeight{0}, padding{0},
+    numOptions{0}, fontSize{0}, minWidth{0}, optionHeight{0}, padding{0}, target{NULL},
     Container("menu", name, classes) {
     //setSize(0, 0, 150, 30);
     setAttribute("border-style", u"solid");
@@ -119,16 +121,18 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     b->setAttribute("bg-color2-b", c.getB(), u"hover");
 
     //Add button click event handler
-    b->addEventListener(Event::CLICKED, [](MouseEvent e, Component* c) {
+    b->addEventListener("click", [this, b](ComponentEvent* e) {
+        auto target = this->target == NULL ? this : this->target;
 
-        std::string name = c->getName();
-        auto numIndex = name.find_last_of("_") + 1;
+        std::string buttonName = b->getName();
+        auto underscoreIndex = buttonName.find_last_of("_") + 1;
+        int optionIndex = std::atoi(
+            buttonName.substr(underscoreIndex, buttonName.length() - underscoreIndex).c_str()
+        );
 
-        //Create event to pass to menu handler
-        MenuEvent menuEvt = MenuEvent(std::atoi(name.substr(numIndex, name.length() - numIndex).c_str()), c->getCurrentProfile()->getString("text"));
-
-        //Handle and dispose of menu event
-        ((Menu*) c->getParent())->handleEvent(e);
+        MenuEvent* event = MenuEvent::create("click", target, this, optionIndex, b->getCurrentProfile()->getString("text"));
+        target->getEventDispatcher()->dispatchEvent(event);
+        delete event;
     });
 
     //TODO style
@@ -190,6 +194,13 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     return b;
 }
 
+void oui::Menu::setTarget(Component* target) {
+    this->target = target;
+}
+
+oui::Component* oui::Menu::getTarget() {
+    return target;
+}
 
 std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
     return addOptions(options, numOptions);

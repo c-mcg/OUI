@@ -2,23 +2,24 @@
 #define OUI_COMPONENT_EVENT_H
 
 #include "OUI_Export.h"
-#include "event/OUI_Event2.h"
-#include "components/OUI_Component.h"
+#include "event/OUI_Event.h"
 
 namespace oui {
+
+	class Component;
 
     /**
      * @brief An event that is triggered by a component
      * 
      */
-    class OUI_API ComponentEvent : public oui::Event2 {
+    class OUI_API ComponentEvent : public oui::Event {
 
         public:
 
             /**
              * @brief The component that triggered the event
              */
-            const Component* originalTarget;
+            Component* const originalTarget;
 
             /**
              * @brief True if the event bubbles (propagates).
@@ -31,7 +32,7 @@ namespace oui {
              * @param type The type of evemt
              * @param typeHash an optional hashed version of `type`, which can be used for optimization
              */
-            ComponentEvent(Component* originalTarget, std::string type, std::size_t typeHash=0, bool bubbles=true);
+            ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, std::size_t typeHash=0, bool bubbles=true);
 
             /**
              * @brief Stops the event from bubbling to parent components

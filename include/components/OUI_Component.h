@@ -2,11 +2,12 @@
 #define OUI_COMPONENT_H
 
 #include "OUI_Export.h"
-#include "event/OUI_Event.h"
 #include "gfx/OUI_Graphics.h"
 #include <vector>
 #include <functional>
 #include "attribute/OUI_StyleSheet.h"
+
+#include "event/OUI_EventDispatcher.h"
 
 namespace oui {
 
@@ -20,9 +21,38 @@ namespace oui {
 
     class Component {
 
+        public:
+
+            /**
+            * @brief Adds a listener to the specified event
+             * 
+             * @param type The type of event to listen for
+             * @param handler The function to be run when the event occurs
+             */
+            void addEventListener(std::string type, EventHandler handler);
+
+            /**
+            * @brief Adds a system event listener to the specified event. A system listener will always be executed when an event fires regardless of `preventDefault` of `stopPropagation` being called.
+             * 
+             * @param type The type of event to listen for
+             * @param handler The function to be run when the event occurs
+             */
+            void addSystemEventListener(std::string type, EventHandler handler);
+
+
+		protected:
+			
+            /**
+             * @brief Handles event listeners and dispatching for the component
+             */
+			EventDispatcher* eventDispatcher;
+
+
 /* START OF VARIABLES */
 
-        public: const bool needsProcessing;
+	public:
+
+		const bool needsProcessing;
 
     //Constants
         public: static const char BORDER_NONE = 0;//TODO change to enum
@@ -89,12 +119,6 @@ namespace oui {
         protected: Style* definedStyle;
         protected: Style* style;
 
-        protected: std::map<char, std::vector<std::function<void(MouseEvent, Component*)>>> mouseEventHandlers;
-        protected: std::map<char, std::vector<std::function<void(KeyEvent, Component*)>>> keyEventHandlers;
-        protected: std::map<char, std::vector<std::function<void(WindowEvent, Component*)>>> windowEventHandlers;
-        protected: std::vector<std::function<void(ScrollEvent, Component*)>> scrollEventHandlers;
-        protected: std::vector<std::function<void(MenuEvent, Component*)>> menuEventHandlers;
-
 /* END OF VARIABLES */
 
 /* START OF METHODS */
@@ -103,7 +127,7 @@ namespace oui {
         public: OUI_API ~Component();
 
         //Default attributes are not loaded until the component is added, so do not attempt to get attribute values in the constructor
-        public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false);
+        public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher());
 
         public: void setAttribute(const std::string& name, Attribute val, const std::u16string& profile=u"default");
         public: OUI_API Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
@@ -114,15 +138,7 @@ namespace oui {
         public: OUI_API void drawBorder();
         public: OUI_API virtual void addedToContainer(Container* container);
 
-    //Events
-        public: OUI_API virtual void handleEvent(Event&);
-
-        public: OUI_API void addEventListener(char type, std::function<void(MouseEvent, Component*)> handler);
-        public: OUI_API void addEventListener(char type, std::function<void(KeyEvent, Component*)> handler);
-        public: OUI_API void addEventListener(char type, std::function<void(WindowEvent, Component*)> handler);
-        public: OUI_API void addEventListener(char type, std::function<void(ScrollEvent, Component*)> handler);
-        public: OUI_API void addEventListener(char type, std::function<void(MenuEvent, Component*)> handler);
-        //TODO removeEventListener
+        public: EventDispatcher* getEventDispatcher();
         
     //Usage functions
         //This parses a value as if it were an OSAL attribute
@@ -199,7 +215,6 @@ namespace oui {
         public: OUI_API virtual Style* getDefaultStyle();
 
 /* END OF METHODS */
-        
     };
 
 }

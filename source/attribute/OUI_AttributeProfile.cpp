@@ -84,7 +84,7 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
             break;
     }
     
-    //std::cout << "parsed attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.getOriginalString()).c_str() << std::endl;
+    std::cout << "parsed attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.getOriginalString()).c_str() << std::endl;
     
     //Finally, add the attribute to our attributes list
     attributes.insert({name, val});
@@ -121,7 +121,7 @@ void oui::AttributeProfile::setAttribute(const std::string& name, Attribute valu
         attributes.erase(it);
     }
 
-    //std::cout << "added attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.toString()).c_str() << std::endl;
+    std::cout << "added attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.toString()).c_str() << std::endl;
     //Create and insert the new value
     attributes.insert({name, value});
 

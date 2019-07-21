@@ -13,7 +13,7 @@ namespace oui {
         protected: std::vector<Component*> processableChildren;
 
         public: OUI_API ~Container();
-        public: OUI_API Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false);
+        public: OUI_API Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher());
 
         public: OUI_API void onProcessableChildAdded(Component* addedChild);
         public: OUI_API void onProcessableChildRemoved(Component* addedChild);

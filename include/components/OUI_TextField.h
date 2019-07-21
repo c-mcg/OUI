@@ -8,6 +8,12 @@ namespace oui {
 
     class TextField : public Component {
 
+        private:
+            void onMenuOption(ComponentEvent* e);
+            void onMouseDown(ComponentEvent* e);
+            void onMouseUp(ComponentEvent* e);
+            void onKeyTyped(ComponentEvent* e);
+
         private: Color textColor;
         private: Font* font;
         //TODO getters and setters
@@ -41,7 +47,6 @@ namespace oui {
         public: OUI_API std::vector<std::u16string> getRightClickOptions() override;
 
         public: OUI_API void redraw() override;
-        public: OUI_API void handleEvent(Event& e) override;
         public: OUI_API void setSelected(bool selected) override;
 
         public: OUI_API void setText(const std::u16string& text);

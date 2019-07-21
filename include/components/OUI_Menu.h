@@ -11,6 +11,7 @@ namespace oui {
 
         private: int numOptions;//TODO this is harder than it looks to remove
         private: std::vector<std::u16string> options;
+        private: Component* target;
         
         //TODO none of these work get assigned through profiles
         private: std::u16string font;
@@ -39,6 +40,8 @@ namespace oui {
         private: std::vector<Button*> addOptions(const std::vector<std::u16string>& options, int index);
         public: bool removeOption(int index);
         public: std::vector<Button*> setOptions(const std::vector<std::u16string>&  options);
+        public: void setTarget(Component* component);
+        public: Component* getTarget();
 
         /*Returns the width of the longest string*/
         private: int resetOptions(int startIndex = 0);

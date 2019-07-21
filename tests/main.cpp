@@ -1,7 +1,9 @@
 #include <iostream>
 
-#include "OUI.h"
+// #include "gmock/gmock.h"
 #include "gtest/gtest.h"
+
+#include "OUI.h"
 #include "util/OUI_StringUtil.h"
 
 // All test files are found by CMake!

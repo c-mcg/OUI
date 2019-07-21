@@ -1,97 +1,107 @@
-#ifndef OUI_EVENT_H
-#define OUI_EVENT_H
+#ifndef OUI_EVENT2_H
+#define OUI_EVENT2_H
 
 #include "OUI_Export.h"
 
 namespace oui {
 
     class OUI_API Event {
+        public:
 
-        public: static const int MOUSE_IN = 0;
-        public: static const int MOUSE_OUT = 1;
-        public: static const int MOUSE_DOWN = 2;
-        public: static const int MOUSE_UP = 3;
-        public: static const int MOUSE_MOVE = 4;
-        public: static const int KEY_DOWN = 5;
-        public: static const int KEY_UP = 6;
-        public: static const int KEY_TYPED = 7;
-        public: static const int CLICKED = 8;
-        public: static const int MOUSE_WHEEL = 9;
-        public: static const int MENU_CLICKED = 10;
-        public: static const int WINDOW_CLOSED = 11;
-        public: static const int WINDOW_MINIMIZED = 12;
-        public: static const int WINDOW_MAXIMIZED = 13;
+            /**
+             * @brief Creates a hash for a type string
+             * 
+             * @param type The type string to hash
+             * @return std::size_t The resulting `typeHash`
+             */
+            static std::size_t createTypeHash(std::string type);
 
-        public: char type;
+            /**
+             * @brief Checks if the types for the specified event are equal. This is faster than raw string comparison.
+             * 
+             * @param event1 Event to compare
+             * @param event2 Event to compare
+             * @return true Events have the same type
+             * @return false Events do not have the same type
+             */
+            static bool compareTypes(const Event& event1, const Event& event2);
 
-        public: bool defaultPrevented;
+            /**
+             * @brief A hasher held to optimize hashing
+             */
+            static std::hash<std::string> hasher;
 
-        public: explicit Event(char type);
+            /**
+             * @brief The type of event
+             */
+            const std::string eventClass;
 
-        public: virtual bool isMouseEvent();
-        public: virtual bool isKeyEvent();
-        public: virtual bool isWindowEvent();
-        public: bool isScrollEvent();
-        public: bool isMenuEvent();
+            /**
+             * @brief The type of event
+             */
+            const std::string type;
 
-        public: void preventDefault();
+            /**
+             * @brief Creates a new event with the specified type
+             * 
+             * @param type The type of evemt
+             * @param typeHash an optional hashed version of `type`, which can be used for optimization
+             */
+            explicit Event(std::string eventClass, std::string type, std::size_t typeHash=0);
 
-    };
+            /**
+             * @brief Checks if the `typeHash` same as is this one. This is faster than raw string comparison.
+             * 
+             * @param event The event to compare with
+             * @return true The event type is the same as this one
+             * @return false The event type is not the same as this one
+             */
+            bool compareType(std::size_t typeHash);
 
-    class MouseEvent : public Event {
+            /**
+             * @brief Checks if the type of event is the same as is this one. This is faster than raw string comparison.
+             * 
+             * @param event The event to compare with
+             * @return true The event type is the same as this one
+             * @return false The event type is not the same as this one
+             */
+            bool compareType(const Event& event);
 
-        private: int x, y;
-        private: int globalX, globalY;
-        private: int button;
+            /**
+             * @brief Checks if the type of event is the same as is this one. This is slower than comparing events or hashes.
+             * 
+             * @param event The event to compare with
+             * @return true The event type is the same as this one
+             * @return false The event type is not the same as this one
+             */
+            bool compareType(std::string event);
 
-        public: OUI_API MouseEvent(char type, int x, int y, int globalX, int globalY, int button=-1);
+            /**
+             * @brief Prevent any built-in behaviours the event may cause
+             */
+            void preventDefault();
 
-        public: OUI_API int getX();
-        public: OUI_API int getY();
+            /**
+             * @brief Returns true if default behaviour should be prevented
+             * 
+             * @return true
+             * @return false
+             */
+            bool isDefaultPrevented();
 
-        public: OUI_API int getGlobalX();
-        public: OUI_API int getGlobalY();
-        
-        public: OUI_API int getButton();
+            std::size_t getTypeHash();
 
-        public: OUI_API bool isMouseEvent() override;
+        private:
+            
+            /**
+             * @brief A hash of the type for quicker comparisons
+             */
+            std::size_t typeHash; 
 
-    };
-
-    class KeyEvent : public Event {
-        private: int keyCode;
-        private: char keyChar;
-
-        public: OUI_API KeyEvent(char type, int keyCode, char keyChar);
-
-        public: OUI_API bool isKeyEvent() override;
-
-        public: OUI_API int getKeyCode();
-        public: OUI_API char getKeyChar();
-    };
-
-    class ScrollEvent : public Event {
-        private: int scroll;
-
-        public: OUI_API explicit ScrollEvent(int scroll);
-
-        public: OUI_API int getScroll();
-    };
-
-    class MenuEvent : public Event {
-        private: int index;
-        private: std::u16string option;
-
-        public: OUI_API MenuEvent(int index, const std::u16string& option);
-
-        public: OUI_API int getIndex();
-        public: OUI_API std::u16string getOption();
-    };
-
-    class WindowEvent : public Event {
-
-        public: OUI_API explicit WindowEvent(char type);
-        public: OUI_API bool isWindowEvent() override;
+            /**
+             * @brief True if default behaviour should be prevented
+             */
+            bool defaultPrevented;
 
     };
 

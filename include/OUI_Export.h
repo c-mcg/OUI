@@ -9,6 +9,7 @@
     #endif
 
 #include <string>
+#include <vector>
 
 #include "OUI_Constants.h"
 

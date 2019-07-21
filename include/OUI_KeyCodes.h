@@ -12,6 +12,8 @@ static const int KEY_CONTROL_LEFT = 1073742048;
 static const int KEY_CONTROL_RIGHT = 1073742052;
 static const int KEY_ALT_LEFT = 1073742050;
 static const int KEY_ALT_RIGHT = 1073742054;
+static const int KEY_META = 157;
+
 static const int KEY_PAUSE = 1073741896;
 static const int KEY_CAPS_LOCK = 9;
 static const int KEY_ESCAPE = 27;

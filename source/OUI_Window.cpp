@@ -11,6 +11,14 @@
 #include "os/OUI_OS.h"
 #include "components/OUI_ComponentLoader.h"
 
+#include "event/OUI_WindowEventDispatcher.h"
+#include "event/OUI_WindowEvent.h"
+#include "event/OUI_ScrollEvent.h"
+#include "event/OUI_KeyboardEvent.h"
+
+#include <functional>
+
+#include "OUI_KeyCodes.h"
 
 #ifdef _DEBUG
     #include "OUI_Context.h"
@@ -23,25 +31,46 @@ oui::Window::~Window() {
         it = editEvents.erase(it);
     }
     selectedComponent = NULL;
-    rightClickedComponent = NULL;
 }
 
 oui::Window::Window(int width, int height) :
     context{NULL}, visible{false}, title{u""},
     shutdown{false}, focused{false}, globalMouseX{0}, globalMouseY{0},
     moving{false}, moveOffX{0}, moveOffY{0}, resizing{false}, resizeX{0}, resizeY{0},
-    maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0},
-    ctrlDown{false}, shiftDown{false}, altDown{false}, editIndex{0},
-    selectedComponent{NULL}, rightClickedComponent{NULL},
+    maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0}, editIndex{0},
+    selectedComponent{NULL},
     cursor{-1}, cursorType{CURSOR_DEFAULT},
-    Container("window", "window", "window") {//TODO let you set a name
+    Container("window", "window", "window", new WindowEventDispatcher()) {//TODO let you set a name
+
+    this->eventDispatcher->addSystemEventListener("close", std::bind(&Window::onSystemClose, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("minimize", std::bind(&Window::onSystemMinimize, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("maximize", std::bind(&Window::onSystemMaximize, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("focus", std::bind(&Window::onSystemFocus, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("blur", std::bind(&Window::onSystemBlur, this, std::placeholders::_1));
+
+    this->eventDispatcher->addSystemEventListener("mousemove", std::bind(&Window::onSystemMouseMove, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("mouseup", std::bind(&Window::onSystemMouseUp, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("mousedown", std::bind(&Window::onSystemMouseDown, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("scroll", std::bind(&Window::onSystemScrollWheel, this, std::placeholders::_1));
+
+    this->eventDispatcher->addSystemEventListener("keydown", std::bind(&Window::onSystemKeyDown, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("keyup", std::bind(&Window::onSystemKeyUp, this, std::placeholders::_1));
+    this->eventDispatcher->addSystemEventListener("keytyped", std::bind(&Window::onSystemKeyTyped, this, std::placeholders::_1));
+    
+    this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("maximize", std::bind(&Window::onMaximize, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("focus", std::bind(&Window::onFocus, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("blur", std::bind(&Window::onBlur, this, std::placeholders::_1));
+
+    this->eventDispatcher->addEventListener("mousemove", std::bind(&Window::onMouseMove, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("mousedown", std::bind(&Window::onMouseDown, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("keydown", std::bind(&Window::onKeyDown, this, std::placeholders::_1));
 }
 
 void oui::Window::initializeWindow(int width, int height) {
     graphics = createGraphics(width, height);
     graphics->setFont(Font::getFont(u"notoserif", 12, this));
     window = this;
-
 
     AttributeProfile* profile = style->getOrCreateProfile(u"default");//This should definitely be default at this point
 
@@ -62,11 +91,14 @@ void oui::Window::initializeWindow(int width, int height) {
     windowBar->parseAttribute("bg-color", u"208 208 208 255");
     windowBar->parseAttribute("bg-color", u"0 0 0 255");
 
-    windowBar->addEventListener(Event::MOUSE_DOWN, [this](MouseEvent e, Component* c) {
+    windowBar->addEventListener("mousedown", [this](ComponentEvent* e) {
+        auto comp = e->getTarget();
         if (maximized) {
-            maximize();
-            moveOffX = c->getWidth() / 2;
-            moveOffY = c->getHeight() / 2;
+            onSystemUnmaximize();
+
+            // TODO if maximized?
+            moveOffX = comp->getWidth() / 2;
+            moveOffY = comp->getHeight() / 2;
             parseAttribute("location", u"0 0 " + intToString(globalMouseX - moveOffX) + u" " + intToString(globalMouseY - moveOffY));
         } else {
             moveOffX = getMouseX();
@@ -75,7 +107,7 @@ void oui::Window::initializeWindow(int width, int height) {
         moving = true;
     });
 
-    windowBar->addEventListener(Event::MOUSE_UP, [this](MouseEvent e, Component* c) {
+    windowBar->addEventListener("mouseup", [this](ComponentEvent* e) {
         moving = false;
         resizing = false;
     });
@@ -89,8 +121,8 @@ void oui::Window::initializeWindow(int width, int height) {
 
     Button* minimizeBtn = new Button("minimizeBtn", "window-button");
 
-    minimizeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
-        minimize();
+    minimizeBtn->addEventListener("click", [this](ComponentEvent* e) {
+        onSystemMinimize();
     });
     minimizeBtn->parseAttribute("location", u"100 0 -73 0");
     minimizeBtn->parseAttribute("size", u"0 0 25 25");
@@ -100,8 +132,8 @@ void oui::Window::initializeWindow(int width, int height) {
 
     Button* maximizeBtn = new Button("maximizeBtn", "window-button");
 
-    maximizeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
-        maximize();
+    maximizeBtn->addEventListener("click", [this](ComponentEvent* e) {
+        onSystemMaximize();
     });
     maximizeBtn->parseAttribute("location", u"100 0 -49 0");
     maximizeBtn->parseAttribute("size", u"0 0 25 25");
@@ -110,9 +142,10 @@ void oui::Window::initializeWindow(int width, int height) {
     maximizeBtn->setAttribute("image", u"maximize-btn1.png");
 
     Button* closeBtn = new Button("closeBtn", "window-button");
-    closeBtn->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
-        WindowEvent windowEvt = WindowEvent(Event::WINDOW_CLOSED);
-        handleEvent(windowEvt);
+    closeBtn->addEventListener("click", [this](ComponentEvent* e) {
+        WindowEvent* windowEvent = WindowEvent::create("close", this, getX(), getY(), getWidth(), getHeight());
+        eventDispatcher->dispatchEvent(windowEvent);
+        delete windowEvent;
     });
 
     closeBtn->parseAttribute("location", u"100 0 -25 0");
@@ -132,10 +165,9 @@ void oui::Window::initializeWindow(int width, int height) {
     menu->setAttribute("visible", false);
     menu->setAttribute("z-index", 15);
 
-    menu->addEventListener(Event::CLICKED, [this](MouseEvent e, Component* c) {
-        getRightClickedComponent()->handleEvent(e);
-        c->setAttribute("visible", false);
-        setSelectedComponent(getRightClickedComponent());
+    menu->addEventListener("click", [this, menu](ComponentEvent* e) {
+        menu->setAttribute("visible", false);
+        setSelectedComponent(menu->getTarget());
     });
     addChild(menu);
 
@@ -250,175 +282,311 @@ oui::Graphics* oui::Window::getGraphics() {
     return graphics;
 }
 
-void oui::Window::handleMouseMoveEvent(MouseEvent event) {
-    mouseX = event.getX();
-    mouseY = event.getY();
+void oui::Window::onSystemClose(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("close", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
 
-    Component* c = getComponentAt(mouseX, mouseY);
-    //std::cout << "Component: name=" << getName() << " mX=" << mouseX << " mY=" << mouseY << std::endl;
-    if (c->getParent() != NULL) {
-        Container* parent = (Container*) c->getParent();
-        for (int i = 0; i < getNumChildren(); i++) {
-            Component* comp = getChild(i);
-            if (comp != NULL) {
-                if (comp != c && !c->isChildOf(comp)) {
-                    comp->setHovered(false);
-                }
-            }
-        }
-        for (int i = 0; i < parent->getNumChildren(); i++) {
-            Component* comp = parent->getChild(i);
-            if (comp != NULL) {
-                comp->setHovered(false);
-            }
-        }
-        if (c->isContainer()) {
-            Container* cont = (Container*) c;
-            for (int i = 0; i < cont->getNumChildren(); i++) {
-                Component* comp = cont->getChild(i);
-                if (comp != NULL) {
-                    comp->setHovered(false);
-                }
-            }
-        }
-    }
+void oui::Window::onSystemMinimize(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("minimize", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemUnminimize(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("unminimize", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemMaximize(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("maximize", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemUnmaximize(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("unmaximize", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemFocus(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("focus", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemBlur(ComponentEvent* compEvent) {
+    WindowEvent* event = new WindowEvent("blur", this, getX(), getY(), getWidth(), getHeight());
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
+    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* event = MouseEvent::create("mousemove", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
+    mouseX = event->windowX;
+    mouseY = event->windowY;
+
     if (!resizing) {
+        // TODO math util
         int dist = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
         if (dist < 15) {
             setCursor(CURSOR_RESIZE);
         } else {
-            setCursor(c->getCursor());
+            setCursor(event->getTarget()->getCursor());
         }
     }
-    c->setHovered(true);
-    MouseEvent e = MouseEvent(Event::MOUSE_MOVE, mouseX - c->getScreenX(), mouseY - c->getScreenY(), mouseX, mouseY);
-    c->handleEvent(e);
+
+    eventDispatcher->dispatchEvent(event);
+    delete event;
 }
 
-void oui::Window::handleMouseDownEvent(MouseEvent event) {
-    mouseX = event.getX();
-    mouseY = event.getY();
-
-    int dist = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
-    if (dist < 15) {
-        Component* menu = getChild("rightClickMenu");
-        if (menu != NULL && menu->getCurrentProfile()->getBool("visible")) {
-            menu->setAttribute("visible", false);
-        }
-        resizeX = getWidth() - (globalMouseX - getX());
-        resizeY = getHeight() - (globalMouseY - getY());
-        resizing = true;
-    } else {
-        Component* c = getComponentAt(mouseX, mouseY);
-        Component* menu = getChild("rightClickMenu");
-        if (menu != NULL && menu->getCurrentProfile()->getBool("visible") && c != menu && !c->isChildOf(menu)) {
-            menu->setAttribute("visible", false);
-        }
-        if (event.getButton() == 1) {//Left Click
-            for (int i = 0; i < getNumChildren(); i++) {
-                Component* comp = getChild(i);
-                if (comp != NULL) {
-                    if (comp != c && !c->isChildOf(comp)) {
-                        comp->setMouseDown(false);
-                    }
-                }
-            }
-            if (c->isContainer()) {
-                Container* cont = (Container*) c;
-                for (int i = 0; i < cont->getNumChildren(); i++) {
-                    Component* comp = cont->getChild(i);
-                    if (comp != NULL) {
-                        comp->setMouseDown(false);
-                    }
-                }
-            }
-            if (c->getParent() != NULL) {
-                Container* parent = (Container*) c->getParent();
-                for (int i = 0; i < parent->getNumChildren(); i++) {
-                    Component* comp = parent->getChild(i);
-                    if (comp != NULL && comp != c) {
-                        comp->setMouseDown(false);
-                    }
-                }
-            }
-            c->setMouseDown(true);
-            setSelectedComponent(c);
-            MouseEvent e = MouseEvent(Event::MOUSE_DOWN, mouseX - c->getScreenX(), mouseY - c->getScreenY(), mouseX, mouseY);
-            c->handleEvent(e);
-        } else if (event.getButton() == 2) {//Right click
-            std::cout << "mb2" << std::endl;
-        } else if (event.getButton() == 3) {
-            Menu* menu = (Menu*) getChild("rightClickMenu");
-            std::vector<std::u16string> rcOptions = c->getRightClickOptions();
-            if (menu != NULL && rcOptions.size() != 0) {
-                setSelectedComponent(c);//TODO pass right click to object
-                setRightClickedComponent(c);
-
-                std::u16string arguments = u"";
-                for (int i = 0; i < rcOptions.size(); i++) {
-                    arguments += u"\"" + rcOptions.at(i) + u"\"" + (i < rcOptions.size() - 1 ? u" " : u"");
-                }
-
-#ifdef _DEBUG
-
-                arguments += u" Inspect";
-
-#endif
-
-                menu->parseAttribute("options", arguments);
-
-                int x = mouseX;
-                int y = mouseY;
-                if (mouseX + menu->getWidth() > getWidth()) {
-                    x = getWidth() - menu->getWidth();
-                }
-                if (y + menu->getHeight() > getHeight()) {
-                    y -= menu->getHeight();
-                }
-                menu->parseAttribute("location", u"0 0 " + intToString(x) + u" " + intToString(y));
-                menu->setAttribute("visible", true);
-                std::cout << "menuX=" << menu->getX() << " menuY=" << menu->getY() << " mW=" << menu->getWidth() << " mH=" << menu->getHeight() << std::endl;
-            } else if (menu != NULL && menu->getCurrentProfile()->getBool("visible")) {
-                menu->setAttribute("visible", false);
-            }
-        }
-    }
-}
-
-void oui::Window::handleMouseUpEvent(MouseEvent event) {
+void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
+    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* event = MouseEvent::create("mouseup", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
     moving = false;
     resizing = false;
+    setMouseDown(false);
 
-    mouseX = event.getX();
-    mouseY = event.getY();
+    mouseX = event->windowX;
+    mouseY = event->windowY;
+    
+    // Fire click event
     Component* c = getComponentAt(mouseX, mouseY);
     if (c->isMouseDown()) {
-        MouseEvent e = MouseEvent(Event::CLICKED, mouseX - c->getScreenX(), mouseY - c->getScreenY(), mouseX, mouseY);
-        c->handleEvent(e);
+        MouseEvent* clickEvent = MouseEvent::create("click", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
+        eventDispatcher->dispatchEvent(clickEvent);
+        delete clickEvent;
     }
-    setMouseDown(false);
-    MouseEvent e = MouseEvent(Event::MOUSE_UP, mouseX - c->getScreenX(), mouseY - c->getScreenY(), mouseX, mouseY);
-    c->handleEvent(e);
+
+    eventDispatcher->dispatchEvent(event);
+    delete event;
 }
 
-void oui::Window::handleEvent(Event e) {
 
-    Component::handleEvent(e);
+void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
+    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* event = MouseEvent::create("mousedown", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
+    mouseX = event->windowX;
+    mouseY = event->windowY;
+    Component* comp = event->getTarget();
 
-    if (e.defaultPrevented) {
-        return;
+    Menu* menu = (Menu*) getChild("rightClickMenu");
+    if (comp != menu) {
+        menu->setAttribute("visible", false);
     }
 
-    //eventHandler(e, c);
-    if(e.type == Event::WINDOW_CLOSED) {//TODO shouldn't this be passed to eventHandler(e, c) ?
-        this->close();
+    switch(event->button) {
+        case 0: // Left Click
+            int distToResize = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
+            if (distToResize < 15) {
+                closeRightClickMenu();
+                resizeX = getWidth() - (globalMouseX - getX());
+                resizeY = getHeight() - (globalMouseY - getY());
+                resizing = true;
+                return;
+            }
+            break;
     }
 
-    if (e.type == Event::MOUSE_DOWN) {
-
+    for (int i = 0; i < getNumChildren(); i++) {
+        Component* windowChild = getChild(i);
+        if (windowChild != NULL) {
+            if (windowChild != comp && !comp->isChildOf(windowChild)) {
+                windowChild->setMouseDown(false);
+            }
+        }
     }
-    if (e.type == Event::MOUSE_UP) {
+    if (comp->isContainer()) {
+        Container* cont = (Container*) comp;
+        for (int i = 0; i < cont->getNumChildren(); i++) {
+            Component* compChild = cont->getChild(i);
+            if (compChild != NULL) {
+                compChild->setMouseDown(false);
+            }
+        }
+    }
+    if (comp->getParent() != NULL) {
+        Container* parent = (Container*) comp->getParent();
+        for (int i = 0; i < parent->getNumChildren(); i++) {
+            Component* parentChild = parent->getChild(i);
+            if (parentChild != NULL && comp != comp) {
+                parentChild->setMouseDown(false);
+            }
+        }
+    }
+    comp->setMouseDown(true);
+    setSelectedComponent(comp);
+    
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
 
+void oui::Window::onMouseMove(ComponentEvent* compEvent) {
+    MouseEvent* event = (MouseEvent*) compEvent;
+    int mouseX = event->windowX;
+    int mouseY = event->windowY;
+    Component* comp = event->getTarget();
+
+    // Set all components in window to hovered = false
+    // TODO Eek!
+    if (comp->getParent() != NULL) {
+        Container* parent = (Container*) comp->getParent();
+
+        for (int i = 0; i < getNumChildren(); i++) {
+            Component* windowChild = getChild(i);
+            if (windowChild != NULL) {
+                if (windowChild != comp && !comp->isChildOf(windowChild)) {
+                    windowChild->setHovered(false);
+                }
+            }
+        }
+        for (int i = 0; i < parent->getNumChildren(); i++) {
+            Component* parentChild = parent->getChild(i);
+            if (parentChild != NULL) {
+                parentChild->setHovered(false);
+            }
+        }
+        if (comp->isContainer()) {
+            Container* cont = (Container*) comp;
+            for (int i = 0; i < cont->getNumChildren(); i++) {
+                Component* compChild = cont->getChild(i);
+                if (compChild != NULL) {
+                    compChild->setHovered(false);
+                }
+            }
+        }
+    }
+    comp->setHovered(true);
+
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemScrollWheel(ComponentEvent* compEvent) {
+    ScrollEvent* rawScrollEvent = (ScrollEvent*) compEvent;
+    ScrollEvent* event = ScrollEvent::create(true, this, rawScrollEvent->buttons, rawScrollEvent->movementX, rawScrollEvent->movementY, rawScrollEvent->scrollDistance);
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemKeyDown(ComponentEvent* compEvent) {
+    KeyboardEvent* event = KeyboardEvent::create("keydown", true, this, ((KeyboardEvent*) compEvent)->key);
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemKeyUp(ComponentEvent* compEvent) {
+    KeyboardEvent* event = KeyboardEvent::create("keyup", true, this, ((KeyboardEvent*) compEvent)->key);
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onSystemKeyTyped(ComponentEvent* compEvent) {
+    KeyboardEvent* event = KeyboardEvent::create("keytyped", true, this, ((KeyboardEvent*) compEvent)->key);
+    eventDispatcher->dispatchEvent(event);
+    delete event;
+}
+
+void oui::Window::onClose(ComponentEvent* compEvent) {
+    this->shutdown = true;
+}
+
+void oui::Window::onMinimize(ComponentEvent* compEvent) {
+    // Move this to SDL window
+}
+
+void oui::Window::onUnminimize(ComponentEvent* compEvent) {
+    // Move this to SDL window
+}
+
+void oui::Window::onMaximize(ComponentEvent* compEvent) {
+    Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
+    if (maximizeBtn != NULL) {
+        maximizeBtn->setAttribute("image", u"maximizeBtn1.png");
+    }
+    maximizeX = getX();
+    maximizeY = getY();
+    maximizeWidth = getWidth();
+    maximizeHeight = getHeight();
+
+    //TODO: cross platform
+    
+
+    int maximizedX = 0;
+    int maximizedY = 0;
+    int maximizedWidth = 0;
+    int maximizedHeight = 0;
+
+    OS()->getMaximizeSize(this, maximizedX, maximizedY, maximizedWidth, maximizedHeight);
+
+    parseAttribute("location", u"0 0 " + intToString(maximizedX) + u" " + intToString(maximizedY));
+    parseAttribute("size", u"0 0 " + intToString(maximizedWidth) + u" " + intToString(maximizedHeight));
+    maximized = true;
+    updateStyle();
+}
+
+void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
+    Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
+    if (maximizeBtn != NULL) {
+        maximizeBtn->setAttribute("image", u"maximizeBtn2.png");
+    }
+    maximized = false;
+
+    parseAttribute("location", u"0 0 " + intToString(maximizeX) + u" " + intToString(maximizeY));
+    parseAttribute("size", u"0 0 " + intToString(maximizeWidth) + u" " + intToString(maximizeHeight));
+    updateStyle();
+}
+
+void oui::Window::onFocus(ComponentEvent* compEvent) {
+    focused = true;
+}
+
+void oui::Window::onBlur(ComponentEvent* compEvent) {
+    focused = false;
+}
+
+void oui::Window::onMouseDown(ComponentEvent* compEvent) {
+    MouseEvent* event = (MouseEvent*) compEvent;
+    Component* c = event->getTarget();
+    if (event->button == 3) {
+        Menu* menu = (Menu*) getChild("rightClickMenu");
+        std::vector<std::u16string> rcOptions = c->getRightClickOptions();
+        if (menu != NULL && rcOptions.size() != 0) {
+            setSelectedComponent(c);//TODO pass right click to object
+
+            std::u16string arguments = u"";
+            for (int i = 0; i < rcOptions.size(); i++) {
+                arguments += u"\"" + rcOptions.at(i) + u"\"" + (i < rcOptions.size() - 1 ? u" " : u"");
+            }
+
+#ifdef _DEBUG
+            arguments += u" Inspect";
+#endif
+
+            menu->parseAttribute("options", arguments);
+            if (mouseX + menu->getWidth() > getWidth()) {
+                mouseX = getWidth() - menu->getWidth();
+            }
+            if (mouseY + menu->getHeight() > getHeight()) {
+                mouseY -= menu->getHeight();
+            }
+            menu->parseAttribute("location", u"0 0 " + intToString(mouseX) + u" " + intToString(mouseY));
+            menu->setAttribute("visible", true);
+            menu->setTarget(c);
+        }
+    }
+}
+
+void oui::Window::onKeyDown(ComponentEvent* compEvent) {
+    int code = ((KeyboardEvent*) compEvent)->key;
+    if (code == KEY_Z && isCtrlDown()) {
+        undo();
+    } else if (code == KEY_Y && isCtrlDown()) {
+        redo();
     }
 }
 
@@ -501,16 +669,18 @@ void oui::Window::redo() {
     }
 }
 
-bool oui::Window::isShiftDown() {
-    return shiftDown;
-}
-
-bool oui::Window::isCtrlDown() {
-    return ctrlDown;
-}
 
 bool oui::Window::isAltDown() {
-    return altDown;
+    return false;
+}
+bool oui::Window::isCtrlDown() {
+    return false;
+}
+bool oui::Window::isMetaDown() {
+    return false;
+}
+bool oui::Window::isShiftDown() {
+    return false;
 }
 
 void oui::Window::setSelectedComponent(Component* component) {
@@ -526,55 +696,15 @@ oui::Component* oui::Window::getSelectedComponent() {
     return selectedComponent;
 }
 
-void oui::Window::setRightClickedComponent(Component* component) {
-    this->rightClickedComponent = component;
-}
-oui::Component* oui::Window::getRightClickedComponent() {
-    return rightClickedComponent;
+void oui::Window::closeRightClickMenu() {
+    Component* menu = getChild("rightClickMenu");
+    if (menu != NULL && menu->getCurrentProfile()->getBool("visible")) {
+        menu->setAttribute("visible", false);
+    }
 }
 
 std::u16string oui::Window::getTitle() {
     return title;
-}
-
-void oui::Window::close() {
-    std::cout << "Window.close was called" << std::endl;
-    this->shutdown = true;
-}
-
-void oui::Window::maximize() {
-    Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
-    if (maximizeBtn != NULL) {
-        maximizeBtn->setAttribute("image", u"maximizeBtn" + convertUTF8toUTF16(maximized ? "1" : "2") + u".png");
-    }
-    if (!maximized) {
-        maximizeX = getX();
-        maximizeY = getY();
-        maximizeWidth = getWidth();
-        maximizeHeight = getHeight();
-
-        //TODO: cross platform
-        
-
-        int maximizedX = 0;
-        int maximizedY = 0;
-        int maximizedWidth = 0;
-        int maximizedHeight = 0;
-
-        OS()->getMaximizeSize(this, maximizedX, maximizedY, maximizedWidth, maximizedHeight);
-
-        parseAttribute("location", u"0 0 " + intToString(maximizedX) + u" " + intToString(maximizedY));
-        parseAttribute("size", u"0 0 " + intToString(maximizedWidth) + u" " + intToString(maximizedHeight));
-        maximized = true;
-        
-
-    } else {
-        maximized = false;
-
-        parseAttribute("location", u"0 0 " + intToString(maximizeX) + u" " + intToString(maximizeY));
-        parseAttribute("size", u"0 0 " + intToString(maximizeWidth) + u" " + intToString(maximizeHeight));
-    }
-    updateStyle();
 }
 
 void oui::Window::setVisible(bool visible) {
@@ -606,11 +736,6 @@ void oui::Window::setPage(std::u16string path) {
 	cl.loadComponents(path);
 	this->removeAllChildren();
 	this->addChild(cl.toPanel());
-}
-
-void oui::Window::minimize() {
-    Event e = Event(Event::WINDOW_MINIMIZED);
-    handleEvent(e);
 }
 
 void oui::Window::setClipboardText(const std::u16string& text) {

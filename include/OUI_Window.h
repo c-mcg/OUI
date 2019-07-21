@@ -4,12 +4,14 @@
 #include "OUI_Export.h"
 #include "gfx/OUI_Graphics.h"
 #include "components/OUI_Container.h"
-#include "event/OUI_Event.h"
 #include "components/OUI_Button.h"
 #include "components/OUI_Panel.h"
 #include "components/OUI_Label.h"
 #include "event/OUI_EditEvent.h"
 #include <stdint.h>
+
+
+#include "event/OUI_ComponentEvent.h"
 
 namespace oui {
 
@@ -56,12 +58,7 @@ namespace oui {
         //Custimizations
         protected: int cursor;
 
-        protected: bool shiftDown;
-        protected: bool ctrlDown;
-        protected: bool altDown;
-
         private: Component* selectedComponent;
-        private: Component* rightClickedComponent;
 
         public: OUI_API ~Window();
         public: OUI_API Window(int width=0, int height=0);
@@ -78,10 +75,17 @@ namespace oui {
         public: OUI_API virtual int process() override;
         public: OUI_API Graphics* getGraphics();
 
-        public: OUI_API void handleMouseMoveEvent(MouseEvent event);
-        public: OUI_API void handleMouseDownEvent(MouseEvent event);
-        public: OUI_API void handleMouseUpEvent(MouseEvent event);
-        public: OUI_API virtual void handleEvent(Event e);
+        public: OUI_API void onSystemMouseMove(ComponentEvent* event);
+        public: OUI_API void onSystemMouseUp(ComponentEvent* event);
+        public: OUI_API void onSystemMouseDown(ComponentEvent* event);
+        public: OUI_API void onSystemScrollWheel(ComponentEvent* event);
+        public: OUI_API void onSystemKeyDown(ComponentEvent* event);
+        public: OUI_API void onSystemKeyUp(ComponentEvent* event);
+        public: OUI_API void onSystemKeyTyped(ComponentEvent* event);
+        public: OUI_API void onMouseMove(ComponentEvent* event);
+        public: OUI_API void onMouseDown(ComponentEvent* event);
+		public: OUI_API void onKeyDown(ComponentEvent* event);
+        
         public: OUI_API virtual void redraw() override;
 
         public: OUI_API void setTimeout(int delay, std::function<void()> func);
@@ -93,14 +97,14 @@ namespace oui {
         public: OUI_API void undo();
         public: OUI_API void redo();
         
-        public: OUI_API bool isShiftDown();
-        public: OUI_API bool isCtrlDown();
-        public: OUI_API bool isAltDown();
+        public: OUI_API virtual bool isAltDown();
+        public: OUI_API virtual bool isCtrlDown();
+        public: OUI_API virtual bool isMetaDown();
+        public: OUI_API virtual bool isShiftDown();
 
         public: OUI_API void setSelectedComponent(Component* component);
         public: OUI_API Component* getSelectedComponent();
-        public: OUI_API void setRightClickedComponent(Component* component);
-        public: OUI_API Component* getRightClickedComponent();
+        public: OUI_API void closeRightClickMenu();
 
 
         //TODO move to own file (with other functions, sleep, etc.)
@@ -108,7 +112,6 @@ namespace oui {
         public: OUI_API std::u16string getClipboardText();
         public: OUI_API bool hasClipboardText();
 
-        public: OUI_API void close();
         public: OUI_API void setVisible(bool visible);
         public: OUI_API void setPage(std::u16string path);
         public: OUI_API virtual Window* getWindow() override;
@@ -123,8 +126,22 @@ namespace oui {
         public: OUI_API virtual void setSize(int width, int height);
         public: OUI_API virtual void setPosition(int x, int y);
         public: OUI_API virtual bool setCursor(int cursor);
-        public: OUI_API virtual void minimize();
-        public: OUI_API virtual void maximize();
+
+        public: OUI_API virtual void onSystemClose(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemMinimize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemUnminimize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemMaximize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemUnmaximize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemFocus(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onSystemBlur(ComponentEvent* event=NULL);
+        
+        public: OUI_API virtual void onClose(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onMinimize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onUnminimize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onMaximize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onUnmaximize(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onFocus(ComponentEvent* event=NULL);
+        public: OUI_API virtual void onBlur(ComponentEvent* event=NULL);
     };
 
 }
