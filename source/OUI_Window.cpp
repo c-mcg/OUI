@@ -41,22 +41,8 @@ oui::Window::Window(int width, int height) :
     selectedComponent{NULL},
     cursor{-1}, cursorType{CURSOR_DEFAULT},
     Container("window", "window", "window", new WindowEventDispatcher()) {//TODO let you set a name
+    this->eventDispatcher->setTarget(this);
 
-    this->eventDispatcher->addSystemEventListener("close", std::bind(&Window::onSystemClose, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("minimize", std::bind(&Window::onSystemMinimize, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("maximize", std::bind(&Window::onSystemMaximize, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("focus", std::bind(&Window::onSystemFocus, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("blur", std::bind(&Window::onSystemBlur, this, std::placeholders::_1));
-
-    this->eventDispatcher->addSystemEventListener("mousemove", std::bind(&Window::onSystemMouseMove, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("mouseup", std::bind(&Window::onSystemMouseUp, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("mousedown", std::bind(&Window::onSystemMouseDown, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("scroll", std::bind(&Window::onSystemScrollWheel, this, std::placeholders::_1));
-
-    this->eventDispatcher->addSystemEventListener("keydown", std::bind(&Window::onSystemKeyDown, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("keyup", std::bind(&Window::onSystemKeyUp, this, std::placeholders::_1));
-    this->eventDispatcher->addSystemEventListener("keytyped", std::bind(&Window::onSystemKeyTyped, this, std::placeholders::_1));
-    
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("maximize", std::bind(&Window::onMaximize, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("focus", std::bind(&Window::onFocus, this, std::placeholders::_1));
