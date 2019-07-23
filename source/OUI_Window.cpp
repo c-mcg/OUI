@@ -326,9 +326,10 @@ void oui::Window::onSystemBlur(ComponentEvent* compEvent) {
 
 void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
     MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    mouseX = rawMouseEvent->windowX;
+    mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mousemove", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-    mouseX = event->windowX;
-    mouseY = event->windowY;
+
 
     if (!resizing) {
         // TODO math util
@@ -346,17 +347,17 @@ void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
 
 void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
     MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    mouseX = rawMouseEvent->windowX;
+    mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mouseup", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
+    Component* c = event->getTarget();
+    bool sendClickEvent = c->isMouseDown();
     moving = false;
     resizing = false;
     setMouseDown(false);
-
-    mouseX = event->windowX;
-    mouseY = event->windowY;
     
     // Fire click event
-    Component* c = getComponentAt(mouseX, mouseY);
-    if (c->isMouseDown()) {
+    if (sendClickEvent) {
         MouseEvent* clickEvent = MouseEvent::create("click", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
         eventDispatcher->dispatchEvent(clickEvent);
         delete clickEvent;
@@ -369,13 +370,13 @@ void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
 
 void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
     MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    mouseX = rawMouseEvent->windowX;
+    mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mousedown", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-    mouseX = event->windowX;
-    mouseY = event->windowY;
     Component* comp = event->getTarget();
 
     Menu* menu = (Menu*) getChild("rightClickMenu");
-    if (comp != menu) {
+    if (menu != NULL && comp != menu) {
         menu->setAttribute("visible", false);
     }
 

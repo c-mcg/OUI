@@ -108,10 +108,6 @@ void oui::Component::addEventListener(std::string type, EventHandler handler) {
     eventDispatcher->addEventListener(type, handler);
 }
 
-void oui::Component::addSystemEventListener(std::string type, EventHandler handler) {
-    eventDispatcher->addSystemEventListener(type, handler);
-}
-
 oui::Attribute oui::Component::getAttribute(const std::string& name, Attribute defaultVal) {
     Attribute* attr = getCurrentProfile()->getAttribute(name);
     if (attr == NULL) {

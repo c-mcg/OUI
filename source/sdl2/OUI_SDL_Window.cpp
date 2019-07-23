@@ -161,7 +161,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
     //TODO native text events: https://wiki.libsdl.org/SDL_TextInputEvent
 
     if (event->type == SDL_MOUSEMOTION && (event->motion.windowID == baseWindowId || focused)) {
-        MouseEvent* mouseEvent = new MouseEvent("mousemove", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->motion.x, event->motion.x);
+        MouseEvent* mouseEvent = new MouseEvent("mousemove", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->motion.x, event->motion.y);
         onSystemMouseMove(mouseEvent);
         delete mouseEvent;
     }

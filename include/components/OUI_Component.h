@@ -31,14 +31,6 @@ namespace oui {
              */
             void addEventListener(std::string type, EventHandler handler);
 
-            /**
-            * @brief Adds a system event listener to the specified event. A system listener will always be executed when an event fires regardless of `preventDefault` of `stopPropagation` being called.
-             * 
-             * @param type The type of event to listen for
-             * @param handler The function to be run when the event occurs
-             */
-            void addSystemEventListener(std::string type, EventHandler handler);
-
 
 		protected:
 			
