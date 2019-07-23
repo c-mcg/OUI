@@ -44,9 +44,6 @@ void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
 void oui::EventDispatcher::triggerListeners(ComponentEvent* event) {
     auto listenerIt = listeners.find(event->getTypeHash());
 
-    std::cout << " triggering event " << event->eventClass << " "
-        << event->type << " for comp " << event->getTarget()->getName() << std::endl;
-
     if (listenerIt == listeners.end()) {
         return;
     }
