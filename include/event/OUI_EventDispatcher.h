@@ -33,7 +33,7 @@ namespace oui {
              * 
              * @param event The event to dispatch 
              */
-            void dispatchEvent(ComponentEvent* event);
+            virtual void dispatchEvent(ComponentEvent* event);
 
             /**
              * @brief Set the target component to dispatch events to. This function can only be called once 
@@ -58,14 +58,6 @@ namespace oui {
              */
             void addEventListener(std::string type, EventHandler handler);
 
-            /**
-             * @brief Adds a system event handler to the specified event. A system listener will always be executed when an event fires regardless of `preventDefault` of `stopPropagation` being called.
-             * 
-             * @param type The type of event to listen for
-             * @param handler A function to be called when the event occurs.
-             */
-            void addSystemEventListener(std::string type, EventHandler handler);
-
         protected:
 
             /**
@@ -79,23 +71,11 @@ namespace oui {
             std::unordered_map<std::size_t, std::vector<EventHandler>> listeners;
 
             /**
-             * @brief Any system listeners attached to the component. A system listener will always be executed when an event fires regardless of `preventDefault` of `stopPropagation` being called.
-             */
-            std::unordered_map<std::size_t, std::vector<EventHandler>> systemListeners;
-
-            /**
              * @brief Triggers all event listeners relevant to the specified event 
              * 
              * @param event The event to trigger listeners for
              */
             void triggerListeners(ComponentEvent* event);
-
-            /**
-             * @brief Triggers all event listeners relevant to the specified event 
-             * 
-             * @param event The event to trigger listeners for
-             */
-            void triggerSystemListeners(ComponentEvent* event);
     };
 
 }

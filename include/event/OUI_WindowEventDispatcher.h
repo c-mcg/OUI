@@ -25,7 +25,7 @@ namespace oui {
              * 
              * @param event The event to dispatch 
              */
-            void dispatchEvent(ComponentEvent* event);
+            virtual void dispatchEvent(ComponentEvent* event);
 
     };
 
