@@ -3,6 +3,8 @@
 #include "event/OUI_Event.h"
 #include <iostream>
 
+std::hash<std::string> oui::Event::hasher = std::hash<std::string>();
+
 std::size_t oui::Event::createTypeHash(std::string type) {
     return hasher(type);
 }

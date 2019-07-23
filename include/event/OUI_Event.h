@@ -1,5 +1,5 @@
-#ifndef OUI_EVENT2_H
-#define OUI_EVENT2_H
+#ifndef OUI_EVENT_H
+#define OUI_EVENT_H
 
 #include "OUI_Export.h"
 
