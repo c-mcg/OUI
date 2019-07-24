@@ -32,7 +32,6 @@ namespace oui {
              * @brief Creates a new event with the specified type
              * 
              * @param type The type of evemt
-             * @param typeHash an optional hashed version of `type`, which can be used for optimization
              */
             explicit Event(std::string eventClass, std::string type);
 

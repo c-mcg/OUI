@@ -30,7 +30,6 @@ namespace oui {
              * @brief Creates a new component event with the specified type
              * 
              * @param type The type of evemt
-             * @param typeHash an optional hashed version of `type`, which can be used for optimization
              */
             ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, bool bubbles=true);
 
