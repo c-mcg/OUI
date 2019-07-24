@@ -19,7 +19,7 @@ oui::KeyboardEvent* oui::KeyboardEvent::create(std::string type, bool bubbles, W
 oui::KeyboardEvent::KeyboardEvent(std::string type, bool bubbles, Component* originalTarget, bool altKey, bool ctrlKey, bool metaKey, bool shiftKey, int key):
     altKey{altKey}, ctrlKey{ctrlKey}, metaKey{metaKey},
     shiftKey{shiftKey}, which{key}, key{key}, character{getChar(key, shiftKey)},
-    ComponentEvent(originalTarget, "keyboard", type, 0, bubbles)
+    ComponentEvent(originalTarget, "keyboard", type, bubbles)
 {
 
 }

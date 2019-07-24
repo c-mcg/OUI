@@ -38,7 +38,7 @@ oui::MouseEvent::MouseEvent(std::string type, bool bubbles, Component* originalT
     movementX{movementX}, movementY{movementY}, pageX{windowX}, pageY{windowY},
     screenX{screenX}, screenY{screenY}, shiftKey{shiftKey}, which{which},
     windowX{windowX}, windowY{windowY}, x{x}, y{y},
-    ComponentEvent(originalTarget, "mouse", type, 0, bubbles)
+    ComponentEvent(originalTarget, "mouse", type, bubbles)
 {
 
 }

@@ -41,14 +41,6 @@ namespace oui {
              * @param target The target component 
              */
             void setTarget(Component* target);
-
-            /**
-             * @brief Adds a handler to the specified event.
-             * 
-             * @param typeHash A preoptimized hashed string type for the event type
-             * @param handler A function to be called when the event occurs.
-             */
-            void addEventListener(std::size_t typeHash, EventHandler handler);
             
             /**
              * @brief Adds a handler to the specified event.
@@ -68,7 +60,7 @@ namespace oui {
             /**
              * @brief Any listeners attached to the component
              */
-            std::unordered_map<std::size_t, std::vector<EventHandler>> listeners;
+            std::unordered_map<std::string, std::vector<EventHandler>> listeners;
 
             /**
              * @brief Triggers all event listeners relevant to the specified event 

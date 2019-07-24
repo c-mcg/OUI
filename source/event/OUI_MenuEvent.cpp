@@ -8,7 +8,7 @@ oui::MenuEvent* oui::MenuEvent::create(std::string type, Component* originalTarg
 
 oui::MenuEvent::MenuEvent(std::string type, Component* originalTarget, Menu* menu, int optionIndex, std::u16string option):
     menu{menu}, optionIndex{optionIndex}, option{option},
-    ComponentEvent(originalTarget, "menu", type, 0, false)
+    ComponentEvent(originalTarget, "menu", type, false)
 {
 
 }

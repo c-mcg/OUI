@@ -1,27 +1,25 @@
 #include "event/OUI_EventDispatcher.h"
 #include "components/OUI_Component.h"
 
-oui::EventDispatcher::EventDispatcher() : target{NULL} {}
+oui::EventDispatcher::EventDispatcher() :
+    target{NULL}, listeners() {
+
+}
 
 void oui::EventDispatcher::setTarget(Component* target) {
     this->target = target;
 }
 
 void oui::EventDispatcher::addEventListener(std::string type, EventHandler handler) {
-    return addEventListener(Event::createTypeHash(type), handler);
-}
+    auto it = listeners.find(type);
 
-void oui::EventDispatcher::addEventListener(std::size_t typeHash, EventHandler handler) {
-    auto it = listeners.find(typeHash);
-
-    std::vector<EventHandler> handlers;
-    if (it != listeners.end()) {
-        handlers = it->second;
+    if (listeners.count(type)) {
+        listeners[type].push_back(handler);
     } else {
-        listeners.insert({ typeHash, handlers });
+        std::vector<EventHandler> handlers;
+        handlers.push_back(handler);
+        listeners[type] = handlers;
     }
-
-    handlers.push_back(handler);
 }
 
 void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
@@ -42,16 +40,15 @@ void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
 }
 
 void oui::EventDispatcher::triggerListeners(ComponentEvent* event) {
-    auto listenerIt = listeners.find(event->getTypeHash());
+    auto listenerIt = listeners.find(event->type);
 
     if (listenerIt == listeners.end()) {
         return;
     }
-
-    std::vector<EventHandler> handlers = listenerIt->second;
-    for (std::size_t i = 0; i < handlers.size(); i++) {
-        auto handler = handlers.at(i);
-        handler(event);
+    
+    std::vector<EventHandler>& handlers = listenerIt->second;
+    for (auto it = handlers.begin(); it != handlers.end(); it++) {
+        (*it)(event);
     }
 }
 

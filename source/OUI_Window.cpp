@@ -40,7 +40,7 @@ oui::Window::Window(int width, int height) :
     maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0}, editIndex{0},
     selectedComponent{NULL},
     cursor{-1}, cursorType{CURSOR_DEFAULT},
-    Container("window", "window", "window", new WindowEventDispatcher()) {//TODO let you set a name
+    Container("window", "window", "window", false, new WindowEventDispatcher()) {//TODO let you set a name
     this->eventDispatcher->setTarget(this);
 
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
@@ -315,7 +315,6 @@ void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
     mouseX = rawMouseEvent->windowX;
     mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mousemove", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-
 
     if (!resizing) {
         // TODO math util

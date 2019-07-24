@@ -121,7 +121,7 @@ void oui::AttributeProfile::setAttribute(const std::string& name, Attribute valu
         attributes.erase(it);
     }
 
-    std::cout << "added attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.toString()).c_str() << std::endl;
+    // std::cout << "added attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.toString()).c_str() << std::endl;
     //Create and insert the new value
     attributes.insert({name, value});
 

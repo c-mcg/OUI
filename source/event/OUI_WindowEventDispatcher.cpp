@@ -5,7 +5,7 @@ oui::WindowEventDispatcher::WindowEventDispatcher(): EventDispatcher() {}
 
 void oui::WindowEventDispatcher::dispatchEvent(ComponentEvent* event) {
     if (event->getTarget() != this->target) {
-        target->getEventDispatcher()->dispatchEvent(event);
+        event->getTarget()->getEventDispatcher()->dispatchEvent(event);
         return;
     }
 

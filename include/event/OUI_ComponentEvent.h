@@ -32,7 +32,7 @@ namespace oui {
              * @param type The type of evemt
              * @param typeHash an optional hashed version of `type`, which can be used for optimization
              */
-            ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, std::size_t typeHash=0, bool bubbles=true);
+            ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, bool bubbles=true);
 
             /**
              * @brief Stops the event from bubbling to parent components
