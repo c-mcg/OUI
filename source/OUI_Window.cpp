@@ -48,7 +48,6 @@ oui::Window::Window(int width, int height) :
     this->eventDispatcher->addEventListener("focus", std::bind(&Window::onFocus, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("blur", std::bind(&Window::onBlur, this, std::placeholders::_1));
 
-    this->eventDispatcher->addEventListener("mousemove", std::bind(&Window::onMouseMove, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("mousedown", std::bind(&Window::onMouseDown, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("keydown", std::bind(&Window::onKeyDown, this, std::placeholders::_1));
 }
@@ -326,6 +325,10 @@ void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
         }
     }
 
+
+	setHovered(false);
+	event->getTarget()->setHovered(true);
+
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
@@ -407,47 +410,6 @@ void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
     comp->setMouseDown(true);
     setSelectedComponent(comp);
     
-    eventDispatcher->dispatchEvent(event);
-    delete event;
-}
-
-void oui::Window::onMouseMove(ComponentEvent* compEvent) {
-    MouseEvent* event = (MouseEvent*) compEvent;
-    int mouseX = event->windowX;
-    int mouseY = event->windowY;
-    Component* comp = event->getTarget();
-
-    // Set all components in window to hovered = false
-    // TODO Eek!
-    if (comp->getParent() != NULL) {
-        Container* parent = (Container*) comp->getParent();
-
-        for (int i = 0; i < getNumChildren(); i++) {
-            Component* windowChild = getChild(i);
-            if (windowChild != NULL) {
-                if (windowChild != comp && !comp->isChildOf(windowChild)) {
-                    windowChild->setHovered(false);
-                }
-            }
-        }
-        for (int i = 0; i < parent->getNumChildren(); i++) {
-            Component* parentChild = parent->getChild(i);
-            if (parentChild != NULL) {
-                parentChild->setHovered(false);
-            }
-        }
-        if (comp->isContainer()) {
-            Container* cont = (Container*) comp;
-            for (int i = 0; i < cont->getNumChildren(); i++) {
-                Component* compChild = cont->getChild(i);
-                if (compChild != NULL) {
-                    compChild->setHovered(false);
-                }
-            }
-        }
-    }
-    comp->setHovered(true);
-
     eventDispatcher->dispatchEvent(event);
     delete event;
 }

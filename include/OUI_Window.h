@@ -82,7 +82,6 @@ namespace oui {
         public: OUI_API void onSystemKeyDown(ComponentEvent* event);
         public: OUI_API void onSystemKeyUp(ComponentEvent* event);
         public: OUI_API void onSystemKeyTyped(ComponentEvent* event);
-        public: OUI_API void onMouseMove(ComponentEvent* event);
         public: OUI_API void onMouseDown(ComponentEvent* event);
 		public: OUI_API void onKeyDown(ComponentEvent* event);
         

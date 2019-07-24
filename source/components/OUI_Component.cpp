@@ -83,6 +83,11 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     eventDispatcher{eventDispatcher}
 {
     eventDispatcher->setTarget(this);
+    eventDispatcher->addEventListener("mousemove", [this](ComponentEvent* compEvent) {
+        MouseEvent* event = (MouseEvent*) compEvent;
+        this->mouseX = event->localX;
+        this->mouseY = event->localY;
+    });
 
     this->classes = std::vector<std::string>();
     std::istringstream iss(classes.c_str());

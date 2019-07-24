@@ -23,8 +23,6 @@ void oui::EventDispatcher::addEventListener(std::string type, EventHandler handl
 }
 
 void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
-    event->setTarget(target);
-
     triggerListeners(event);
 
 	if (target != NULL) {
@@ -34,6 +32,7 @@ void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
 				MouseEvent* mouseEvent = ( MouseEvent*) event;
 				event = mouseEvent->createBubbledEvent(mouseEvent);
 			}
+			event->setTarget(parent);
 			parent->getEventDispatcher()->dispatchEvent(event);
 		}
 	}
@@ -48,7 +47,8 @@ void oui::EventDispatcher::triggerListeners(ComponentEvent* event) {
     
     std::vector<EventHandler>& handlers = listenerIt->second;
     for (auto it = handlers.begin(); it != handlers.end(); it++) {
-        (*it)(event);
+		EventHandler handler = (*it);
+        handler(event);
     }
 }
 
