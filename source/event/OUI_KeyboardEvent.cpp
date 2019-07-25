@@ -4,12 +4,7 @@
 #include "OUI_KeyCodes.h"
 
 oui::KeyboardEvent* oui::KeyboardEvent::create(std::string type, bool bubbles, Window* window, int key) {
-    int mouseX = window->getMouseX();
-    int mouseY = window->getMouseY();
-    Component* originalTarget = window->getComponentAt(mouseX, mouseY);
-    
-    int localX = mouseX - originalTarget->getScreenX();
-    int localY = mouseY - originalTarget->getScreenY();
+    Component* originalTarget = window->getSelectedComponent();
 
     return new KeyboardEvent(type, bubbles, originalTarget,
         window->isAltDown(),  window->isCtrlDown(),

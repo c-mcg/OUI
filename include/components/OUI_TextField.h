@@ -12,6 +12,7 @@ namespace oui {
             void onMenuOption(ComponentEvent* e);
             void onMouseDown(ComponentEvent* e);
             void onMouseUp(ComponentEvent* e);
+            void onMouseMove(ComponentEvent* e);
             void onKeyTyped(ComponentEvent* e);
 
         private: Color textColor;

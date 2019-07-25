@@ -34,21 +34,17 @@ oui::TextField::TextField(const std::string& name, const std::string& classes) :
     setAttribute("carat-h-offset", 2);
     parseAttribute("highlight-color", u"200 200 255 255");
     parseAttribute("size", u"0 0 150 25");
+    
+    addEventListener("mousedown", std::bind(&TextField::onMouseDown, this, std::placeholders::_1));
+    addEventListener("keytyped", std::bind(&TextField::onKeyTyped, this, std::placeholders::_1));
 }
 
 void oui::TextField::addedToContainer(Container* parent) {
     Component::addedToContainer(parent);
     
     if (window != NULL) {
-        window->addEventListener("mouseup", [this](ComponentEvent* e) {
-            this->highlighting = false;
-        });
-        window->addEventListener("mousemove", [this](ComponentEvent* compEvent) {
-            MouseEvent* event = (MouseEvent*) compEvent;
-            if (this->highlighting) {
-                setCaratIndex(getIndexAt(event->localX));
-            }
-        });
+        window->addEventListener("mouseup", std::bind(&TextField::onMouseUp, this, std::placeholders::_1));
+        window->addEventListener("mousemove", std::bind(&TextField::onMouseMove, this, std::placeholders::_1));
     }
 }
 
@@ -177,8 +173,16 @@ void oui::TextField::onMouseDown(ComponentEvent* compEvent) {
 void oui::TextField::onMouseUp(ComponentEvent* e) {
     highlighting = false;
 }
+
+void oui::TextField::onMouseMove(ComponentEvent* compEvent) {
+    MouseEvent* event = (MouseEvent*) compEvent;
+    if (this->highlighting) {
+        int localX = event->windowX - getScreenX();
+        setCaratIndex(getIndexAt(localX));
+    }
+}
 void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
-    KeyboardEvent* event = (KeyboardEvent*) event;
+    KeyboardEvent* event = (KeyboardEvent*) compEvent;
     int code = event->key;
     char character = event->character;
     if (code == KEY_BACKSPACE) {

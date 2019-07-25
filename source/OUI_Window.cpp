@@ -337,12 +337,15 @@ void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
     MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
     mouseX = rawMouseEvent->windowX;
     mouseY = rawMouseEvent->windowY;
+
     MouseEvent* event = MouseEvent::create("mouseup", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
     Component* c = event->getTarget();
     bool sendClickEvent = c->isMouseDown();
     moving = false;
     resizing = false;
     setMouseDown(false);
+    eventDispatcher->dispatchEvent(event);
+    delete event;
     
     // Fire click event
     if (sendClickEvent) {
@@ -350,9 +353,6 @@ void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
         eventDispatcher->dispatchEvent(clickEvent);
         delete clickEvent;
     }
-
-    eventDispatcher->dispatchEvent(event);
-    delete event;
 }
 
 
@@ -381,32 +381,7 @@ void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
             break;
     }
 
-    for (int i = 0; i < getNumChildren(); i++) {
-        Component* windowChild = getChild(i);
-        if (windowChild != NULL) {
-            if (windowChild != comp && !comp->isChildOf(windowChild)) {
-                windowChild->setMouseDown(false);
-            }
-        }
-    }
-    if (comp->isContainer()) {
-        Container* cont = (Container*) comp;
-        for (int i = 0; i < cont->getNumChildren(); i++) {
-            Component* compChild = cont->getChild(i);
-            if (compChild != NULL) {
-                compChild->setMouseDown(false);
-            }
-        }
-    }
-    if (comp->getParent() != NULL) {
-        Container* parent = (Container*) comp->getParent();
-        for (int i = 0; i < parent->getNumChildren(); i++) {
-            Component* parentChild = parent->getChild(i);
-            if (parentChild != NULL && comp != comp) {
-                parentChild->setMouseDown(false);
-            }
-        }
-    }
+    window->setMouseDown(false);
     comp->setMouseDown(true);
     setSelectedComponent(comp);
     
@@ -425,6 +400,7 @@ void oui::Window::onSystemKeyDown(ComponentEvent* compEvent) {
     KeyboardEvent* event = KeyboardEvent::create("keydown", true, this, ((KeyboardEvent*) compEvent)->key);
     eventDispatcher->dispatchEvent(event);
     delete event;
+    onSystemKeyTyped(compEvent);
 }
 
 void oui::Window::onSystemKeyUp(ComponentEvent* compEvent) {
@@ -504,7 +480,7 @@ void oui::Window::onMouseDown(ComponentEvent* compEvent) {
         Menu* menu = (Menu*) getChild("rightClickMenu");
         std::vector<std::u16string> rcOptions = c->getRightClickOptions();
         if (menu != NULL && rcOptions.size() != 0) {
-            setSelectedComponent(c);//TODO pass right click to object
+            setSelectedComponent(c);
 
             std::u16string arguments = u"";
             for (int i = 0; i < rcOptions.size(); i++) {

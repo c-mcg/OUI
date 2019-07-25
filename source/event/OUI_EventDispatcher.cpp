@@ -23,6 +23,8 @@ void oui::EventDispatcher::addEventListener(std::string type, EventHandler handl
 }
 
 void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
+	event->setTarget(target);
+
     triggerListeners(event);
 
 	if (target != NULL) {
