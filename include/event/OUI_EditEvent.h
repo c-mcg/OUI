@@ -7,7 +7,7 @@
 
 namespace oui {
 
-    class EditEvent {
+    class EditEvent : public ComponentEvent {
 
         protected: bool performed;
         protected: std::function<void()> undoHandler;
