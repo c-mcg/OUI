@@ -1,4 +1,4 @@
-import os, subprocess, shutil, uuid, hashlib
+import os, subprocess, shutil, uuid, hashlib, sys
 import common, setup, file_util
 
 common.check_requests_package()
@@ -57,12 +57,15 @@ def build():
     if common.needs_setup():
         setup.setup()
 
+    debug = False
+    if "-D" in sys.argv:
+        debug = True
+
     # Will show our "no Visual Studio" error instead of CMake's
     msbuild_location = find_ms_build()
 
     version = get_visual_studio_version()
 
-    debug = False
 
     build_type = "Debug" if debug else "Release"
 
