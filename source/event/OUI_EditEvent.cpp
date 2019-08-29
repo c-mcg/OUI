@@ -12,8 +12,8 @@ oui::EditEvent::EditEvent(std::function<void()> undoHandler, std::function<void(
 
 
 void oui::EditEvent::combine(EditEvent e) {
-    std::function<void()> redoHandler1 = std::function<void()>(redoHandler);
-    std::function<void()> redoHandler2 = std::function<void()>(e.redoHandler);
+    auto redoHandler1 = std::function<void()>(redoHandler);
+    auto redoHandler2 = std::function<void()>(e.redoHandler);
     this->redoHandler = [redoHandler1, redoHandler2] {
         redoHandler1();
         redoHandler2();
