@@ -18,7 +18,7 @@ oui::TextField::TextField(const std::string& name, const std::string& classes) :
     highlighting{false}, caratWidth{1}, caratHeightOffset{1},
     caratVisible{true}, resetInput{false}, lastInput{0},
     caratIndex{0}, lastCaratSwitch{0}, drawX{0},
-    Component("button", name, classes, true) {
+    Component("textfield", name, classes, true) {
     selectStart = 0;
     typing = false;
     setAttribute("text", u"");
