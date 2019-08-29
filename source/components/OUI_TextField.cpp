@@ -183,6 +183,7 @@ void oui::TextField::onMouseMove(ComponentEvent* compEvent) {
 }
 void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
     KeyboardEvent* event = (KeyboardEvent*) compEvent;
+	std::cout << "key typed " << event->key << " " << event->character << std::endl;
     int code = event->key;
     char character = event->character;
     if (code == KEY_BACKSPACE) {
