@@ -58,7 +58,7 @@ def build():
         setup.setup()
 
     debug = False
-    if "-D" in sys.argv or if "--debug" in sys.argv:
+    if "-D" in sys.argv or "--debug" in sys.argv:
         debug = True
 
     # Will show our "no Visual Studio" error instead of CMake's
