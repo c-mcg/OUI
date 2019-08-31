@@ -89,7 +89,7 @@ def build():
         '/p:Platform=x64'
     ], "Could not build project")
 
-    outputFolder = "{}/windows".format(common.OUTPUT_FOLDER)
+    outputFolder = "{}/windows/{}".format(common.OUTPUT_FOLDER, "debug" if debug else "release") 
 
     print('\nCopying OUI headers')
     if os.path.isdir("{}/include".format(common.OUTPUT_FOLDER)):
