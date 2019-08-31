@@ -62,7 +62,7 @@ bool oui::SDLContext::pollEvents() {
 
 oui::SDLWindow* oui::SDLContext::getWindow(int sdlID) {
     for (unsigned int i = 0; i < windows.size(); i++) {
-        SDLWindow* window = (SDLWindow*) windows.at(i);
+        SDLWindow* window = static_cast<SDLWindow*>(windows.at(i));
         if (window->baseWindowId == sdlID) {
             return window;
         }

@@ -92,7 +92,7 @@ void oui::Container::flagGraphicsUpdateAll() {
         //if (!c->isDependantOnParent()) continue;
 
         if (c->isContainer()) {
-            ((Container*) c)->flagGraphicsUpdateAll();
+            static_cast<Container*>(c)->flagGraphicsUpdateAll();
         } else {
             c->flagGraphicsUpdate(false);
         }
@@ -284,7 +284,7 @@ oui::Component* oui::Container::getChild(int index) {
 oui::Container* oui::Container::getChildCont(const std::string& name) {
     Component* c = getChild(name);
     if (c != NULL && c->isContainer()) {
-        return (Container*) c;
+        return static_cast<Container*>(c);
     }
     return NULL;
 }
@@ -292,7 +292,7 @@ oui::Container* oui::Container::getChildCont(const std::string& name) {
 oui::Container* oui::Container::getChildCont(int index) {
     Component* c = children.at(index);
     if (c != NULL && c->isContainer()) {
-        return (Container*) c;
+        return static_cast<Container*>(c);
     }
     return NULL;
 }

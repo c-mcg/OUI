@@ -1,5 +1,6 @@
 #include "event/OUI_EventDispatcher.h"
 #include "components/OUI_Component.h"
+#include "components/OUI_Container.h"
 
 oui::EventDispatcher::EventDispatcher() :
     target{NULL}, listeners() {
@@ -28,7 +29,7 @@ void oui::EventDispatcher::dispatchEvent(ComponentEvent* event) {
     triggerListeners(event);
 
 	if (target != NULL) {
-		Component* parent = (Component*) target->getParent();
+		Component* parent = dynamic_cast<Component*>(target->getParent());
 		if (parent != NULL && event->bubbles && !event->isPropagationStopped()) {
 			if (event->eventClass == "mouse") {
 				MouseEvent* mouseEvent = ( MouseEvent*) event;

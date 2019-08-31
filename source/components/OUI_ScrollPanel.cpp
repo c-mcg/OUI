@@ -38,7 +38,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->setAttribute("z-index", 10);
 
     scrollBar->addEventListener("scroll", [this, vertical](ComponentEvent* compEvent) {
-        ScrollEvent* event = (ScrollEvent*) compEvent;
+        ScrollEvent* event = static_cast<ScrollEvent*>(compEvent);
         if (vertical) {
             scrollY(event->scrollDistance * SCROLL_WHEEL_SPEED);
         } else {
@@ -108,7 +108,7 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     bar->setAttribute("border-style", u"none");
 
     bar->addEventListener("mousedown", [this, vertical](ComponentEvent* compEvent) {
-        MouseEvent* event = (MouseEvent*) compEvent;
+        MouseEvent* event = static_cast<MouseEvent*>(compEvent);
         auto comp = event->getTarget();
         scrollingY = vertical;
         scrollingX = !vertical;
@@ -151,7 +151,7 @@ void oui::ScrollPanel::getChildSize(int* w, int* h) {
 }
 
 void oui::ScrollPanel::onScroll(ComponentEvent* e) {
-    ScrollEvent* scrollEvt = (ScrollEvent*) e;
+    ScrollEvent* scrollEvt = static_cast<ScrollEvent*>(e);
     scrollY(scrollEvt->scrollDistance * SCROLL_WHEEL_SPEED);
 }
 
@@ -316,8 +316,8 @@ void oui::ScrollPanel::resize() {
     //TODO resize screen so children don't hide behind scrollbars
 
     //Horizontal scrollbar resize
-    Container* hSB = (Container*) getChild("horizontalScrollBar");
-    Container* vSB = (Container*) getChild("verticalScrollBar");
+    Container* hSB = static_cast<Container*>(getChild("horizontalScrollBar"));
+    Container* vSB = static_cast<Container*>(getChild("verticalScrollBar"));
 
     float hRatio = childWidth / (float) getWidth();
     float vRatio = childHeight / (float) getHeight();
