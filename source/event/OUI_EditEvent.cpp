@@ -1,12 +1,18 @@
 
 #include "event/OUI_EditEvent.h"
 #include "util/OUI_StringUtil.h"
+#include "exception/OUI_ArgumentException.h"
 
 oui::EditEvent::EditEvent(std::function<void()> undoHandler, std::function<void()> redoHandler, bool hasPerformed, bool appendable, Component* source)
     : undoHandler{undoHandler}, redoHandler{redoHandler},
     performed{hasPerformed}, appendable{appendable}, source{source} {
     if (appendable && source == NULL) {
-        //error
+        throw ArgumentException(
+            "EditEvent",
+            "constructor",
+            "Appendable edit event created with no source component",
+            "Specify a source component"
+        );
     }
 }
 

@@ -1,9 +1,12 @@
 #include "components/OUI_Container.h"
-#include "OUI_Window.h"
+
 #include <iostream>
 #include <algorithm>
 #include <map>
 #include <vector>
+
+#include "OUI_Window.h"
+#include "exception/OUI_ArgumentException.h"
 
 oui::Container::~Container() {
     std::vector<Component*>::iterator it;
@@ -253,8 +256,12 @@ bool oui::Container::isDuplicateName(const std::string& name, Component* ignore)
 bool oui::Container::addChild(Component* child) {
     for (unsigned int i = 0; i < children.size(); i++) {
         if (children.at(i)->getName() == child->getName()) {
-            std::cout << "Tried to add duplicate child: '" << child->getName().c_str() << "'" << std::endl;//TODO error
-            return false;
+            throw ArgumentException(
+                "Container",
+                "addChild",
+                "Tried to add another child with the same name (name: " + child->getName() + ")",
+                "Specify a source component"
+            );
         }
     }
     child->addedToContainer(this);

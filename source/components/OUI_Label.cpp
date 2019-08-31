@@ -45,6 +45,5 @@ void oui::Label::redraw() {
     Component::redraw();
     graphics->setColor(textColor);
     graphics->setFont(font);
-    // std::cout << "text=" << convertUTF16toUTF8(text).c_str() << std::endl;
     graphics->drawText(text, 0, 0);
 }

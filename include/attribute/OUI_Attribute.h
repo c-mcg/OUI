@@ -5,11 +5,11 @@
 
 namespace oui {
 
-    class OUI_API Attribute {//TODO make seperate file
+    class OUI_API Attribute {
         public: char type;
 
         //TODO these should be stored in a subclass of Attribute
-        //There would be no variables here, but the rest would stay the same
+        //      there would be no variables here, but the rest would stay the same
         public: int intVal = 0;
         public: std::u16string stringVal = u"";
         public: bool boolVal = false;

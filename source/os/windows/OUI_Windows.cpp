@@ -4,6 +4,8 @@
 #include "os/windows/OUI_Windows.h"
 
 #include <Windows.h>
+#include <iostream>
+#include <sstream>
 
 #include "OUI_Window.h"
 
@@ -12,12 +14,6 @@ oui::WindowsOS::WindowsOS() : OperatingSystem() {
 }
 
 bool oui::WindowsOS::initialize() {
-    // if (LoadLibraryExA("sdlimg\\SDL2_image.dll", 0, 0) == NULL) {
-    //     std::cout << "Couldn't load SDL2_image.dll" << std::endl;
-    // }
-    // if (LoadLibraryExA("sdlttf\\SDL2_ttf.dll", 0, 0) == NULL) {
-    //     std::cout << "Couldn't load SDL2_ttf.dll" << std::endl;
-    // }
     return true;
 }
 
@@ -52,6 +48,33 @@ bool oui::WindowsOS::getMaximizeSize(oui::Window* window, int &x, int &y, int &w
     delete prc;
 
     return true;
+}
+
+void oui::WindowsOS::showErrorMessage(Exception e) {
+    std::wstring message;
+
+    std::wstringstream wss;
+    wss << L"OUI Exception \n"
+        "File/Class: " << e.getFileName().c_str() << "\n" <<
+        "Function: " << e.getFunctionName().c_str() << "\n" <<
+        "Reason: " << e.getReason().c_str() << "\n" <<
+        "Next Steps:: " << e.getHowToFix().c_str() << "\n";
+
+    message.append( wss.str() );
+    MessageBox(
+        NULL,
+        ws2s(message).c_str(),
+        ws2s(L"Error Occured!").c_str(),
+        MB_ICONERROR
+    );
+}
+
+
+std::string oui::WindowsOS::ws2s(const std::wstring& wstr) {
+    int size_needed = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), int(wstr.length() + 1), 0, 0, 0, 0); 
+    std::string strTo(size_needed, 0);
+    WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), int(wstr.length() + 1), &strTo[0], size_needed, 0, 0); 
+    return strTo;
 }
 
 #endif

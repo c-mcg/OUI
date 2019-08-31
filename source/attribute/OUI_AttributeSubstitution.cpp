@@ -1,6 +1,7 @@
 #include "attribute/OUI_AttributeSubstitution.h"
 #include "attribute/OUI_AttributeProfile.h"
 #include "util/OUI_StringUtil.h"
+#include "exception/OUI_ArgumentException.h"
 
 std::unordered_map<std::string, oui::AttributeSubstitution> oui::AttributeSubstitution::attributeSubs = std::unordered_map<std::string, oui::AttributeSubstitution>();
 
@@ -20,12 +21,22 @@ void oui::AttributeSubstitution::addSubstitution(const std::string& name, const 
 
     //Check if substitution already exusts
     if (subIt != attributeSubs.end()) {
-        //TODO error multiple subs for same attribute
+        throw ArgumentException(
+            "AttributeSubstitution",
+            "addSubstitution",
+            "Tried to overwrite existing substitution",
+            "Contact OUI support"
+        );
     }
 
     //Make sure we've actually got a substitution
     if (subAttributes.size() == 0) {
-        //TODO error, we need an actual substitution
+        throw ArgumentException(
+            "AttributeSubstitution",
+            "addSubstitution",
+            "No attributes specified for substitution",
+            "Enter attributes to substitute with"
+        );
     }
 
     //Add substitution to list

@@ -189,7 +189,7 @@ namespace oui {
         public: OUI_API int getMouseX();
         public: OUI_API int getMouseY();
         //Sets this as the active component in the window
-        public: OUI_API virtual void setSelected(bool selected);//TODO make this change the window as well, and make it so comps are deselected when added to window
+        public: OUI_API virtual void setSelected(bool selected);//TODO it's vague wether this is callable from a runtime
         public: OUI_API bool isSelected();
         //This is used to distinguish a click from a release
         public: OUI_API virtual void setMouseDown(bool mouseDown);
@@ -200,7 +200,7 @@ namespace oui {
     //Styling
         //Creates a new StyleSheet via `Component::getAllStyleSheets()` and applies them to this component
         public: OUI_API virtual Style* createStyle(StyleSheet* sheet = NULL);
-        public: OUI_API int getCursor();//TODO replace with Attribute value substitution (auto change string value to int value when attribute is added)
+        public: OUI_API int getCursor();
         public: OUI_API virtual std::vector<std::u16string> getRightClickOptions();
         public: OUI_API AttributeProfile* getCurrentProfile();
         public: OUI_API virtual void updateStyle();

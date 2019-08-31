@@ -28,7 +28,6 @@ int oui::SDLFont::getStringHeight(const std::u16string& string) {
     return 0;
 }
 int oui::SDLFont::getStringWidth(const std::u16string& string) {
-    //std::cout << "Get String width: '" << string.c_str() << "'" << std::endl;
     int w, h;
     if (TTF_SizeText(baseFont, convertUTF16toUTF8(string).c_str(), &w, &h) != -1) {
         return w;

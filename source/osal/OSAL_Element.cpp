@@ -43,7 +43,7 @@ std::vector<OSAL::Attribute> OSAL::Element::getAttributes(const std::u16string& 
     if (it != attributes.end()) {
         return it->second;
     }
-    //TODO error or something
+
     return std::vector<OSAL::Attribute>();
 }
 

@@ -11,9 +11,6 @@ oui::SDLContext::SDLContext() : Context() {
 
 oui::Window* oui::SDLContext::createWindow(int width, int height) {
     Window* window = new SDLWindow(width, height);
-    std::cout << "Window created" << std::endl;
-
-    //window->setContext(this);//TODO move to window constructor param
     return window;
 }
 

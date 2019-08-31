@@ -48,7 +48,7 @@ namespace oui {
 
         public: OUI_API int getNumChildren();
         public: OUI_API bool isDuplicateName(const std::string& name, Component* ignore = NULL);
-        public: OUI_API virtual bool addChild(Component* child);//TODO make applying style optional in while adding child
+        public: OUI_API virtual bool addChild(Component* child);
         public: OUI_API Component* getChild(const std::string& name);
         public: OUI_API virtual Component* getChild(int index);
         public: OUI_API Container* getChildCont(const std::string& name);

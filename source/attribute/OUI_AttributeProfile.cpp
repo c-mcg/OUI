@@ -3,6 +3,8 @@
 #include <iostream>//TODO remove
 #include "OUI.h"//TODO remove
 
+#include "exception/OUI_ArgumentException.h"
+
 oui::AttributeProfile::~AttributeProfile() {
     
     //Loop through all attributes and delete
@@ -49,15 +51,19 @@ void oui::AttributeProfile::parseAttribute(const std::string& name, const std::u
 
 void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribute value)  {
 
-    //Perform any substitutions
-    //`AttributeSubstitution::applySubstitution` recursively calls this function with the substitutions
+    // Perform any substitutions
     if (AttributeSubstitution::applySubstitution(name, value, this)) {
-        return;
+        return; // `AttributeSubstitution::applySubstitution` recursively calls this function with the substitutions
     }
 
-    //All attributes with multiple values should have been substituted away by now
+    // All attributes with multiple values should have been substituted away by now
     if (value.getNumValues() > 1) {
-        //TODO error
+        throw ArgumentException(
+            "AttributeProfile",
+            "setAttribute",
+            "Recieved OSAL::Attribute with multiple values",
+            "Raise a ticket with OUI support"
+        );
     }
 
     //Delete the attribute if it already exists
@@ -84,8 +90,6 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
             break;
     }
     
-    // std::cout << "parsed attribute " << name.c_str() << " value " << convertUTF16toUTF8(value.getOriginalString()).c_str() << std::endl;
-    
     //Finally, add the attribute to our attributes list
     attributes.insert({name, val});
 }
@@ -101,10 +105,12 @@ void oui::AttributeProfile::setAttribute(const std::string& name, Attribute valu
             return;
         }
 
-        //TODO throw error
-        std::cout << "Use parseAttribute for attributes with multiple arguments name=" << name.c_str() << std::endl;
-
-        return;
+        throw ArgumentException(
+            "AttributeProfile",
+            "setAttribute",
+            "Recieved oui::Attribute with substitutions that is not a string",
+            "Use `parseAttribute` for attributes with multiple arguments"
+        );
     }
 
     //Delete the attribute if it already exists
@@ -175,11 +181,14 @@ int oui::AttributeProfile::getInt(const std::string& name) {
     if (attribute->type == OSAL::TYPE_INT) {
         return attribute->intVal;
     }
-        
-    //TODO throw error because it exists and wasn't an int
-    std::cout << "Tried to get incorrect type (int): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
-    return 0;
-
+    
+    
+    throw ArgumentException(
+        "AttributeProfile",
+        "getInt",
+        "Tried to get a int value from attribute that is not an int (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
 }
 
 std::u16string oui::AttributeProfile::getString(const std::string& name) {
@@ -194,11 +203,13 @@ std::u16string oui::AttributeProfile::getString(const std::string& name) {
     if (attribute->type == OSAL::TYPE_STRING) {
         return attribute->stringVal;
     }
-        
-    //TODO throw error because it exists and wasn't a string
-    std::cout << "Tried to get incorrect type (string): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
-    return u"";
-
+    
+    throw ArgumentException(
+        "AttributeProfile",
+        "getString",
+        "Tried to get a string value from attribute that is not a string (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
 }
 
 bool oui::AttributeProfile::getBool(const std::string& name) {
@@ -213,11 +224,13 @@ bool oui::AttributeProfile::getBool(const std::string& name) {
     if (attribute->type == OSAL::TYPE_BOOL) {
         return attribute->boolVal;
     }
-        
-    //TODO throw error because it exists and wasn't a string
-    std::cout << "Tried to get incorrect type (bool): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
-    return false;
 
+    throw ArgumentException(
+        "AttributeProfile",
+        "getBool",
+        "Tried to get a boolean value from attribute that is not a boolean (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
 }
 
 double oui::AttributeProfile::getDouble(const std::string& name) {
@@ -233,10 +246,12 @@ double oui::AttributeProfile::getDouble(const std::string& name) {
         return attribute->doubleVal;
     }
         
-    //TODO throw error because it exists and wasn't a string
-    std::cout << "Tried to get incorrect type (double): " << name.c_str() << " type=" << ((int) attribute->type) << " value=" << convertUTF16toUTF8(attribute->toString()).c_str() << std::endl;
-    return 0.0;
-
+    throw ArgumentException(
+        "AttributeProfile",
+        "getDouble",
+        "Tried to get a double value from attribute that is not a double (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
 }
 
 void oui::AttributeProfile::removeAttribute(const std::string& name) {//TODO substitutions

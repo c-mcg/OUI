@@ -5,11 +5,9 @@
 #include <iostream>
 
 oui::Attribute::~Attribute() {
-    //TODO!!!!!
 }
 
 oui::Attribute::Attribute() {
-
 }
 
 oui::Attribute::Attribute(const Attribute& a) {

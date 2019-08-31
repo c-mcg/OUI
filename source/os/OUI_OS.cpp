@@ -17,7 +17,7 @@ bool oui::OperatingSystem::initialize() {
 }
 
 bool oui::OperatingSystem::getGlobalMousePos(Window* window, int &x, int &y) {
-    SDL_GetGlobalMouseState(&x, &y);
+    SDL_GetGlobalMouseState(&x, &y); // TODO why is SDL here?
     return true;
 }
 bool oui::OperatingSystem::getMaximizeSize(Window* window, int &x, int &y, int &width, int &height) {
@@ -28,4 +28,8 @@ bool oui::OperatingSystem::getMaximizeSize(Window* window, int &x, int &y, int &
 
 oui::Context* oui::OperatingSystem::createContext() {
     return new SDLContext();
+}
+
+void oui::OperatingSystem::showErrorMessage(Exception e) {
+    // TODO log error
 }

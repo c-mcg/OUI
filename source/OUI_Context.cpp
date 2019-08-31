@@ -19,9 +19,15 @@ int oui::Context::process() {
     std::vector<Window*>::iterator it;
     for (it = windows.begin(); it != windows.end();) {//TODO make a safe(er) loop like the queuedEvents
         
-        if ((*it)->process() == -1) {
-        std::cout << "deleted the window" << std::endl;
+        int processResult = -1;
+        try {
+            processResult = (*it)->process();
+        } catch (Exception e) {
+            OS()->showErrorMessage(e);
+        }
 
+
+        if (processResult == -1) {
             delete *it;
             it = windows.erase(it);
         } else {

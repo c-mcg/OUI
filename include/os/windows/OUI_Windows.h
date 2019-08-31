@@ -17,6 +17,10 @@ namespace oui {
 
         public: bool getMaximizeSize(Window* window, int &x, int &y, int &width, int &height) override;
 
+        public: virtual void showErrorMessage(Exception e);
+
+        std::string ws2s(const std::wstring& wstr);
+
     };
 
 }

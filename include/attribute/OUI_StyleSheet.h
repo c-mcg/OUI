@@ -41,8 +41,6 @@ namespace oui {
         //Adds the new StyleSheet's attributes to this one
         //Any common attributes are overwritten
         public: OUI_API void combineStyleSheet(StyleSheet* sheet, bool overwrite  = false);
-
-        //TODO make a clone function
         
         //Converts an OSAL sheet into a new OUI stylesheet
         public: OUI_API static StyleSheet* fromOSAL(OSAL::Sheet sheet);

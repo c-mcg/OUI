@@ -77,8 +77,9 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
             this->value.push_back(token);
         }
     }
+
     if (this->value.size() == 0) {
-        //TODO error
+        //TODO parse error
     }
 }
 
