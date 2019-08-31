@@ -141,14 +141,14 @@ void oui::SDLGraphics::fillVerticalGradient(int x, int y, int w, int h, oui::Col
 
 void oui::SDLGraphics::drawImage(Image* image, int x, int y, int width, int height) {
     prepare();
-    SDLImage* sdlImg = (SDLImage*) image;
+    SDLImage* sdlImg = static_cast<SDLImage*>(image);
     SDL_Rect dst = {x, y, width, height};
     SDL_RenderCopy(renderer, sdlImg->getBaseImage(), NULL, &dst);
 }
 
 void oui::SDLGraphics::drawImage(Image* image, int x, int y) {
     prepare();
-    SDLImage* sdlImg = (SDLImage*) image;
+    SDLImage* sdlImg = static_cast<SDLImage*>(image);
     SDL_Rect dst = {x, y, image->getWidth(), image->getHeight()};
     SDL_RenderCopy(renderer, sdlImg->getBaseImage(), NULL, &dst);
 }
@@ -200,7 +200,7 @@ void oui::SDLGraphics::drawTextLine(const std::u16string& text, int x, int y) {
         return;
     }
 
-    SDLFont* sdlFont = (SDLFont*) font;
+    SDLFont* sdlFont = static_cast<SDLFont*>(font);
 
     SDL_Color foregroundColor = {(Uint8) currentColor.getR(), (Uint8) currentColor.getG(), (Uint8) currentColor.getB()};
     SDL_Surface* textSurface = TTF_RenderUNICODE_Blended(sdlFont->getBaseFont(), reinterpret_cast<const Uint16*>(text.c_str()), foregroundColor);
@@ -230,7 +230,7 @@ void oui::SDLGraphics::setAlpha(int alpha) {
 }
 
 void oui::SDLGraphics::renderToGraphics(int x, int y, Graphics* target) {
-    ((SDLGraphics*) target)->prepare();
+    static_cast<SDLGraphics*>(target)->prepare();
     SDL_Rect dest = {x, y, width, height};
     //std::cout << "graphics: width=" << width << " height=" << height << std::endl;
     SDL_RenderCopy(renderer, buffer, NULL, &dest);

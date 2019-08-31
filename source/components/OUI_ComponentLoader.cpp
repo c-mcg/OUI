@@ -73,7 +73,7 @@ bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
                 state = 4;
             } else if(c == '>' && endTag) {
                 if(currContainer != NULL) {
-                    currContainer = (Container*) currContainer->getParent();
+                    currContainer = static_cast<Container*>(currContainer->getParent());
                     state = 0;
                 } else {
                     //TODO error
@@ -120,7 +120,7 @@ bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
                         components.push_back(c);
                     }
                     if(c->isContainer()) {
-                        currContainer = (Container*) c;
+                        currContainer = static_cast<Container*>(c);
                     }
                 }
                 state = 0;

@@ -84,7 +84,7 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
 {
     eventDispatcher->setTarget(this);
     eventDispatcher->addEventListener("mousemove", [this](ComponentEvent* compEvent) {
-        MouseEvent* event = (MouseEvent*) compEvent;
+        MouseEvent* event = static_cast<MouseEvent*>(compEvent);
         this->mouseX = event->localX;
         this->mouseY = event->localY;
     });
@@ -170,7 +170,7 @@ void oui::Component::addedToContainer(Container* parent) {
 
     hoverProfile->addDefaultProfile(defaultProfile);
 
-    window = (Window*) (parent->isWindow() ? parent : parent->window);
+    window = static_cast<Window*>(parent->isWindow() ? parent : parent->window);
     this->parent = parent;
     createStyle();
     if (window != NULL) {
@@ -331,7 +331,7 @@ bool oui::Component::compareTag(const std::string& tag) {
 }
 bool oui::Component::setName(const std::string& name) {
     if (parent != NULL) {
-        if (((Container*) parent)->isDuplicateName(name, this)) {
+        if (static_cast<Container*> (parent)->isDuplicateName(name, this)) {
             std::cout << "Tried to set duplicate name: " << name.c_str() << std::endl;
             return false;
         }

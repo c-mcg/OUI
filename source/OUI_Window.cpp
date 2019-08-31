@@ -310,7 +310,7 @@ void oui::Window::onSystemBlur(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
     mouseX = rawMouseEvent->windowX;
     mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mousemove", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
@@ -334,7 +334,7 @@ void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
     mouseX = rawMouseEvent->windowX;
     mouseY = rawMouseEvent->windowY;
 
@@ -357,13 +357,13 @@ void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
 
 
 void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = (MouseEvent*) compEvent;
+    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
     mouseX = rawMouseEvent->windowX;
     mouseY = rawMouseEvent->windowY;
     MouseEvent* event = MouseEvent::create("mousedown", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
     Component* comp = event->getTarget();
 
-    Menu* menu = (Menu*) getChild("rightClickMenu");
+    Menu* menu = static_cast<Menu*>(getChild("rightClickMenu"));
     if (menu != NULL && comp != menu) {
         menu->setAttribute("visible", false);
     }
@@ -390,27 +390,27 @@ void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onSystemScrollWheel(ComponentEvent* compEvent) {
-    ScrollEvent* rawScrollEvent = (ScrollEvent*) compEvent;
+    ScrollEvent* rawScrollEvent = static_cast<ScrollEvent*>(compEvent);
     ScrollEvent* event = ScrollEvent::create(true, this, rawScrollEvent->buttons, rawScrollEvent->movementX, rawScrollEvent->movementY, rawScrollEvent->scrollDistance);
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemKeyDown(ComponentEvent* compEvent) {
-    KeyboardEvent* event = KeyboardEvent::create("keydown", true, this, ((KeyboardEvent*) compEvent)->key);
+    KeyboardEvent* event = KeyboardEvent::create("keydown", true, this, static_cast<KeyboardEvent*>(compEvent)->key);
     eventDispatcher->dispatchEvent(event);
     delete event;
     onSystemKeyTyped(compEvent);
 }
 
 void oui::Window::onSystemKeyUp(ComponentEvent* compEvent) {
-    KeyboardEvent* event = KeyboardEvent::create("keyup", true, this, ((KeyboardEvent*) compEvent)->key);
+    KeyboardEvent* event = KeyboardEvent::create("keyup", true, this, static_cast<KeyboardEvent*>(compEvent)->key);
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemKeyTyped(ComponentEvent* compEvent) {
-    KeyboardEvent* event = KeyboardEvent::create("keytyped", true, this, ((KeyboardEvent*) compEvent)->key);
+    KeyboardEvent* event = KeyboardEvent::create("keytyped", true, this, static_cast<KeyboardEvent*>(compEvent)->key);
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
@@ -428,7 +428,7 @@ void oui::Window::onUnminimize(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onMaximize(ComponentEvent* compEvent) {
-    Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
+    Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
         maximizeBtn->setAttribute("image", u"maximizeBtn1.png");
     }
@@ -454,7 +454,7 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
-    Button* maximizeBtn = ((Button*) ((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
+    Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
         maximizeBtn->setAttribute("image", u"maximizeBtn2.png");
     }
@@ -474,10 +474,10 @@ void oui::Window::onBlur(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onMouseDown(ComponentEvent* compEvent) {
-    MouseEvent* event = (MouseEvent*) compEvent;
+    MouseEvent* event = static_cast<MouseEvent*>(compEvent);
     Component* c = event->getTarget();
     if (event->button == 3) {
-        Menu* menu = (Menu*) getChild("rightClickMenu");
+        Menu* menu = static_cast<Menu*>(getChild("rightClickMenu"));
         std::vector<std::u16string> rcOptions = c->getRightClickOptions();
         if (menu != NULL && rcOptions.size() != 0) {
             setSelectedComponent(c);
@@ -506,7 +506,7 @@ void oui::Window::onMouseDown(ComponentEvent* compEvent) {
 }
 
 void oui::Window::onKeyDown(ComponentEvent* compEvent) {
-    int code = ((KeyboardEvent*) compEvent)->key;
+    int code = static_cast<KeyboardEvent*>(compEvent)->key;
     if (code == KEY_Z && isCtrlDown()) {
         undo();
     } else if (code == KEY_Y && isCtrlDown()) {
@@ -538,7 +538,7 @@ void oui::Window::setTitle(const std::u16string& title) {
     this->title = title;
     
     if (getChild("window-bar") != NULL) {
-        Label* titleLbl = ((Label*) ((Container*) getChild("window-bar"))->getChild("window-title"));
+        Label* titleLbl = static_cast<Label*>(((Container*) getChild("window-bar"))->getChild("window-title"));
         if (titleLbl != NULL) {
             titleLbl->setAttribute("text", title);
         }
@@ -674,7 +674,7 @@ bool oui::Window::hasClipboardText() {
 }
 
 oui::Window* oui::Window::getWindow() {
-    return (Window*) parent;
+    return static_cast<Window*>(parent);
 }
 
 oui::Graphics* oui::Window::createGraphics(int width, int height) {

@@ -13,7 +13,9 @@ oui::SDLWindow::~SDLWindow() {
     SDL_DestroyRenderer(renderer);
 }
 
-oui::SDLWindow::SDLWindow(int width, int height) : Window(width, height) {
+oui::SDLWindow::SDLWindow(int width, int height) :
+    ctrlDown{false}, shiftDown{false}, altDown{false}, metaDown{false},
+    Window(width, height) {
     // TODO retina: https://stackoverflow.com/questions/18544881/sdl-2-0-retina-mac
     this->baseWindow = SDL_CreateWindow(convertUTF16toUTF8(getTitle()).c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);
     if (baseWindow == NULL) {

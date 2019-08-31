@@ -24,7 +24,7 @@ oui::MouseEvent* oui::MouseEvent::createBubbledEvent(MouseEvent* event) {
     int newLocalY = event->windowY - parent->getScreenY();
 
     if (event->type == "scroll") {
-        int scrollDistance = ((ScrollEvent*) event)->scrollDistance;
+        int scrollDistance = static_cast<ScrollEvent*>(event)->scrollDistance;
         return new ScrollEvent(event->bubbles, parent, event->altKey, event->buttons, newLocalX, newLocalY, event->ctrlKey, event->metaKey, event->movementX, event->movementY, event->screenX, event->screenY, event->shiftKey, event->windowX, event->windowY, scrollDistance);
     }
 

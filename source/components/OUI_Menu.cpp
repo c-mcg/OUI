@@ -144,13 +144,13 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     if (numOptions > 0) {
 
         //Rename button at desired index
-        Button* currentButton = (Button*) getChild("option_" + std::to_string(index));
+        Button* currentButton = static_cast<Button*>(getChild("option_" + std::to_string(index)));
         currentButton->setName("MENU_TEMP_NAME_" + std::to_string(index));
 
         //Reorganize remaining items
         for (int i = index; i < numOptions; i++) {
-            currentButton = (Button*) getChild("MENU_TEMP_NAME_" + std::to_string(i));
-            Button* nextButton = (Button*) getChild("option_" + std::to_string(i + 1));
+            currentButton = static_cast<Button*>(getChild("MENU_TEMP_NAME_" + std::to_string(i)));
+            Button* nextButton = static_cast<Button*>(getChild("option_" + std::to_string(i + 1)));
 
             //Set next button to temp name
             if (nextButton != NULL) {
@@ -219,9 +219,9 @@ bool oui::Menu::removeOption(int index) {
         return false;
     }
     int borderWidth = getCurrentProfile()->getInt("border-width");
-    Button* b2 = (Button*) getChild("option_" + std::to_string(index));
+    Button* b2 = static_cast<Button*>(getChild("option_" + std::to_string(index)));
     b2->setAttribute("permanent", false);
-    removeChild((Component*) b2);
+    removeChild(static_cast<Component*>(b2));
     int biggestWidth = resetOptions(index + 1);
     numOptions--;
     parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
@@ -244,7 +244,7 @@ int oui::Menu::resetOptions(int startIndex) {
     int biggestWidth = minWidth;
     Font* f = Font::getFont(font, fontSize, window);
     for (int i = startIndex; i < numOptions; i++) {
-        Button* b2 = (Button*) getChild("option_" + std::to_string(i));
+        Button* b2 = static_cast<Button*>(getChild("option_" + std::to_string(i)));
 
         b2->setName("option_" + std::to_string(i));
         b2->parseAttribute("size", u"100 0 " + intToString(-padding * 2 - borderWidth * 2) + u" " + intToString(optionHeight));

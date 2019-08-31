@@ -41,5 +41,5 @@ TEST(ComponentEvent, it_can_set_a_target)
     ComponentEvent event(NULL, "testClass", "test", false);
     EXPECT_EQ(event.getTarget(),  NULL_COMP);
     event.setTarget((Component*) 4);
-    EXPECT_EQ(event.getTarget(), (Component*) 4);
+    EXPECT_EQ(event.getTarget(), (Component*)4);
 }

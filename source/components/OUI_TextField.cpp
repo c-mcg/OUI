@@ -126,7 +126,7 @@ void oui::TextField::redraw() {
 }
 
 void oui::TextField::onMenuOption(ComponentEvent* compEvent) {
-		MenuEvent* event = (MenuEvent*) compEvent;
+		MenuEvent* event = static_cast<MenuEvent*>(compEvent);
 		std::u16string option = event->option;
         if (option == u"Cut") {
             if (caratIndex != selectStart) {
@@ -134,7 +134,7 @@ void oui::TextField::onMenuOption(ComponentEvent* compEvent) {
                     bool reverse = selectStart > caratIndex;
                     int start = reverse ? caratIndex : selectStart;
                     int end = reverse ? selectStart : caratIndex;
-                    ((Window*) window)->setClipboardText(text.substr(start, end));
+                    static_cast<Window*>(window)->setClipboardText(text.substr(start, end));
                     deleteChar(true);
                 });
                 e->performRedo();
@@ -152,18 +152,18 @@ void oui::TextField::onMenuOption(ComponentEvent* compEvent) {
         }
 
         if (option == u"Paste") {
-            if (((Window*) window)->getClipboardText() != u"") {
+            if (static_cast<Window*>(window)->getClipboardText() != u"") {
                 EditEvent* e = new EditEvent(getUndoEvent(), [this] {
-                    insertString(((Window*) window)->getClipboardText());
+                    insertString(static_cast<Window*>(window)->getClipboardText());
                 });
                 e->performRedo();
-                ((Window*) window)->addEditEvent(e);
+                static_cast<Window*>(window)->addEditEvent(e);
             }
         }
 }
 
 void oui::TextField::onMouseDown(ComponentEvent* compEvent) {
-    MouseEvent* event = (MouseEvent*) compEvent;
+    MouseEvent* event = static_cast<MouseEvent*>(compEvent);
     caratVisible = true;
     selectStart = 0;
     setCaratIndex(getIndexAt(event->localX));
@@ -175,15 +175,14 @@ void oui::TextField::onMouseUp(ComponentEvent* e) {
 }
 
 void oui::TextField::onMouseMove(ComponentEvent* compEvent) {
-    MouseEvent* event = (MouseEvent*) compEvent;
+    MouseEvent* event = static_cast<MouseEvent*>(compEvent);
     if (this->highlighting) {
         int localX = event->windowX - getScreenX();
         setCaratIndex(getIndexAt(localX));
     }
 }
 void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
-    KeyboardEvent* event = (KeyboardEvent*) compEvent;
-	std::cout << "key typed " << event->key << " " << event->character << std::endl;
+    KeyboardEvent* event = static_cast<KeyboardEvent*>(compEvent);
     int code = event->key;
     char character = event->character;
     if (code == KEY_BACKSPACE) {
@@ -192,7 +191,7 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
                 deleteChar(true);
             }, false, true, this);
             e->performRedo();
-            ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && !typing && !resetInput);
+            static_cast<Window*>(window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && !typing && !resetInput);
             typing = false;
             resetInput = false;
             lastInput = currentTimeMillis();
@@ -203,7 +202,7 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
                 deleteChar(false);
             }, false, !typing && !resetInput, this);
             e->performRedo();
-            ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512);
+            static_cast<Window*>(window)->addEditEvent(e, currentTimeMillis() - lastInput < 512);
             typing = false;
             resetInput = false;
             lastInput = currentTimeMillis();
@@ -218,13 +217,13 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
             moveCarat(true);
         }
         resetInput = true;
-    } else if (window != NULL && ((Window*) window)->isCtrlDown()) {
+    } else if (event->ctrlKey) {
         if (code == KEY_C) {
             bool reverse = selectStart > caratIndex;
             int start = reverse ? caratIndex : selectStart;
             int end = reverse ? selectStart : caratIndex;
             if (start != end) {
-                ((Window*) window)->setClipboardText(text.substr(start, end));
+                static_cast<Window*>(window)->setClipboardText(text.substr(start, end));
             }
             resetInput = true;
         }
@@ -234,21 +233,21 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
                     bool reverse = selectStart > caratIndex;
                     int start = reverse ? caratIndex : selectStart;
                     int end = reverse ? selectStart : caratIndex;
-                    ((Window*) window)->setClipboardText(text.substr(start, end));
+                    static_cast<Window*>(window)->setClipboardText(text.substr(start, end));
                     deleteChar(true);
                 });
                 e->performRedo();
-                ((Window*) window)->addEditEvent(e);
+                static_cast<Window*>(window)->addEditEvent(e);
             }
             resetInput = true;
         }
         if (code == KEY_V) {
-            if (((Window*) window)->getClipboardText() != u"") {
+            if (static_cast<Window*>(window)->getClipboardText() != u""){
                 EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
-                    insertString(((Window*) window)->getClipboardText());
+                    insertString(static_cast<Window*>(window)->getClipboardText());
                 });
                 e->performRedo();
-                ((Window*) window)->addEditEvent(e);
+                static_cast<Window*>(window)->addEditEvent(e);
             }
             resetInput = true;
         }
@@ -259,7 +258,7 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
             insertChar(character);
         }, false, true, this);
         e->performRedo();
-        ((Window*) window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && code != KEY_ENTER && typing && !resetInput);
+        static_cast<Window*>(window)->addEditEvent(e, currentTimeMillis() - lastInput < 512 && code != KEY_ENTER && typing && !resetInput);
         lastInput = currentTimeMillis();
         typing = true;
         resetInput = false;
@@ -388,7 +387,7 @@ std::function<void()> oui::TextField::getUndoEvent() {
         setText(text_);
         updateTextPosition();
         if (window != NULL) {
-            ((Window*) window)->setSelectedComponent(this);
+            static_cast<Window*>(window)->setSelectedComponent(this);
         }
     };
 }
