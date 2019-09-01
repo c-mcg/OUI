@@ -206,7 +206,6 @@ void oui::SDLGraphics::drawTextLine(const std::u16string& text, int x, int y) {
     SDL_Surface* textSurface = TTF_RenderUNICODE_Blended(sdlFont->getBaseFont(), reinterpret_cast<const Uint16*>(text.c_str()), foregroundColor);
     if (textSurface == NULL) {
         printf("Error rendering font : %s", TTF_GetError());
-        std::cout << "Text surface was null!" << std::endl;
         return;
     }
     SDL_Rect textLocation = {x, y, textSurface->w, textSurface->h};
@@ -232,13 +231,11 @@ void oui::SDLGraphics::setAlpha(int alpha) {
 void oui::SDLGraphics::renderToGraphics(int x, int y, Graphics* target) {
     static_cast<SDLGraphics*>(target)->prepare();
     SDL_Rect dest = {x, y, width, height};
-    //std::cout << "graphics: width=" << width << " height=" << height << std::endl;
     SDL_RenderCopy(renderer, buffer, NULL, &dest);
 }
 
 void oui::SDLGraphics::renderToWindow(int x, int y) {
     SDL_SetRenderTarget(renderer, NULL);
     SDL_Rect dest = {x, y, width, height};
-    //std::cout << "graphics: width=" << width << " height=" << height << std::endl;
     SDL_RenderCopy(renderer, buffer, NULL, &dest);
 }

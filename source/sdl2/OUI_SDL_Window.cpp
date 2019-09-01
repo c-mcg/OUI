@@ -18,7 +18,7 @@ oui::SDLWindow::SDLWindow(int width, int height) :
     Window(width, height) {
     // TODO retina: https://stackoverflow.com/questions/18544881/sdl-2-0-retina-mac
     
-    this->baseWindow = SDL_CreateWindow(convertUTF16toUTF8(getTitle()).c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_BORDERLESS);
+    this->baseWindow = SDL_CreateWindow(convertUTF16toUTF8(getTitle()).c_str(), 0, 0, width, height, SDL_WINDOW_BORDERLESS);
     this->renderer = SDL_CreateRenderer(baseWindow, -1, SDL_RENDERER_ACCELERATED);
     this->baseWindowId = SDL_GetWindowID(baseWindow);
     this->baseCursor = NULL;
@@ -82,9 +82,11 @@ bool oui::SDLWindow::setCursor(int cursor) {
     return true;
 }
 void oui::SDLWindow::onMinimize(ComponentEvent* event) {
+    Window::onMaximize(event);
     SDL_MinimizeWindow(baseWindow);
 }
 void oui::SDLWindow::onMaximize(ComponentEvent* event) {
+    Window::onMaximize(event);
     SDL_MaximizeWindow(baseWindow);
 }
 
@@ -180,7 +182,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
         if (it == mouseButtonsDown.end()) {
             mouseButtonsDown.push_back(event->button.button);
         }
-        MouseEvent* mouseEvent = new MouseEvent("mousedown", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
+        MouseEvent* mouseEvent = new MouseEvent("mousedown", true, NULL, false, event->button.button - 1, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
         onSystemMouseDown(mouseEvent);
         delete mouseEvent;
         lastMouseX = event->button.x;

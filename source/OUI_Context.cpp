@@ -12,32 +12,40 @@ oui::Context::Context() :
 int oui::Context::process() {
 
     if (windows.size() == 0) {
-        std::cout << "No windows" << std::endl;
+        std::cout << "Shutting down because all windows were closed" << std::endl;
         return -1;
+    }
+
+    bool wereEventsCaptured = false;
+    try {
+        wereEventsCaptured = captureEvents();
+    } catch(Exception e) {
+        OS()->showErrorMessage(e);
+    }
+
+    if (wereEventsCaptured) {
+        lastEvent = currentTimeMillis();
     }
 
     std::vector<Window*>::iterator it;
     for (it = windows.begin(); it != windows.end();) {//TODO make a safe(er) loop like the queuedEvents
-        
+        Window* window = *it;
         int processResult = -1;
         try {
-            processResult = (*it)->process();
+            processResult = window->process();
+            handleEventsForWindow(window);
         } catch (Exception e) {
+            processResult = -1;
             OS()->showErrorMessage(e);
         }
-
 
         if (processResult == -1) {
             delete *it;
             it = windows.erase(it);
         } else {
-            ++it;
+            it++;
         }
         
-    }
-
-    if (pollEvents()) {
-        lastEvent = currentTimeMillis();
     }
 
     sleep(currentTimeMillis() - lastEvent > 5000 ? 32 : 0);
@@ -85,6 +93,9 @@ oui::Window* oui::Context::createWindow(int width, int height) {
     return NULL;
 }
 
-bool oui::Context::pollEvents() {
+bool oui::Context::captureEvents() {
     return false;
+}
+
+void oui::Context::handleEventsForWindow(Window* window) {
 }

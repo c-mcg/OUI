@@ -4,9 +4,10 @@
 #include "sdl2/OUI_SDL_Context.h"
 
 #include <iostream>
-oui::SDLContext::SDLContext() : Context() {
-    lastSDLEvent = 0;
-    std::cout << "created sdl context" << std::endl;
+oui::SDLContext::SDLContext() :
+    lastSDLEvent{0}, capturedEvents{std::unordered_map<SDLWindow*, std::vector<SDL_Event>>()},
+    Context()
+{
 }
 
 oui::Window* oui::SDLContext::createWindow(int width, int height) {
@@ -14,7 +15,7 @@ oui::Window* oui::SDLContext::createWindow(int width, int height) {
     return window;
 }
 
-bool oui::SDLContext::pollEvents() {
+bool oui::SDLContext::captureEvents() {
     SDL_Event event;
     SDLWindow* window = NULL;
     bool hasEvent = SDL_PollEvent(&event);
@@ -48,13 +49,42 @@ bool oui::SDLContext::pollEvents() {
         }
 
         if (window != NULL) {
-            window->handleSDLEvent(&event);
+            auto it = capturedEvents.find(window);
+            if (it != capturedEvents.end()) {
+                std::vector<SDL_Event> events = it->second;
+                events.push_back(event);
+                capturedEvents.insert_or_assign(window, events);
+            } else {
+                std::vector<SDL_Event> events;
+                events.push_back(event);
+                capturedEvents.insert_or_assign(window, events);
+            }
         }
 
         hasEvent = SDL_PollEvent(&event);
     }
 
     return hadEvent;
+}
+
+
+void oui::SDLContext::handleEventsForWindow(Window* baseWindow) {
+    SDLWindow* window = static_cast<SDLWindow*>(baseWindow);
+    auto mapIt = capturedEvents.find(window);
+
+    if (mapIt == capturedEvents.end()) {
+        return;
+    }
+
+    std::vector<SDL_Event> windowEvents = mapIt->second;
+
+    for (auto vecIt = windowEvents.begin(); vecIt != windowEvents.end(); vecIt++) {
+        SDL_Event event = *vecIt;
+        window->handleSDLEvent(&event);
+    }
+
+    windowEvents.clear();
+    capturedEvents.insert_or_assign(window, windowEvents);
 }
 
 oui::SDLWindow* oui::SDLContext::getWindow(int sdlID) {

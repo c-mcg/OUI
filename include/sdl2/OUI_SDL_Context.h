@@ -10,15 +10,23 @@ namespace oui {
 
     class SDLContext : public Context {
 
-        private: long long lastSDLEvent;
+        public:
 
-        public: SDLContext();
+            SDLContext();
 
-        protected: Window* createWindow(int width=0, int height=0);
+        protected:
 
-        protected: bool pollEvents() override;
+            Window* createWindow(int width=0, int height=0);
 
-        private: SDLWindow* getWindow(int sdlID);
+            bool captureEvents() override;
+            void handleEventsForWindow(Window* window) override;
+
+        private:
+
+            SDLWindow* getWindow(int sdlID);
+
+            long long lastSDLEvent;
+            std::unordered_map<SDLWindow*, std::vector<SDL_Event>> capturedEvents;
 
     };
 

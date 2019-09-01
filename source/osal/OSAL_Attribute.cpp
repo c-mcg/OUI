@@ -68,10 +68,8 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
             } else if (isDouble(token)) {
                 types.push_back(TYPE_DOUBLE);
             } else if (equalsIgnoreCase(token, u"true") || equalsIgnoreCase(token, u"false")) {
-                //std::cout << "parsed bool: " << convertUTF16toUTF8(token).c_str() << std::endl;
                 types.push_back(TYPE_BOOL);
             } else {
-                //std::cout << "Defaulted to string for value " << convertUTF16toUTF8(token).c_str() << std::endl;
                 types.push_back(TYPE_STRING);
             }
             this->value.push_back(token);

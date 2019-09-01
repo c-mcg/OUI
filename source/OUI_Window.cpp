@@ -79,10 +79,10 @@ void oui::Window::initializeWindow(int width, int height) {
     windowBar->addEventListener("mousedown", [this](ComponentEvent* e) {
         auto comp = e->getTarget();
         if (maximized) {
-            onSystemUnmaximize();
+            onUnmaximize();
 
             // TODO if maximized?
-            moveOffX = comp->getWidth() / 2;
+            moveOffX = getWidth() / 2;
             moveOffY = comp->getHeight() / 2;
             parseAttribute("location", u"0 0 " + intToString(globalMouseX - moveOffX) + u" " + intToString(globalMouseY - moveOffY));
         } else {
@@ -108,6 +108,7 @@ void oui::Window::initializeWindow(int width, int height) {
 
     minimizeBtn->addEventListener("click", [this](ComponentEvent* e) {
         onSystemMinimize();
+        e->stopPropagation();
     });
     minimizeBtn->parseAttribute("location", u"100 0 -73 0");
     minimizeBtn->parseAttribute("size", u"0 0 25 25");
@@ -119,6 +120,7 @@ void oui::Window::initializeWindow(int width, int height) {
 
     maximizeBtn->addEventListener("click", [this](ComponentEvent* e) {
         onSystemMaximize();
+        e->stopPropagation();
     });
     maximizeBtn->parseAttribute("location", u"100 0 -49 0");
     maximizeBtn->parseAttribute("size", u"0 0 25 25");
@@ -130,6 +132,7 @@ void oui::Window::initializeWindow(int width, int height) {
     closeBtn->addEventListener("click", [this](ComponentEvent* e) {
         WindowEvent* windowEvent = WindowEvent::create("close", this, getX(), getY(), getWidth(), getHeight());
         eventDispatcher->dispatchEvent(windowEvent);
+        e->stopPropagation();
         delete windowEvent;
     });
 
@@ -158,6 +161,7 @@ void oui::Window::initializeWindow(int width, int height) {
 
     parseAttribute("bg-color", u"255 255 255 255");
     setAttribute("border-style", u"solid");
+    setProfile(u"default");
 }
 
 void oui::Window::setContext(Context* context) {
@@ -207,7 +211,6 @@ bool oui::Window::isWindow() {
 
 int oui::Window::process() {
     if (shutdown) {
-        std::cout << "Shutdown was true.." << std::endl;
         return -1;
     }
 
@@ -438,7 +441,6 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
     maximizeHeight = getHeight();
 
     //TODO: cross platform
-    
 
     int maximizedX = 0;
     int maximizedY = 0;
