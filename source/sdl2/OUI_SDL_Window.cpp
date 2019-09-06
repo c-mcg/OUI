@@ -53,25 +53,23 @@ void oui::SDLWindow::setSize(int width, int height) {
 void oui::SDLWindow::setPosition(int x, int y) {
     SDL_SetWindowPosition(baseWindow, x, y);
 }
-bool oui::SDLWindow::setCursor(int cursor) {
+bool oui::SDLWindow::setCursor(std::u16string cursor) {
     if (!Window::setCursor(cursor)) {
         return false;
     }
     SDL_Cursor* baseCursor;
     SDL_SystemCursor newCursor;
-    switch (cursor) {
-        case CURSOR_DEFAULT:
-            newCursor = SDL_SYSTEM_CURSOR_ARROW;
-            break;
-        case CURSOR_POINTER:
-            newCursor = SDL_SYSTEM_CURSOR_HAND;
-            break;
-        case CURSOR_RESIZE:
-            newCursor = SDL_SYSTEM_CURSOR_SIZENWSE;
-            break;
-        case CURSOR_TEXT:
-            newCursor = SDL_SYSTEM_CURSOR_IBEAM;
-            break;
+    if (cursor == CURSOR_DEFAULT) {
+        newCursor = SDL_SYSTEM_CURSOR_ARROW;
+    }
+    if (cursor == CURSOR_POINTER) {
+        newCursor = SDL_SYSTEM_CURSOR_HAND;
+    }
+    if (cursor == CURSOR_RESIZE) {
+        newCursor = SDL_SYSTEM_CURSOR_SIZENWSE;
+    }
+    if (cursor == CURSOR_TEXT) {
+        newCursor = SDL_SYSTEM_CURSOR_IBEAM;
     }
     if (this->baseCursor != NULL) {
         //	SDL_FreeCursor(baseCursor);
@@ -121,7 +119,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
             case SDL_WINDOWEVENT_RESTORED:
                 break;
             case SDL_WINDOWEVENT_ENTER:
-                cursor = -1;
+                cursorType = u"none";
                 break;
             case SDL_WINDOWEVENT_LEAVE:
                 setHovered(false);

@@ -3,21 +3,22 @@
 
 #include "OUI_Export.h"
 #include "components/OUI_Component.h"
+#include "components/OUI_LabelAttributeManager.h"
 
 namespace oui {
 
-    class Label : public Component {
+    class OUI_API Label : public Component {
 
-        private: std::u16string text;
-        private: Font* font;
-        private: Color textColor;
-        private: bool autoSize;
+        public:
+        
+            ~Label();
+            Label(const std::string& name, const std::string& classes,  EventDispatcher* eventDispatcher=new EventDispatcher(), LabelAttributeManager* attributeManager=new LabelAttributeManager());
 
-        public: OUI_API ~Label();
-        public: OUI_API Label(const std::string& name, const std::string& classes);
+            void redraw() override;
 
-        public: OUI_API void setProfile(const std::u16string& profile) override;
-        public: OUI_API void redraw() override;
+        private:
+
+            LabelAttributeManager* getAttributeManager();
 
     };
 }

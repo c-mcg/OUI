@@ -3,71 +3,66 @@
 
 #include "OUI_Export.h"
 #include "components/OUI_Component.h"
+#include "components/OUI_ContainerAttributeManager.h"
 
 namespace oui {
 
     class Container: public Component {
 
-        protected: StyleSheet* styleSheet;
-        protected: std::vector<Component*> children;
-        protected: std::vector<Component*> processableChildren;
+        public:
+        
+            OUI_API ~Container();
+            OUI_API Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher(), ContainerAttributeManager* attributeManager=new ContainerAttributeManager());
 
-        public: OUI_API ~Container();
-        public: OUI_API Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher());
+            OUI_API void onProcessableChildAdded(Component* addedChild);
+            OUI_API void onProcessableChildRemoved(Component* addedChild);
 
-        public: OUI_API void onProcessableChildAdded(Component* addedChild);
-        public: OUI_API void onProcessableChildRemoved(Component* addedChild);
+            OUI_API void flagGraphicsUpdateAll();
 
-        public: OUI_API void flagGraphicsUpdateAll();
+            OUI_API virtual void addedToContainer(Container* container) override;
 
-        //Sets the style sheet and deletes the current one if it exists
-        //Two container styleSheets should never point to the same sheet
-        public: OUI_API void setStyleSheet(StyleSheet* sheet);
-        public: OUI_API virtual Style* createStyle(StyleSheet* sheet = NULL) override;
-        public: OUI_API virtual void setProfile(const std::u16string& profile) override;
+            OUI_API virtual void setSelected(bool selected) override;
 
-        public: OUI_API virtual void addedToContainer(Container* container) override;
+            OUI_API virtual void redraw() override;
 
-        public: OUI_API virtual void setSelected(bool selected) override;
+            OUI_API virtual void redrawChildren();
 
-        public: OUI_API virtual void redraw() override;
+            OUI_API Component* getComponentAt(int x, int y);
 
-        public: OUI_API virtual void redrawChildren();
+            OUI_API int getIndexOf(const std::string& name);
+            OUI_API int getIndexOf(Component* c);
 
-        public: OUI_API Component* getComponentAt(int x, int y);
+            OUI_API bool isContainer() override;
 
-        public: OUI_API int getIndexOf(const std::string& name);
-        public: OUI_API int getIndexOf(Component* c);
+            OUI_API virtual void removeAllChildren(bool shouldDelete = false);
+            OUI_API Component* removeChild(const std::string& name, bool shouldDelete = false);
+            OUI_API Component* removeChild(Component* child, bool shouldDelete = false);
+            OUI_API virtual Component* removeChild(int index, bool shouldDelete = false);
 
-        public: OUI_API bool isContainer() override;
+            OUI_API int getNumChildren();
+            OUI_API bool isDuplicateName(const std::string& name, Component* ignore = NULL);
+            OUI_API virtual bool addChild(Component* child);
+            OUI_API Component* getChild(const std::string& name);
+            OUI_API virtual Component* getChild(int index);
+            OUI_API Container* getChildCont(const std::string& name);
+            OUI_API Container* getChildCont(int index);
 
-        public: OUI_API virtual void removeAllChildren(bool shouldDelete = false);
-        public: OUI_API Component* removeChild(const std::string& name, bool shouldDelete = false);
-        public: OUI_API Component* removeChild(Component* child, bool shouldDelete = false);
-        public: OUI_API virtual Component* removeChild(int index, bool shouldDelete = false);
-
-        public: OUI_API int getNumChildren();
-        public: OUI_API bool isDuplicateName(const std::string& name, Component* ignore = NULL);
-        public: OUI_API virtual bool addChild(Component* child);
-        public: OUI_API Component* getChild(const std::string& name);
-        public: OUI_API virtual Component* getChild(int index);
-        public: OUI_API Container* getChildCont(const std::string& name);
-        public: OUI_API Container* getChildCont(int index);
-
-        public: OUI_API void setHovered(bool hovered) override;
-        public: OUI_API void setMouseDown(bool mouseDown) override;
+            OUI_API void setHovered(bool hovered) override;
+            OUI_API void setMouseDown(bool mouseDown) override;
 
 
-        public: OUI_API void addOSALStyle(const std::u16string& sheet);
-        public: OUI_API void addOSALStyle(OSAL::Sheet sheet);
+            OUI_API void addOSALStyle(const std::u16string& sheet);
+            OUI_API void addOSALStyle(OSAL::Sheet sheet);
 
-        //Adds a style sheet to the container
-        //This is combined with existing style sheets
-        //Style sheets are applied to children of the container
-        public: OUI_API void addStyleSheet(StyleSheet* sheet);
+            OUI_API virtual StyleSheet* getAllStyleSheets();
 
+        protected:
+        
+            std::vector<Component*> children;
+            std::vector<Component*> processableChildren;
 
-        public: OUI_API virtual StyleSheet* getAllStyleSheets();
+        private: 
+            ContainerAttributeManager* getAttributeManager();
 
     };
 

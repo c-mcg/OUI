@@ -3,69 +3,62 @@
 
 #include "OUI_Export.h"
 #include "components/OUI_Component.h"
+#include "components/OUI_TextFieldAttributeManager.h"
 
 namespace oui {
 
-    class TextField : public Component {
+    class OUI_API TextField : public Component {
 
+        public:
+        
+            ~TextField();
+            TextField(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher=new EventDispatcher(), TextFieldAttributeManager* attributeManager=new TextFieldAttributeManager());
+
+            void addedToContainer(Container* container) override;
+
+            int process() override;
+
+            std::vector<std::u16string> getRightClickOptions() override;
+
+            void redraw() override;
+            void setSelected(bool selected) override;
+
+            void setText(const std::u16string& text);
+
+            void insertString(const std::u16string& string);
+            void insertChar(char c);
+            void deleteChar(bool backspace);
+            void moveCarat(bool right);
+
+            int getCaratIndex();
+            void setCaratIndex(int index);
+
+            void updateTextPosition();
+        
         private:
+
+            TextFieldAttributeManager* getAttributeManager();
+
+            int drawX;
+            int selectStart;
+            bool caratVisible;
+            long long lastCaratSwitch;
+            int caratIndex;
+
+            bool highlighting;
+
+            bool resetInput;
+            bool typing;//true if last input was typing, false if last input was deleting
+            long long lastInput;
+            
+            int getIndexAt(int x);
+            std::function<void()> getUndoEvent();
+
             void onMenuOption(ComponentEvent* e);
             void onMouseDown(ComponentEvent* e);
             void onMouseUp(ComponentEvent* e);
             void onMouseMove(ComponentEvent* e);
             void onKeyTyped(ComponentEvent* e);
-
-        private: Color textColor;
-        private: Font* font;
-        //TODO getters and setters
-        private: Color caratColor;
-        private: int caratWidth;
-        private: int caratHeightOffset;
-        private: Color highlightColor;
-
-        private: int selectStart;
-        private: bool caratVisible;
-        private: long long lastCaratSwitch;
-        private: int caratIndex;
-        private: std::u16string text;
-
-        private: bool highlighting;
-
-        private: bool resetInput;
-        private: bool typing;//true if last input was typing, false if last input was deleting
-        private: long long lastInput;
-
-        private: int drawX;
-
-        public: OUI_API ~TextField();
-        public: OUI_API TextField(const std::string& name, const std::string& classes);
-
-        public: OUI_API void addedToContainer(Container* container) override;
-
-        public: OUI_API int process() override;
-
-        public: OUI_API void setProfile(const std::u16string& profile) override;
-        public: OUI_API std::vector<std::u16string> getRightClickOptions() override;
-
-        public: OUI_API void redraw() override;
-        public: OUI_API void setSelected(bool selected) override;
-
-        public: OUI_API void setText(const std::u16string& text);
-
-        public: OUI_API void insertString(const std::u16string& string);
-        public: OUI_API void insertChar(char c);
-        public: OUI_API void deleteChar(bool backspace);
-        public: OUI_API void moveCarat(bool right);
-
-        public: OUI_API int getCaratIndex();
-        public: OUI_API void setCaratIndex(int index);
-
-        public: OUI_API void updateTextPosition();
-
-        private: int getIndexAt(int x);
-        private: std::function<void()> getUndoEvent();
-
-
     };
 }
 #endif

@@ -14,6 +14,7 @@ namespace oui {
         public: std::u16string stringVal = u"";
         public: bool boolVal = false;
         public: double doubleVal = 0;
+        public: Color colorVal = Color::BLACK;
 
         public: ~Attribute();
         public: Attribute();
@@ -25,6 +26,7 @@ namespace oui {
         public: Attribute(const char16_t* value);
         public: Attribute(bool value);
         public: Attribute(double value);
+        public: Attribute(Color value);
 
         public: std::u16string toString();
         public: bool equals(Attribute other);

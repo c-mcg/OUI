@@ -53,6 +53,70 @@ double stringToDouble(const std::u16string& str) {
     return std::stof(convertUTF16toUTF8(str).c_str());
 }
 
+bool stringStartsWith(std::u16string string, std::u16string starting) {
+    if (string.length() < starting.length()) {
+        return false;
+    }
+    
+    auto stringIt = string.begin();
+    auto startingIt = starting.begin();
+
+    int charactersChecked = 0;
+    while (charactersChecked < starting.length()) {
+        if (*stringIt != *startingIt) {
+            return false;
+        }
+        charactersChecked++;
+        stringIt++;
+        startingIt++;
+    }
+
+    return true;
+}
+
+
+bool stringEndsWith(std::u16string string, std::u16string ending) {
+    if (string.length() < ending.length()) {
+        return false;
+    }
+    
+    auto stringIt = string.end() - 1;
+    auto endingIt = ending.end() - 1;
+
+    int charactersChecked = 0;
+    while (charactersChecked < ending.length()) {
+        if (*stringIt != *endingIt) {
+            return false;
+        }
+        charactersChecked++;
+        stringIt--;
+        endingIt--;
+    }
+
+    return true;
+}
+
+bool stringEndsWith(std::string string, std::string ending) {
+    if (string.length() < ending.length()) {
+        return false;
+    }
+    
+    auto stringIt = string.end() - 1;
+    auto endingIt = ending.end() - 1;
+
+    int charactersChecked = 0;
+    while (charactersChecked < ending.length()) {
+        if (*stringIt != *endingIt) {
+            return false;
+        }
+        charactersChecked++;
+        stringIt--;
+        endingIt--;
+    }
+
+    return true;
+}
+
 // std::u16string::const_iterator findInString(const std::u16string& string, const char toFind) {
 // 	const char16_t toFind16 = (char16_t) toFind;
 // 	return std::search(string.cbegin(), string.cend(), std::boyer_moore_searcher(&toFind16, &toFind16)); 

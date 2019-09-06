@@ -10,8 +10,9 @@
 #include "event/OUI_EditEvent.h"
 #include <stdint.h>
 
-
 #include "event/OUI_ComponentEvent.h"
+#include "event/OUI_WindowEventDispatcher.h"
+#include "components/OUI_WindowAttributeManager.h"
 
 namespace oui {
 
@@ -25,6 +26,9 @@ namespace oui {
 
     class Window: public Container {
         
+        private:
+
+            WindowAttributeManager* getAttributeManager();
 
         private: Context* context;
 
@@ -32,8 +36,7 @@ namespace oui {
 
         //Basic window properties
         private: std::u16string title;
-        private: bool visible;
-        private: char cursorType;
+        protected: std::u16string cursorType;
         protected: int globalMouseX;
         protected: int globalMouseY;
         private: bool maximized;
@@ -55,20 +58,15 @@ namespace oui {
         protected: int resizeX;
         protected: int resizeY;
 
-        //Custimizations
-        protected: int cursor;
-
         private: Component* selectedComponent;
 
         public: OUI_API ~Window();
-        public: OUI_API Window(int width=0, int height=0);
+        public: OUI_API Window(int width=0, int height=0, EventDispatcher* eventDispatcher=new WindowEventDispatcher(), WindowAttributeManager* attributeManager = new WindowAttributeManager());
 
         protected: void initializeWindow(int width, int height);
 
         public: OUI_API void setContext(Context* context);
         public: OUI_API Context* getContext();
-
-        public: OUI_API virtual void setProfile(const std::u16string& profile) override;
 
         public: OUI_API virtual bool isWindow() override;
 
@@ -124,7 +122,7 @@ namespace oui {
         public: OUI_API virtual void setTitle(const std::u16string& title);
         public: OUI_API virtual void setSize(int width, int height);
         public: OUI_API virtual void setPosition(int x, int y);
-        public: OUI_API virtual bool setCursor(int cursor);
+        public: OUI_API virtual bool setCursor(std::u16string cursor);
 
         public: OUI_API virtual void onSystemClose(ComponentEvent* event=NULL);
         public: OUI_API virtual void onSystemMinimize(ComponentEvent* event=NULL);

@@ -3,36 +3,32 @@
 
 #include "OUI_Export.h"
 #include "components/OUI_Component.h"
+#include "components/OUI_ButtonAttributeManager.h"
 
 namespace oui {
 
     class Button : public Component {
 
-        public: static Style* defaultStyle;
-        public: static Style* getDefaultButtonStyle();
+        public:
+        
+            static Style* defaultStyle;
+            static Style* getDefaultButtonStyle();
 
-        private: std::u16string link;
-        private: std::u16string imageString;
-        private: Image* image;
-        private: Color textColor;
-        private: Font* font;
-        private: bool centerText;
+            OUI_API ~Button();
+            OUI_API Button(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher=new EventDispatcher(), ButtonAttributeManager* attributeManager=new ButtonAttributeManager());
 
-        private: std::u16string text;
+            OUI_API void redraw() override;
 
-        public: OUI_API ~Button();
-        public: OUI_API Button(const std::string& name, const std::string& classes);
+            OUI_API void addedToContainer(Container* container) override;
 
-        public: OUI_API void setProfile(const std::u16string& profile) override;
+            OUI_API Image* getImage();
 
-        public: OUI_API void redraw() override;
+        protected:
 
-        public: OUI_API void addedToContainer(Container* container) override;
+        private:
+            Image* image;
 
-        public: OUI_API void setImage(Image* image);
-        public: OUI_API Image* getImage();
-
-        public: OUI_API Style* getDefaultStyle() override;
+            ButtonAttributeManager* getAttributeManager();
 
     };
 }

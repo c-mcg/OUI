@@ -5,6 +5,8 @@ oui::Panel::~Panel() {
 
 }
 
-oui::Panel::Panel(const std::string& name, const std::string& classes) : Container("panel", name, classes) {
+oui::Panel::Panel(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher, ContainerAttributeManager* attributeManager) :
+    Container("panel", name, classes, false, eventDispatcher, attributeManager)
+{
 
 }

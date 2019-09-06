@@ -55,6 +55,11 @@ oui::Attribute::Attribute(double value) {
     doubleVal = value;
 }
 
+oui::Attribute::Attribute(Color value) {
+    type = OSAL::TYPE_COLOR;
+    colorVal = value;
+}
+
 std::u16string oui::Attribute::toString() {
     switch (type) {
         case OSAL::TYPE_INT:
@@ -65,6 +70,9 @@ std::u16string oui::Attribute::toString() {
             return boolVal ? u"true" : u"false";
         case OSAL::TYPE_DOUBLE:
             return doubleToString(doubleVal);
+            break;
+        case OSAL::TYPE_COLOR:
+            return intToString(colorVal.getARGB());
             break;
     }
     return stringVal;
@@ -79,7 +87,7 @@ bool oui::Attribute::equals(Attribute other) {
 
     //Compare member values
     return intVal == other.intVal && stringVal == other.stringVal
-        && boolVal == other.boolVal && doubleVal == other.doubleVal;
+        && boolVal == other.boolVal && doubleVal == other.doubleVal && colorVal.getARGB() == other.colorVal.getARGB();
 }
 
 oui::Attribute* oui::Attribute::clone() {
@@ -95,6 +103,9 @@ oui::Attribute* oui::Attribute::clone() {
             break;
         case OSAL::TYPE_DOUBLE:
             return new Attribute(doubleVal);
+            break;
+        case OSAL::TYPE_COLOR:
+            return new Attribute(colorVal);
             break;
     }
 

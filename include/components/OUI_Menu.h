@@ -4,47 +4,42 @@
 #include "OUI_Export.h"
 #include "components/OUI_Container.h"
 #include "components/OUI_Button.h"
+#include "components/OUI_MenuAttributeManager.h"
 
 namespace oui {
 
     class Menu : public Container {
 
-        private: int numOptions;//TODO this is harder than it looks to remove
-        private: std::vector<std::u16string> options;
-        private: Component* target;
+        public:
         
-        //TODO none of these work get assigned through profiles
-        private: std::u16string font;
-        private: int fontSize;
-        private: int minWidth;
-        private: int optionHeight;
-        private: Color hoverColor;
-        private: int padding;
-        
+            OUI_API ~Menu();
+            OUI_API Menu(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher=new EventDispatcher(), MenuAttributeManager* attributeManager=new MenuAttributeManager());
 
-        public: OUI_API ~Menu();
-        public: OUI_API Menu(const std::string& name, const std::string& classes);
+            // Used to disable adding children traditionally
+            OUI_API bool addChild(Component* child) override;
 
-        public: OUI_API void setProfile(const std::u16string& profile) override;
+            OUI_API bool removeOption(int index);
+            OUI_API std::vector<Button*> setOptions(const std::vector<std::u16string>&  options);
 
-        //Used to disable adding children traditionally
-        public: OUI_API bool addChild(Component* child) override;
+            void setTarget(Component* component);
+            Component* getTarget();
 
-        //Used to override the disabled addChild above
-        private: bool _addChild(Button* child);
+            // Start of internal public methods
+            int resetOptions(int startIndex = 0);
+            void removeAllOptionComponents();
+            std::vector<Button*> addOptions(const std::vector<std::u16string>& options);
 
-        //TODO remove these
-        private: Button* addOption(const std::u16string& option);
-        private: Button* addOption(const std::u16string& option, int index);
-        private: std::vector<Button*> addOptions(const std::vector<std::u16string>& options);
-        private: std::vector<Button*> addOptions(const std::vector<std::u16string>& options, int index);
-        public: bool removeOption(int index);
-        public: std::vector<Button*> setOptions(const std::vector<std::u16string>&  options);
-        public: void setTarget(Component* component);
-        public: Component* getTarget();
+        private:
+            Component* target;
 
-        /*Returns the width of the longest string*/
-        private: int resetOptions(int startIndex = 0);
+            MenuAttributeManager* getAttributeManager();
+
+            Button* addOption(const std::u16string& option);
+            Button* addOption(const std::u16string& option, int index);
+            std::vector<Button*> addOptions(const std::vector<std::u16string>& options, int index);
+
+            // Used to override the disabled addChild above
+            bool _addChild(Button* child);
 
     };
 }

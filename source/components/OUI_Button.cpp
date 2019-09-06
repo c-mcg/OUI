@@ -3,7 +3,6 @@
 #include "components/OUI_Button.h"
 #include <iostream>
 #include <sstream>
-#include "OUI_Constants.h"
 
 oui::Style* oui::Button::defaultStyle = Button::getDefaultButtonStyle();
 
@@ -65,55 +64,34 @@ oui::Button::~Button() {
     //TODO
 }
 
-oui::Button::Button(const std::string& name, const std::string& classes) : 
-    centerText{false}, font{NULL}, image{NULL},
-    Component("button", name, classes) {
-        eventDispatcher->addEventListener("click", [this](ComponentEvent* event) {
-		if (this->window == NULL || this->link.compare(u"") == 0) {
+oui::Button::Button(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher, ButtonAttributeManager* attributeManager) :
+    image{NULL},
+    Component("button", name, classes, false, eventDispatcher, attributeManager)
+{
+    eventDispatcher->addEventListener("click", [this](ComponentEvent* event) {
+        std::u16string link = this->getAttributeManager()->getLink();
+		if (this->window == NULL || link.compare(u"") == 0) {
 			return;
 		}
-		this->window->setPage(this->link);
+		this->window->setPage(link);
 	});
 }
 
-void oui::Button::setProfile(const std::u16string& profileName) {
-    Component::setProfile(profileName);
-
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
-
-        // Image
-        imageString = profile->getString("image");
-
-        // Text
-        text = profile->getString("text");
-
-        // Font
-        font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), window);
-
-        // Text-color
-        textColor = Color(profile->getInt("text-color-r"), profile->getInt("text-color-g"), profile->getInt("text-color-b"), profile->getInt("text-color-a"));
-
-        // Center-text
-        centerText = profile->getBool("center-text");
-
-        // Page Link
-        link = profile->getString("link");
-
-    }
-}
 
 void oui::Button::addedToContainer(Container* parent) {
+    ButtonAttributeManager* attributeManager = getAttributeManager();
     Component::addedToContainer(parent);
     if(window != NULL) {
+        std::u16string imageString = attributeManager->getImageString();
         if(image == NULL && imageString.length() > 0) {
-            this->image = Image::loadImage(this->imageString, window);
+            image = Image::loadImage(imageString, window);
             flagGraphicsUpdate();
         }
     }
 }
 
 void oui::Button::redraw() {
+    ButtonAttributeManager* attributeManager = getAttributeManager();
     Component::redraw();
 
     // Draw image
@@ -126,6 +104,10 @@ void oui::Button::redraw() {
     }
 
     // Draw text
+    std::u16string text = attributeManager->getText();
+    Color textColor = attributeManager->getTextColor();
+    Font* font = attributeManager->getFont();
+    bool centerText = attributeManager->isTextCentered();
     if (text != u"") {
         graphics->setColor(textColor);
         graphics->setFont(font);
@@ -136,16 +118,10 @@ void oui::Button::redraw() {
     drawBorder();
 }
 
-void oui::Button::setImage(Image* image) {
-    this->imageString = u"";
-    this->image = image;
-    flagGraphicsUpdate();
-}
-
 oui::Image* oui::Button::getImage() {
     return image;
 }
 
-oui::Style* oui::Button::getDefaultStyle() {
-    return Button::getDefaultButtonStyle();
+oui::ButtonAttributeManager* oui::Button::getAttributeManager() {
+    return static_cast<ButtonAttributeManager*>(attributeManager);
 }

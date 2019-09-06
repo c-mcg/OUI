@@ -35,7 +35,7 @@ namespace oui {
             void setTitle(const std::u16string& title) override;
             void setSize(int width, int height) override;
             void setPosition(int x, int y) override;
-            bool setCursor(int cursor) override;
+            bool setCursor(std::u16string cursor) override;
             
             void onMinimize(ComponentEvent* event) override;
             void onMaximize(ComponentEvent* event) override;

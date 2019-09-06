@@ -2,7 +2,6 @@
 #include <iostream>
 #include <sstream>
 #include "OUI_KeyCodes.h"
-#include "OUI_Constants.h"
 #include "OUI_Window.h"
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
@@ -10,17 +9,17 @@
 #include "event/OUI_MenuEvent.h"
 
 oui::TextField::~TextField() {
-    font = NULL;
 }
 
-oui::TextField::TextField(const std::string& name, const std::string& classes) : 
-    selectStart{0}, typing{false}, font{NULL},
-    highlighting{false}, caratWidth{1}, caratHeightOffset{1},
+oui::TextField::TextField(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher, TextFieldAttributeManager* attributeManager) : 
+    selectStart{0}, typing{false}, highlighting{false},
     caratVisible{true}, resetInput{false}, lastInput{0},
     caratIndex{0}, lastCaratSwitch{0}, drawX{0},
-    Component("textfield", name, classes, true) {
+    Component("textfield", name, classes, true, eventDispatcher, attributeManager) {
     selectStart = 0;
     typing = false;
+
+    // TODO use default styling like other comps
     setAttribute("text", u"");
     parseAttribute("font", u"notoserif 14");
     parseAttribute("bg-color1", u"240 240 240 255");
@@ -61,33 +60,6 @@ int oui::TextField::process() {
     return 0;
 }
 
-void oui::TextField::setProfile(const std::u16string& profileName) {
-    Component::setProfile(profileName);
-
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
-
-        //Text
-        text = profile->getString("text");
-
-        //Font
-        font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), window);
-
-        //Text-color
-        textColor =Color(profile->getInt("text-color-r"), profile->getInt("text-color-g"), profile->getInt("text-color-b"), profile->getInt("text-color-a"));
-
-        //Carat-width
-        caratWidth = profile->getInt("carat-width");
-        //Carat-color
-        caratColor = Color(profile->getInt("carat-color-r"), profile->getInt("carat-color-g"), profile->getInt("carat-color-b"), profile->getInt("carat-color-a"));
-        //Carat-h-offset
-        caratHeightOffset = profile->getInt("carat-h-offset");
-
-        //highlight-color
-        highlightColor = Color(profile->getInt("highlight-color-r"), profile->getInt("highlight-color-g"), profile->getInt("highlight-color-b"), profile->getInt("highlight-color-a"));
-
-    }
-}
 
 std::vector<std::u16string> oui::TextField::getRightClickOptions() {
     std::vector<std::u16string> options = Component::getRightClickOptions();
@@ -99,21 +71,34 @@ std::vector<std::u16string> oui::TextField::getRightClickOptions() {
 
 void oui::TextField::redraw() {
     Component::redraw();
-    int borderWidth = getCurrentProfile()->getInt("border-width");
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    int borderWidth = attributeManager->getBorderWidth();
+    Font* font = attributeManager->getFont();
+    std::u16string text = attributeManager->getText();
+    int caratHeightOffset = attributeManager->getCaratHeightOffset();
+
     if (isSelected() && selectStart != caratIndex) {
-            //Draw carat
+        Color highlightColor = attributeManager->getHighlightColor();
+
+        //Draw carat
         graphics->setColor(highlightColor);
         int startX = font->getStringWidth(text.substr(0, selectStart)) - drawX + borderWidth + 1;
         int endX = font->getStringWidth(text.substr(0, caratIndex)) - drawX + borderWidth + 1;
         graphics->fillRect(startX, caratHeightOffset, endX - startX, getHeight() - caratHeightOffset * 2);
     }
+
     if (text != u"") {
+        Color textColor = attributeManager->getTextColor();
         graphics->setColor(textColor);
         graphics->setFont(font);
         graphics->drawTextLine(text, -drawX + borderWidth + 1, getHeight() / 2 - font->getStringHeight(text) / 2);
     }
+
     if (isSelected()) {
         if (caratVisible) {
+            Color caratColor = attributeManager->getCaratColor();
+            int caratWidth = attributeManager->getCaratWidth();
+
             //Draw carat
             graphics->setColor(caratColor);
             int caratX = font->getStringWidth(text.substr(0, caratIndex)) - drawX + borderWidth + 1;
@@ -126,40 +111,44 @@ void oui::TextField::redraw() {
 }
 
 void oui::TextField::onMenuOption(ComponentEvent* compEvent) {
-		MenuEvent* event = static_cast<MenuEvent*>(compEvent);
-		std::u16string option = event->option;
-        if (option == u"Cut") {
-            if (caratIndex != selectStart) {
-                EditEvent* e = new EditEvent(getUndoEvent(), [this] {
-                    bool reverse = selectStart > caratIndex;
-                    int start = reverse ? caratIndex : selectStart;
-                    int end = reverse ? selectStart : caratIndex;
-                    static_cast<Window*>(window)->setClipboardText(text.substr(start, end));
-                    deleteChar(true);
-                });
-                e->performRedo();
-                window->addEditEvent(e);
-            }
-        }
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
 
-        if (option == u"Copy") {
-            bool reverse = selectStart > caratIndex;
-            int start = reverse ? caratIndex : selectStart;
-            int end = reverse ? selectStart : caratIndex;
-            if (start != end) {
-                window->setClipboardText(text.substr(start, end));
-            }
-        }
+    MenuEvent* event = static_cast<MenuEvent*>(compEvent);
+    std::u16string option = event->option;
 
-        if (option == u"Paste") {
-            if (static_cast<Window*>(window)->getClipboardText() != u"") {
-                EditEvent* e = new EditEvent(getUndoEvent(), [this] {
-                    insertString(static_cast<Window*>(window)->getClipboardText());
-                });
-                e->performRedo();
-                static_cast<Window*>(window)->addEditEvent(e);
-            }
+    if (option == u"Cut") {
+        if (caratIndex != selectStart) {
+            EditEvent* e = new EditEvent(getUndoEvent(), [this, text] {
+                bool reverse = selectStart > caratIndex;
+                int start = reverse ? caratIndex : selectStart;
+                int end = reverse ? selectStart : caratIndex;
+                static_cast<Window*>(window)->setClipboardText(text.substr(start, end));
+                deleteChar(true);
+            });
+            e->performRedo();
+            window->addEditEvent(e);
         }
+    }
+
+    if (option == u"Copy") {
+        bool reverse = selectStart > caratIndex;
+        int start = reverse ? caratIndex : selectStart;
+        int end = reverse ? selectStart : caratIndex;
+        if (start != end) {
+            window->setClipboardText(text.substr(start, end));
+        }
+    }
+
+    if (option == u"Paste") {
+        if (static_cast<Window*>(window)->getClipboardText() != u"") {
+            EditEvent* e = new EditEvent(getUndoEvent(), [this] {
+                insertString(static_cast<Window*>(window)->getClipboardText());
+            });
+            e->performRedo();
+            static_cast<Window*>(window)->addEditEvent(e);
+        }
+    }
 }
 
 void oui::TextField::onMouseDown(ComponentEvent* compEvent) {
@@ -182,6 +171,8 @@ void oui::TextField::onMouseMove(ComponentEvent* compEvent) {
     }
 }
 void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
     KeyboardEvent* event = static_cast<KeyboardEvent*>(compEvent);
     int code = event->key;
     char character = event->character;
@@ -229,7 +220,7 @@ void oui::TextField::onKeyTyped(ComponentEvent* compEvent) {
         }
         if (code == KEY_X) {
             if (caratIndex != selectStart) {
-                EditEvent* e = new EditEvent(getUndoEvent(), [this, character] {
+                EditEvent* e = new EditEvent(getUndoEvent(), [this, character, text] {
                     bool reverse = selectStart > caratIndex;
                     int start = reverse ? caratIndex : selectStart;
                     int end = reverse ? selectStart : caratIndex;
@@ -277,6 +268,8 @@ void oui::TextField::setText(const std::u16string& text) {
 }
 
 void oui::TextField::insertString(const std::u16string& string) {
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
     if (selectStart != caratIndex) {
         deleteChar(true);
     }
@@ -288,6 +281,8 @@ void oui::TextField::insertString(const std::u16string& string) {
     setAttribute("text", text);
 }
 void oui::TextField::insertChar(char c) {
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
     if (selectStart != caratIndex) {
         deleteChar(true);
     }
@@ -297,6 +292,8 @@ void oui::TextField::insertChar(char c) {
     setAttribute("text", text);
 }
 void oui::TextField::deleteChar(bool backspace) {
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
     if (selectStart != caratIndex) {
         bool reverse = selectStart > caratIndex;
         if (text.size() > 0 && caratIndex >= 0 && caratIndex <= text.size() && selectStart >= 0 && selectStart <= text.size()) {
@@ -345,7 +342,12 @@ void oui::TextField::setCaratIndex(int caratIndex) {
 }
 
 void oui::TextField::updateTextPosition() {
-    int borderWidth = getCurrentProfile()->getInt("border-width");
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
+    Font* font = attributeManager->getFont();
+    int borderWidth = attributeManager->getBorderWidth();
+    int caratWidth = attributeManager->getCaratWidth();
+
     int caratX = font->getStringWidth(text.substr(0, caratIndex));
     if (caratX < drawX) {
         drawX = caratX;
@@ -364,7 +366,11 @@ void oui::TextField::updateTextPosition() {
 }
 
 int oui::TextField::getIndexAt(int x) {
-    int borderWidth = getCurrentProfile()->getInt("border-width");
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
+    Font* font = attributeManager->getFont();
+    int borderWidth = attributeManager->getBorderWidth();
+
     int lastWidth = font->getStringWidth(std::u16string(text));
     for (int i = (int) text.length() - 1; i >= 0; i--) {
         std::u16string testStr = text.substr(0, i);
@@ -378,6 +384,8 @@ int oui::TextField::getIndexAt(int x) {
     return 0;
 }
 std::function<void()> oui::TextField::getUndoEvent() {
+    TextFieldAttributeManager* attributeManager = getAttributeManager();
+    std::u16string text = attributeManager->getText();
     int selectStart_ = selectStart;
     int caratIndex_ = caratIndex;
     std::u16string text_ = text;
@@ -390,4 +398,8 @@ std::function<void()> oui::TextField::getUndoEvent() {
             static_cast<Window*>(window)->setSelectedComponent(this);
         }
     };
+}
+
+oui::TextFieldAttributeManager* oui::TextField::getAttributeManager() {
+    return static_cast<TextFieldAttributeManager*>(attributeManager);
 }

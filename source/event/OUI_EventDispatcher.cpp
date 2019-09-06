@@ -8,6 +8,9 @@ oui::EventDispatcher::EventDispatcher() :
 }
 
 void oui::EventDispatcher::setTarget(Component* target) {
+    if (this->target != NULL) {
+        return;
+    }
     this->target = target;
 }
 

@@ -88,6 +88,9 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
         case OSAL::TYPE_BOOL:
             val = value.getAsBool();
             break;
+        case OSAL::TYPE_COLOR:
+            val = value.getAsColor();
+            break;
     }
     
     //Finally, add the attribute to our attributes list

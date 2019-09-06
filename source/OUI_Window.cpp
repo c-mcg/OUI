@@ -4,14 +4,12 @@
 #include "OUI.h"
 #include <iostream>
 #include <math.h>
-#include "OUI_Constants.h"
 #include "components/OUI_Menu.h"
 #include "components/OUI_ScrollPanel.h"
 #include "util/OUI_StringUtil.h"
 #include "os/OUI_OS.h"
 #include "components/OUI_ComponentLoader.h"
 
-#include "event/OUI_WindowEventDispatcher.h"
 #include "event/OUI_WindowEvent.h"
 #include "event/OUI_ScrollEvent.h"
 #include "event/OUI_KeyboardEvent.h"
@@ -33,15 +31,13 @@ oui::Window::~Window() {
     selectedComponent = NULL;
 }
 
-oui::Window::Window(int width, int height) :
-    context{NULL}, visible{false}, title{u""},
+oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, WindowAttributeManager* attributeManager) :
+    context{NULL}, title{u""},
     shutdown{false}, focused{false}, globalMouseX{0}, globalMouseY{0},
     moving{false}, moveOffX{0}, moveOffY{0}, resizing{false}, resizeX{0}, resizeY{0},
     maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0}, editIndex{0},
-    selectedComponent{NULL},
-    cursor{-1}, cursorType{CURSOR_DEFAULT},
-    Container("window", "window", "window", false, new WindowEventDispatcher()) {//TODO let you set a name
-    this->eventDispatcher->setTarget(this);
+    selectedComponent{NULL}, cursorType{CURSOR_DEFAULT},
+    Container("window", "window", "window", false, eventDispatcher, attributeManager) {//TODO let you set a name
 
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("maximize", std::bind(&Window::onMaximize, this, std::placeholders::_1));
@@ -57,14 +53,12 @@ void oui::Window::initializeWindow(int width, int height) {
     graphics->setFont(Font::getFont(u"notoserif", 12, this));
     window = this;
 
-    AttributeProfile* profile = style->getOrCreateProfile(u"default");//This should definitely be default at this point
-
     width = width / 2;
     height = height / 2;
     setAttribute("width-offset", width);
     setAttribute("height-offset", height);
-    int widthOffset = profile->getInt("width-offset");
-    int heightOffset = profile->getInt("height-offset");
+    int widthOffset = getInt("width-offset");
+    int heightOffset = getInt("height-offset");
     
 
     Panel* windowBar = new Panel("window-bar", "");
@@ -161,7 +155,7 @@ void oui::Window::initializeWindow(int width, int height) {
 
     parseAttribute("bg-color", u"255 255 255 255");
     setAttribute("border-style", u"solid");
-    setProfile(u"default");
+    getAttributeManager()->setProfile(u"default");
 }
 
 void oui::Window::setContext(Context* context) {
@@ -170,39 +164,6 @@ void oui::Window::setContext(Context* context) {
 
 oui::Context* oui::Window::getContext() {
     return this->context;
-}
-
-void oui::Window::setProfile(const std::u16string& profileName) {
-    bool wasVisible = this->visible;
-    int w = getWidth(), h = getHeight(), x = getX(), y = getY();
-
-    Container::setProfile(profileName);
-
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
-
-        bool newVisible = profile->getBool("visible");
-        if (wasVisible != newVisible) {
-            //setVisible(newVisible);
-            if (newVisible) {
-                showWindow();
-            } else {
-                hideWindow();
-            }
-            this->visible = newVisible;
-        }
-
-    }
-    
-    if (w != getWidth() || h != getHeight()) {
-        setSize(getWidth(), getHeight());
-        flagGraphicsUpdateAll();
-    }
-
-    if (x != getX() || y != getY()) {
-        setPosition(getX(), getY());
-    }
-
 }
 
 bool oui::Window::isWindow() {
@@ -219,7 +180,7 @@ int oui::Window::process() {
     if (moving) {
         int newX = globalMouseX - moveOffX;
         int newY = globalMouseY - moveOffY;
-        if (newX != getCurrentProfile()->getInt("x-offset") || newY != getCurrentProfile()->getInt("y-offset")) {
+        if (newX != getInt("x-offset") || newY != getInt("y-offset")) {
             this->setAttribute("x-offset", newX);
             this->setAttribute("y-offset", newY);
         }
@@ -243,7 +204,7 @@ int oui::Window::process() {
     }
 
     if (needsProfileUpdate()) {
-        updateStyle();
+        refreshProfile();
         clearProfileUpdate();
     }
 
@@ -258,7 +219,7 @@ int oui::Window::process() {
 
     if (needsGraphicsUpdate()) {
         //TODO needsGraphicsUpdate is called because of DrawablePanel so profile doesn't need to change...
-        updateStyle();
+        refreshProfile();
         redraw();
         render();
     }
@@ -452,7 +413,7 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
     parseAttribute("location", u"0 0 " + intToString(maximizedX) + u" " + intToString(maximizedY));
     parseAttribute("size", u"0 0 " + intToString(maximizedWidth) + u" " + intToString(maximizedHeight));
     maximized = true;
-    updateStyle();
+    refreshProfile();
 }
 
 void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
@@ -464,7 +425,7 @@ void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
 
     parseAttribute("location", u"0 0 " + intToString(maximizeX) + u" " + intToString(maximizeY));
     parseAttribute("size", u"0 0 " + intToString(maximizeWidth) + u" " + intToString(maximizeHeight));
-    updateStyle();
+    refreshProfile();
 }
 
 void oui::Window::onFocus(ComponentEvent* compEvent) {
@@ -517,7 +478,7 @@ void oui::Window::onKeyDown(ComponentEvent* compEvent) {
 }
 
 void oui::Window::redraw() {
-    if (getCurrentProfile()->getBool("visible")) {
+    if (getBool("visible")) {
         Graphics* g = graphics;
 
         Container::redraw();
@@ -547,11 +508,11 @@ void oui::Window::setTitle(const std::u16string& title) {
     }
 }
 
-bool oui::Window::setCursor(int cursor) {
-    if (this->cursor == cursor) {
+bool oui::Window::setCursor(std::u16string cursor) {
+    if (this->cursorType == cursor) {
         return false;
     }
-    this->cursor = cursor;
+    this->cursorType = cursor;
     return true;
 }
 
@@ -624,7 +585,7 @@ oui::Component* oui::Window::getSelectedComponent() {
 
 void oui::Window::closeRightClickMenu() {
     Component* menu = getChild("rightClickMenu");
-    if (menu != NULL && menu->getCurrentProfile()->getBool("visible")) {
+    if (menu != NULL && menu->getBool("visible")) {
         menu->setAttribute("visible", false);
     }
 }
@@ -635,25 +596,11 @@ std::u16string oui::Window::getTitle() {
 
 void oui::Window::setVisible(bool visible) {
 
-    this->visible = visible;
-
-    Style* defaultStyle = getDefaultStyle();
-
-    AttributeProfile* defaultProfile = style->getOrCreateProfile(u"default");
-    AttributeProfile* hoverProfile = style->getOrCreateProfile(u"hover");
-    
-    defaultProfile->clearDefaultProfiles();
-    defaultProfile->addDefaultProfile(defaultStyle->getOrCreateProfile(u"default"));
-
-    hoverProfile->clearDefaultProfiles();
-    hoverProfile->addDefaultProfile(defaultStyle->getOrCreateProfile(u"hover"));
-    hoverProfile->addDefaultProfile(defaultProfile);
-
     if (visible) {
-        setProfile(u"default");
+        attributeManager->setProfile(u"default");
     }
 
-    setAttribute("visible", true);
+    setAttribute("visible", visible);
 }
 
 
@@ -697,4 +644,8 @@ void oui::Window::setSize(int width, int height) {
 
 }
 void oui::Window::setPosition(int width, int height) {
+}
+
+oui::WindowAttributeManager* oui::Window::getAttributeManager() {
+    return static_cast<WindowAttributeManager*>(attributeManager);
 }

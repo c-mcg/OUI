@@ -15,15 +15,10 @@ oui::Container::~Container() {
         it = children.erase(it);
     }
     children.clear();
-
-    if (this->styleSheet != NULL) {
-        delete this->styleSheet;
-    }
 }
 
-oui::Container::Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing, EventDispatcher* eventDispatcher) :
-    Component(tag, name, classes, needsProcessing, eventDispatcher) {
-    this->styleSheet = NULL;
+oui::Container::Container(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing, EventDispatcher* eventDispatcher, ContainerAttributeManager* attributeManager) :
+    Component(tag, name, classes, needsProcessing, eventDispatcher, attributeManager) {
 }
 
 void oui::Container::onProcessableChildAdded(Component* addedChild) {
@@ -45,46 +40,6 @@ void oui::Container::onProcessableChildRemoved(Component* removedChild) {
     if (parent != NULL) {
         parent->onProcessableChildRemoved(removedChild);
     }
-}
-
-void oui::Container::setProfile(const std::u16string& profile) {
-    int w = getWidth(), h = getHeight();
-    Component::setProfile(profile);
-    if (w != graphics->getWidth() || h != graphics->getHeight()) {
-        flagGraphicsUpdateAll();
-    }
-}
-
-void oui::Container::setStyleSheet(StyleSheet* sheet) {
-
-    if (this->styleSheet != sheet && this->styleSheet != NULL) {
-        delete this->styleSheet;
-    }
-
-    this->styleSheet = sheet;
-}
-
-oui::Style* oui::Container::createStyle(StyleSheet* sheet) {
-
-    if (sheet == NULL) {
-        sheet = getAllStyleSheets();
-
-        if (sheet == NULL) {
-            return NULL;
-        }
-    }
-
-    if (sheet != this->styleSheet) {
-        StyleSheet* clone = sheet->clone(); //Not inline for debugging
-        setStyleSheet(clone);
-    }
-
-    for(unsigned int i = 0; i < children.size(); i++) {
-        children.at(i)->createStyle(sheet);
-    }
-
-    Component::createStyle(sheet);
-    return this->style;
 }
 
 void oui::Container::flagGraphicsUpdateAll() {
@@ -135,9 +90,9 @@ oui::Component* oui::Container::getComponentAt(int x, int y) {
     std::unordered_map<int, std::vector<Component*>> zIndexes;
     for (unsigned int i = 0; i < children.size(); i++) {
         Component* child = children.at(i);
-        int z = child->getAttribute("z-index", 0).intVal;
+        int z = child->getAttribute("z-index", 0).intVal; // TODO getInt with default value
 
-        if(child->getCurrentProfile()->getBool("visible") && child->getCurrentProfile()->getBool("interactable")) {
+        if(child->getBool("visible") && child->getBool("interactable")) {
             if(z != 0) {
                 if(zIndexes.find(z) == zIndexes.end()) {
                     zIndexes[z] = std::vector<Component*>();
@@ -195,7 +150,7 @@ bool oui::Container::isContainer() {
      while (children.size() > permanentOffset) {
 
          //If a permanent child is at the "bottom" we bump the offset up to leave it there
-         if (children.at(permanentOffset)->getCurrentProfile()->getBool("permanent")) {
+         if (children.at(permanentOffset)->getBool("permanent")) {
              permanentOffset++;
              continue;
          }
@@ -225,7 +180,7 @@ oui::Component* oui::Container::removeChild(int index, bool shouldDelete) {
     }
 
     Component* c = children.at(index);
-    if (!c->getCurrentProfile()->getBool("permanent")) {
+    if (!c->getBool("permanent")) {
 
         if (c->needsProcessing) {
             onProcessableChildRemoved(c);
@@ -254,6 +209,7 @@ bool oui::Container::isDuplicateName(const std::string& name, Component* ignore)
 }
 
 bool oui::Container::addChild(Component* child) {
+    ContainerAttributeManager* attributeManager = getAttributeManager();
     for (unsigned int i = 0; i < children.size(); i++) {
         if (children.at(i)->getName() == child->getName()) {
             throw ArgumentException(
@@ -265,7 +221,7 @@ bool oui::Container::addChild(Component* child) {
         }
     }
     child->addedToContainer(this);
-    child->createStyle(this->styleSheet);
+    child->deriveAttributesForComponent(attributeManager->getStyleSheet());
     children.push_back(child);
 
     if (child->needsProcessing) {
@@ -315,8 +271,8 @@ void oui::Container::redrawChildren() {
 
     for(unsigned int i = 0; i < children.size(); i++) {
         Component* c = children.at(i);
-        if(c->getCurrentProfile()->getBool("visible")) {
-            int z = c->getCurrentProfile()->getInt("z-index");
+        if(c->getBool("visible")) {
+            int z = c->getInt("z-index");
             if(z != 0) {
                 if(zIndexes.find(z) == zIndexes.end()) {
                     zIndexes[z] = std::vector<Component*>();
@@ -324,11 +280,11 @@ void oui::Container::redrawChildren() {
                 zIndexes[z].push_back(c);
             }
             if (c->needsProfileUpdate()) {
-                c->updateStyle();
+                c->refreshProfile();
                 c->clearProfileUpdate();
                 c->redraw();
             } else if(c->needsGraphicsUpdate()) {
-                c->updateStyle();
+                c->refreshProfile();
                 c->redraw();
             }
             c->getGraphics()->renderToGraphics(c->getX(), c->getY(), graphics);
@@ -373,62 +329,17 @@ void oui::Container::addOSALStyle(const std::u16string& sheet) {
 }
 
 void oui::Container::addOSALStyle(OSAL::Sheet osalSheet) {
+    ContainerAttributeManager* attributeManager = getAttributeManager();
     StyleSheet* sheet = StyleSheet::fromOSAL(osalSheet);
-    addStyleSheet(sheet);
+    attributeManager->addStyleSheet(sheet);
 }
 
-void oui::Container::addStyleSheet(StyleSheet* sheet) {
-    if(styleSheet == NULL) {
-        this->styleSheet = sheet;
-    } else {
-        this->styleSheet->combineStyleSheet(sheet, true);
-    }
-    createStyle(this->styleSheet);
-    if (this->getCurrentProfile()->getBool("visible")) {
-        updateStyle();
-    }
-}
 
 oui::StyleSheet* oui::Container::getAllStyleSheets() {
+    ContainerAttributeManager* attributeManager = getAttributeManager();
+    return attributeManager->getAllStyleSheets();
+}
 
-    StyleSheet* sheet = new StyleSheet();
-
-    //Add style sheet from parent
-    if(parent != NULL) {
-
-        StyleSheet* parentSheet = parent->getAllStyleSheets();
-
-        if (parentSheet != NULL) {
-            sheet->combineStyleSheet(parentSheet);
-        }
-
-    }
-
-    //Make sure something exists before we add this styleSheet
-    //This makes it so we only need to check for empty sheet later, as opposed to looking for equality to styleSheet
-    if (!sheet->isEmpty()) {
-
-        //Add this style sheet
-        if (this->styleSheet != NULL && !this->styleSheet->isEmpty()) {
-            sheet->combineStyleSheet(this->styleSheet, false);
-        }
-
-    }
-
-    //Delete and replace current style sheet
-    //Above check lets us assume if it's not empty, then it isn't equal to `this->styleSheet`
-    if (!sheet->isEmpty()) {
-
-        //Sets the current style sheet, deletes the old one if it exists
-        setStyleSheet(sheet);
-
-        return sheet;
-    }
-
-    //We didn't replace the styleSheet so we'll delete this
-    delete sheet;
-    sheet = NULL;
-
-    //Return the current styleSheet
-    return styleSheet;
+oui::ContainerAttributeManager* oui::Container::getAttributeManager() {
+    return static_cast<ContainerAttributeManager*>(attributeManager);
 }

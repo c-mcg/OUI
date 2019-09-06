@@ -6,6 +6,7 @@
 #include <vector>
 #include <functional>
 #include "attribute/OUI_StyleSheet.h"
+#include "components/OUI_ComponentAttributeManager.h"
 
 #include "event/OUI_EventDispatcher.h"
 
@@ -22,55 +23,42 @@ namespace oui {
     class Component {
 
         public:
+            static const std::u16string BORDER_NONE;//TODO change to enum
+            static const std::u16string BORDER_SOLID;
 
-            /**
-            * @brief Adds a listener to the specified event
-             * 
-             * @param type The type of event to listen for
-             * @param handler The function to be run when the event occurs
-             */
+            static const std::u16string CURSOR_DEFAULT;
+            static const std::u16string CURSOR_POINTER;
+            static const std::u16string CURSOR_RESIZE;
+            static const std::u16string CURSOR_TEXT;
+            static Style* defaultStyle;
+
+            static Style* getDefaultComponentStyle();
+
+            const bool needsProcessing;
+
             void addEventListener(std::string type, EventHandler handler);
 
+            virtual OUI_API int getInt(std::string name);
+            virtual OUI_API double getDouble(std::string name);
+            virtual OUI_API std::u16string getString(std::string name);
+            virtual OUI_API bool getBool(std::string name);
 
-		protected:
-			
-            /**
-             * @brief Handles event listeners and dispatching for the component
-             */
-			EventDispatcher* eventDispatcher;
+            virtual OUI_API void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
-
-/* START OF VARIABLES */
-
-	public:
-
-		const bool needsProcessing;
-
-    //Constants
-        public: static const char BORDER_NONE = 0;//TODO change to enum
-        public: static const char BORDER_SOLID = 1;
-    
-        private: static Style* defaultStyle;
-        public: static Style* getDefaultComponentStyle();
-
-    //Containers
-        protected: Window* window;
-        protected: Container* parent;
+        protected:
+            Window* window;
+            Container* parent;
+            
+            Graphics* graphics;
+            ComponentAttributeManager* attributeManager;
+            EventDispatcher* eventDispatcher;
 
     //Identification
         private: std::string tag;
         private: std::string name;
         protected: std::vector<std::string> classes;
 
-    //Size
-        private: int minWidth, minHeight;
-        private: int widthPercent, heightPercent;
-        private: int widthOffset, heightOffset;
-
     //Location
-        private: int xPercent, yPercent;
-        private: int xOffset, yOffset;
-        private: int z;
         private: float scrollOffsetX, scrollOffsetY;
 
     //Cached calculations
@@ -79,37 +67,17 @@ namespace oui {
         private: int screenX, screenY;
 
     //Graphics
-        protected: Graphics* graphics;
         private: bool graphicsUpdate;
         private: bool profileUpdate;//This was added to try to take out the setProfile call when updating graphics. @see oui::Container::redrawChildren()
 
     //State
-        private: bool interactable;
-        private: bool hovered, mouseDown;
-        //The local mouse X position
+        bool hovered, mouseDown;
         protected: int mouseX;
-        //The local mouse Y position
         protected: int mouseY;
-        private: bool visible;
-        private: bool selected;
-        //private: bool selectable;
-        private: std::vector<std::u16string> rightClickOptions;
+        bool selected;
 
     //Styling
-        private: int cursor;
-        private: Color backgroundColor1;
-        private: Color backgroundColor2;
-        private: char borderStyle;
-        private: int borderWidth;
-        private: Color borderColor;
-        private: bool centeredX;
-        private: bool centeredY;
-        private: int opacity;
 
-        private: std::u16string currentProfileName;
-        private: AttributeProfile* currentProfile;
-        protected: Style* definedStyle;
-        protected: Style* style;
 
 /* END OF VARIABLES */
 
@@ -119,7 +87,7 @@ namespace oui {
         public: OUI_API ~Component();
 
         //Default attributes are not loaded until the component is added, so do not attempt to get attribute values in the constructor
-        public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher());
+        public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher(), ComponentAttributeManager* attributeManager = new ComponentAttributeManager());
 
         public: void setAttribute(const std::string& name, Attribute val, const std::u16string& profile=u"default");
         public: OUI_API Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
@@ -136,8 +104,8 @@ namespace oui {
         //This parses a value as if it were an OSAL attribute
         //This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("bg-color", u"0 0 0 255")"
         public: OUI_API void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
-        public: OUI_API virtual void setProfile(const std::u16string& profile);
         public: OUI_API bool contains(int localX, int localY);
+        public: void updateSize();
 
     //Containers
         public: OUI_API virtual bool isWindow();
@@ -199,13 +167,9 @@ namespace oui {
 
     //Styling
         //Creates a new StyleSheet via `Component::getAllStyleSheets()` and applies them to this component
-        public: OUI_API virtual Style* createStyle(StyleSheet* sheet = NULL);
-        public: OUI_API int getCursor();
+        public: OUI_API std::u16string getCursor();
         public: OUI_API virtual std::vector<std::u16string> getRightClickOptions();
-        public: OUI_API AttributeProfile* getCurrentProfile();
-        public: OUI_API virtual void updateStyle();
-        public: OUI_API virtual Style* getDefaultStyle();
-
+        public: OUI_API virtual void refreshProfile();
 /* END OF METHODS */
     };
 

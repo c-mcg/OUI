@@ -32,8 +32,6 @@ namespace OSAL {
             std::istreambuf_iterator<char>());//Load file
         stream.close();
 
-        
-
         std::vector<OSAL::Element> elements;//Elements in the sheet
         std::vector <OSAL::Attribute> attributes;//Attributes in the current elements
         std::vector<std::u16string> currElements;//The name of current elements being attributed (used when parsing attributes)

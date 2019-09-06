@@ -37,42 +37,37 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
             strLiteral = token.substr(1);
             if(token.at(token.length() - 1) == '\'') {//End quote
                 strLiteral = token.substr(1, token.length() - 2);
-                types.push_back(TYPE_STRING);
-                this->value.push_back(strLiteral);
+                addValue(TYPE_STRING, strLiteral);
                 quote = false;
             }
         } else if(token.at(token.length() - 1) == '\'' && quote) {//End quote
             quote = false;
             strLiteral += std::u16string(u" ").append(token.substr(0, token.length() - 1));
-            types.push_back(TYPE_STRING);
-            this->value.push_back(strLiteral);
+            addValue(TYPE_STRING, strLiteral);
         } else if(token.at(0) == '"' && !quote && !doubleQuote) {//Start double quote
             doubleQuote = true;
             strLiteral = token.substr(1);
             if(token.at(token.length() - 1) == '"') {//End double quote
                 strLiteral = token.substr(1, token.length() - 2);
-                types.push_back(TYPE_STRING);
-                this->value.push_back(strLiteral);
+                addValue(TYPE_STRING, strLiteral);
                 doubleQuote = false;
             }
         } else if(token.at(token.length() - 1) == '"' && doubleQuote) {//End double quote
             doubleQuote = false;
             strLiteral += std::u16string(u" ").append(token.substr(0, token.length() - 1));
-            types.push_back(TYPE_STRING);
-            this->value.push_back(strLiteral);
+            addValue(TYPE_STRING, strLiteral);
         } else if(quote || doubleQuote) {
             strLiteral += std::u16string(u" ").append(token);
         } else {
             if (isInteger(token)) {
-                types.push_back(TYPE_INT);
+                addValue(TYPE_INT, token);
             } else if (isDouble(token)) {
-                types.push_back(TYPE_DOUBLE);
+                addValue(TYPE_DOUBLE, token);
             } else if (equalsIgnoreCase(token, u"true") || equalsIgnoreCase(token, u"false")) {
-                types.push_back(TYPE_BOOL);
+                addValue(TYPE_BOOL, token);
             } else {
-                types.push_back(TYPE_STRING);
+                addValue(TYPE_STRING, token);
             }
-            this->value.push_back(token);
         }
     }
 
@@ -124,7 +119,15 @@ bool OSAL::Attribute::getAsBool(int index) {
     if(s == u"null") {
         return false;
     }
-    return getAsString(index).compare(u"true") == 0;
+    return s.compare(u"true") == 0;
+}
+
+oui::Color OSAL::Attribute::getAsColor(int index) {
+    std::u16string s = getAsString(index);
+    if(s == u"null") {
+        return oui::Color::BLACK;
+    }
+    return oui::Color(std::stoul(convertUTF16toUTF8(s), nullptr, 16));
 }
 
 std::u16string OSAL::Attribute::getOriginalString() {
@@ -134,4 +137,16 @@ std::u16string OSAL::Attribute::getOriginalString() {
 bool OSAL::Attribute::isValid() {
     //return value.size() == 0 || value.at(0) != "null"; TODO
     return value.size() > 0 && value.at(0) != u"null";
+}
+
+void OSAL::Attribute::addValue(char type, std::u16string value) {
+
+    if (type == TYPE_STRING && stringStartsWith(value, u"#")) {
+        types.push_back(TYPE_COLOR);
+        this->value.push_back(value);
+        return;
+    }
+
+    types.push_back(type);
+    this->value.push_back(value);
 }

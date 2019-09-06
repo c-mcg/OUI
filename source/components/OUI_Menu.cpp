@@ -6,15 +6,16 @@
 #include "event/OUI_MenuEvent.h"
 #include "util/OUI_StringUtil.h"
 
-
 oui::Menu::~Menu() {
 
 }
 
-oui::Menu::Menu(const std::string& name, const std::string& classes) : 
-    numOptions{0}, fontSize{0}, minWidth{0}, optionHeight{0}, padding{0}, target{NULL},
-    Container("menu", name, classes) {
+oui::Menu::Menu(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher, MenuAttributeManager* attributeManager) : 
+    target{NULL},
+    Container("menu", name, classes, false, eventDispatcher, attributeManager) {
     //setSize(0, 0, 150, 30);
+
+    // TODO use default style like other components
     setAttribute("border-style", u"solid");
     setAttribute("border-color-r", 0);
     setAttribute("border-color-g", 0);
@@ -31,43 +32,7 @@ oui::Menu::Menu(const std::string& name, const std::string& classes) :
     parseAttribute("options", u"");
 }
 
-void oui::Menu::setProfile(const std::u16string& profileName) {
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
 
-        hoverColor = Color(profile->getInt("hover-color-r"), profile->getInt("hover-color-g"), profile->getInt("hover-color-b"), profile->getInt("hover-color-a"));
-
-        padding = profile->getInt("padding");
-
-        minWidth = profile->getInt("min-width");
-
-        optionHeight = profile->getInt("option-height");
-
-        minWidth = profile->getInt("min-width");
-
-        //Font
-        font = profile->getString("font-face");
-        fontSize = profile->getInt("font-size");
-
-        //Options
-        bool optionsChanged = false;
-        std::vector<std::u16string> options;
-        for (int i = 0; i < profile->getInt("options_length"); i++) {
-            options.push_back(profile->getString("options_" + std::to_string(i)));
-            if (i >= this->options.size() || options.at(i) != this->options.at(i)) {
-                optionsChanged = true;
-            }
-        }
-        if (optionsChanged) {
-            setOptions(options);
-            int borderWidth = profile->getInt("border-width");
-            int biggestWidth = resetOptions();
-            parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
-        }
-    }
-    
-    Container::setProfile(profileName);
-}
 
 bool oui::Menu::_addChild(Button* child) {
     return Container::addChild(child);
@@ -79,10 +44,18 @@ bool oui::Menu::addChild(Component* child) {
 }
 
 oui::Button* oui::Menu::addOption(const std::u16string& option) {
-    return addOption(option, numOptions);
+    MenuAttributeManager* attributeManager = getAttributeManager();
+    return addOption(option, attributeManager->getNumOptions());
 }
 oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
-    AttributeProfile* profile = getCurrentProfile();
+    MenuAttributeManager* attributeManager = getAttributeManager();
+    int padding = attributeManager->getPadding();
+    int optionHeight = attributeManager->getOptionHeight();
+    std::u16string fontName = attributeManager->getFont();
+    int fontSize = attributeManager->getFontSize();
+    Color hoverColor = attributeManager->getHoverColor();
+    int minWidth = attributeManager->getMinWidth();
+    int numOptions = attributeManager->getNumOptions();
 
     //Create button for option
     Button* b = new Button("option_" + std::to_string(index), "menuOption");
@@ -90,7 +63,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
     b->setAttribute("text", option);
 
-    int borderWidth = profile->getInt("border-width");
+    int borderWidth = getInt("border-width");
 
     //Set size
     b->setAttribute("width-percent", 100);
@@ -105,7 +78,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     b->setAttribute("y-offset", optionHeight * index + padding + borderWidth);
 
     //Font
-    b->setAttribute("font-face", font);
+    b->setAttribute("font-face", fontName);
     b->setAttribute("font-size", fontSize);
 
     b->setAttribute("border-style", u"none");
@@ -130,14 +103,14 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
             buttonName.substr(underscoreIndex, buttonName.length() - underscoreIndex).c_str()
         );
 
-        MenuEvent* event = MenuEvent::create("click", target, this, optionIndex, b->getCurrentProfile()->getString("text"));
+        MenuEvent* event = MenuEvent::create("click", target, this, optionIndex, b->getString("text"));
         target->getEventDispatcher()->dispatchEvent(event);
         delete event;
     });
 
     //TODO style
-    Font* font = Font::getFont(this->font, fontSize, window);
-    int biggestWidth = font->getStringWidth(b->getCurrentProfile()->getString("text"));
+    Font* font = Font::getFont(fontName, fontSize, window);
+    int biggestWidth = font->getStringWidth(b->getString("text"));
     biggestWidth = biggestWidth < minWidth ? minWidth : biggestWidth;
 
     //Reorganize options if inserted
@@ -174,7 +147,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
             //Continue calculating biggest width
             if (currentButton->getWidth() > biggestWidth) {
-                biggestWidth = font->getStringWidth(currentButton->getCurrentProfile()->getString("text"));
+                biggestWidth = font->getStringWidth(currentButton->getString("text"));
             }
         }
 
@@ -185,6 +158,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     numOptions++;
 
     //Set size for menu
+    this->setAttribute("num-options", numOptions);
     this->setAttribute("width-percent", 0);
     this->setAttribute("height-percent", 0);
     this->setAttribute("width-offset", biggestWidth + padding * 2 + borderWidth * 2);
@@ -203,6 +177,8 @@ oui::Component* oui::Menu::getTarget() {
 }
 
 std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
+    MenuAttributeManager* attributeManager = getAttributeManager();
+    int numOptions = attributeManager->getNumOptions();
     return addOptions(options, numOptions);
 }
 
@@ -215,10 +191,14 @@ std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string
 }
 
 bool oui::Menu::removeOption(int index) {
+    MenuAttributeManager* attributeManager = getAttributeManager();
+    int numOptions = attributeManager->getNumOptions();
     if (index < 0 || index >= numOptions) {
         return false;
     }
-    int borderWidth = getCurrentProfile()->getInt("border-width");
+    int padding = attributeManager->getPadding();
+    int optionHeight = attributeManager->getOptionHeight();
+    int borderWidth = attributeManager->getBorderWidth();
     Button* b2 = static_cast<Button*>(getChild("option_" + std::to_string(index)));
     b2->setAttribute("permanent", false);
     removeChild(static_cast<Component*>(b2));
@@ -227,20 +207,18 @@ bool oui::Menu::removeOption(int index) {
     parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
     return true;
 }
-std::vector<oui::Button*> oui::Menu::setOptions(const std::vector<std::u16string>& options) {
-    this->options = options;
-    std::vector<Component*>::iterator it;
-    for (it = children.begin(); it != children.end(); ) {
-        delete *it;
-        it = children.erase(it);
-    }
-    numOptions = 0;
-    return addOptions(options);
-}
 
 
 int oui::Menu::resetOptions(int startIndex) {
-    int borderWidth = getCurrentProfile()->getInt("border-width");
+    MenuAttributeManager* attributeManager = getAttributeManager();
+    int borderWidth = attributeManager->getBorderWidth();
+    int minWidth = attributeManager->getMinWidth();
+    int fontSize = attributeManager->getFontSize();
+    std::u16string font = attributeManager->getFont();
+    int numOptions = attributeManager->getNumOptions();
+    int optionHeight = attributeManager->getOptionHeight();
+    int padding = attributeManager->getPadding();
+
     int biggestWidth = minWidth;
     Font* f = Font::getFont(font, fontSize, window);
     for (int i = startIndex; i < numOptions; i++) {
@@ -252,8 +230,20 @@ int oui::Menu::resetOptions(int startIndex) {
         b2->parseAttribute("font", font + u" " + intToString(fontSize));
         b2->setAttribute("border-style", u"none");
         if (b2->getWidth() > biggestWidth) {
-            biggestWidth = f->getStringWidth(b2->getCurrentProfile()->getString("text"));
+            biggestWidth = f->getStringWidth(b2->getString("text"));
         }
     }
     return biggestWidth;
+}
+
+void oui::Menu::removeAllOptionComponents() {
+    std::vector<Component*>::iterator it;
+    for (it = children.begin(); it != children.end(); ) {
+        delete *it;
+        it = children.erase(it);
+    }
+}
+
+oui::MenuAttributeManager* oui::Menu::getAttributeManager() {
+    return static_cast<MenuAttributeManager*>(attributeManager);
 }

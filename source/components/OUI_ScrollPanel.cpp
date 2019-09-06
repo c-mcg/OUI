@@ -10,9 +10,10 @@ oui::ScrollPanel::~ScrollPanel() {
 
 }
 
-oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classes) : Container("scrollpanel", name, classes, true), 
+oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classes, EventDispatcher* eventdispatcher, ScrollPanelAttributeManager* attributeManager) :
 	childWidth{0}, childHeight{0}, clickStartX{0}, clickStartY{0}, resetX{0}, resetY{0},
-	scrollPosX{0}, scrollPosY{0}, scrollingX{false}, scrollingY{false}, childrenChanged{false}
+	scrollPosX{0}, scrollPosY{0}, scrollingX{false}, scrollingY{false}, childrenChanged{false},
+    Container("scrollpanel", name, classes, true, eventDispatcher, attributeManager)
 {
     createScrollBar(true);
     createScrollBar(false);
@@ -190,30 +191,11 @@ void oui::ScrollPanel::removeAllChildren(bool shouldDelete) {
     childrenChanged = true;
 }
 
-void oui::ScrollPanel::setProfile(const std::u16string& profileName) {
-    int w = graphics->getWidth(), h = graphics->getHeight();
-
-    Component::setProfile(profileName);
-
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
-        
-        //TODO replace SCROLLBAR_SIZE with scrollbar-size
-
-    }
-
-    if (w != graphics->getWidth() || h != graphics->getHeight()) {
-        resize();
-    }
-
-    Container::setProfile(profileName);
-    
-}
 
 int oui::ScrollPanel::process() {
 
     if (childrenChanged) {
-        resize();
+        handleResize();
         childrenChanged = false;
     }
     
@@ -227,7 +209,7 @@ void oui::ScrollPanel::redraw() {
 
         if (scrollingY || resetY) {//TODO resizing is kinda glitchy sometimes (visibility check here is a cheaphax fix)
             Component* c = getChildCont("verticalScrollBar")->getChild("bar");
-            if (!c->getParent()->getCurrentProfile()->getBool("visible")) {
+            if (!c->getParent()->getBool("visible")) {
                 scrollPosY = 0;
                 resetY = true;
             }
@@ -262,7 +244,7 @@ void oui::ScrollPanel::redraw() {
         }
         if (scrollingX || resetX) {
             Component* c = getChildCont("horizontalScrollBar")->getChild("bar");
-            if (!c->getParent()->getCurrentProfile()->getBool("visible")) {
+            if (!c->getParent()->getBool("visible")) {
                 scrollPosX = 0;
                 resetX = true;
             }
@@ -307,7 +289,7 @@ void oui::ScrollPanel::redraw() {
     }
 }
 
-void oui::ScrollPanel::resize() {
+void oui::ScrollPanel::handleResize() {
     if (getWidth() == 0 || getHeight() == 0) return;
 
     //TODO the reason they scroll during resize is because the bar positions should be based on a fixed percentage during resizing (implementable in this function)
@@ -327,13 +309,13 @@ void oui::ScrollPanel::resize() {
 
     //Resize to avoid overlap
     int width, height;
-    width = vSB->getCurrentProfile()->getBool("visible") ? -SCROLLBAR_SIZE : 0;
+    width = vSB->getBool("visible") ? -SCROLLBAR_SIZE : 0;
     height = SCROLLBAR_SIZE;
     hSB->setAttribute("width-offset", width);
     hSB->setAttribute("height-offset", height);
 
     width = SCROLLBAR_SIZE;
-    height = hSB->getCurrentProfile()->getBool("visible") ? -SCROLLBAR_SIZE : 0;
+    height = hSB->getBool("visible") ? -SCROLLBAR_SIZE : 0;
     vSB->setAttribute("width-offset", width);
     vSB->setAttribute("height-offset", height);
 
@@ -376,4 +358,8 @@ void oui::ScrollPanel::scrollY(int speed) {
     }
     resetY = true;
     flagGraphicsUpdate();
+}
+
+oui::ScrollPanelAttributeManager* oui::ScrollPanel::getAttributeManager() {
+    return static_cast<ScrollPanelAttributeManager*>(attributeManager);
 }
