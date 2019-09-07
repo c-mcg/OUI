@@ -20,12 +20,13 @@ namespace oui {
 
     class OUI_API AttributeManager {
 
-        public: static const char STRING = 0;
-        public: static const char INT = 1;
-        public: static const char DOUBLE = 2;
-        public: static const char BOOL = 3;
-        public: static const char COLOR = 4;
-        public: static const char STRING_ARRAY = 5;
+        public: static const char STRING = OSAL::TYPE_STRING;
+        public: static const char INT = OSAL::TYPE_INT;
+        public: static const char DOUBLE = OSAL::TYPE_DOUBLE;
+        public: static const char BOOL = OSAL::TYPE_BOOL;
+        public: static const char COLOR = OSAL::TYPE_COLOR;
+        public: static const char ARRAY = OSAL::TYPE_ARRAY;
+        public: static const char STRING_ARRAY = 1000;
 
         public:
 

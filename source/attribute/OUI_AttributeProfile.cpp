@@ -56,16 +56,6 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
         return; // `AttributeSubstitution::applySubstitution` recursively calls this function with the substitutions
     }
 
-    // All attributes with multiple values should have been substituted away by now
-    if (value.getNumValues() > 1 && value.getType() != OSAL::TYPE_ARRAY) {
-        throw ArgumentException(
-            "AttributeProfile",
-            "setAttribute",
-            "Recieved OSAL::Attribute with multiple values",
-            "Raise a ticket with OUI support"
-        );
-    }
-
     //Delete the attribute if it already exists
     auto it = attributes.find(name);
     if (it != attributes.end()) {//TOOD deletion could be avoided if we reuse the attribute (does this affect speed?)
@@ -83,20 +73,13 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
 void oui::AttributeProfile::setAttribute(const std::string& name, Attribute value) {
 
     //See if we can get a valid substitution
-    if (AttributeSubstitution::hasSubstitution(name) && value.type != OSAL::TYPE_ARRAY) {
+    if (AttributeSubstitution::hasSubstitution(name)) {
 
         //If the attribute is a string, we will put it back in automatically
         if (value.type == OSAL::TYPE_STRING) {
             setAttribute(name, OSAL::Attribute(name, value.stringVal));
             return;
         }
-
-        throw ArgumentException(
-            "AttributeProfile",
-            "setAttribute",
-            "Recieved oui::Attribute with substitutions that is not a string",
-            "Use `parseAttribute` for attributes with multiple arguments"
-        );
     }
 
     //Delete the attribute if it already exists

@@ -166,12 +166,7 @@ oui::Color oui::Attribute::asColor() {
 
 std::vector<oui::Attribute> oui::Attribute::asArray() {
     if (type != OSAL::TYPE_ARRAY) {
-        throw ArgumentException(
-            "Attribute",
-            "asArray",
-            "Tried to get an array value from attribute that is not an array",
-            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-        );
+        return std::vector<Attribute>{*this};
     }
 
     return arrayVal;
