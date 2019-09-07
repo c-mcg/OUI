@@ -65,7 +65,7 @@ oui::Attribute::Attribute(Color value) {
 }
 
 oui::Attribute::Attribute(std::vector<Attribute> value) {
-    type = OSAL::TYPE_COLOR;
+    type = OSAL::TYPE_ARRAY;
     arrayVal = value;
 }
 

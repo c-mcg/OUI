@@ -50,37 +50,37 @@ namespace OSAL {
              * Gets the type at the specified index
              * Zero is default index for 1 value attributes
              */
-            char getType(int index = 0);
+            char getType();
 
             /**
              * Gets the value at the specified index as a string
              * Zero is default index for one value attributes
              */
-            std::u16string getAsString(int index = 0);//Gets the attributes value (of the specified index) as a string
+            std::u16string getAsString();//Gets the attributes value (of the specified index) as a string
 
             /**
              * Gets the value at the specified index as an integer
              * Zero is default index for one value attributes
              */
-            int getAsInt(int index = 0);//Gets the attributes value (of the specified index) as an int
+            int getAsInt();//Gets the attributes value (of the specified index) as an int
 
             /**
              * Gets the value at the specified index as a double
              * Zero is default index for one value attributes
              */
-            double getAsDouble(int index = 0);
+            double getAsDouble();
 
             /**
              * Gets the value at the specified index as a boolean
              * Zero is default index for one value attributes
              */
-            bool getAsBool(int index = 0);
+            bool getAsBool();
 
             /**
              * Gets the value at the specified index as a Color
              * Zero is default index for one value attributes
              */
-            oui::Color getAsColor(int index = 0);
+            oui::Color getAsColor();
 
             /**
              * Gets the value at the specified index as a Color

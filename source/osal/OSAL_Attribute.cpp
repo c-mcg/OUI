@@ -90,46 +90,47 @@ int OSAL::Attribute::getNumValues() {
     return (int) value.size();
 }
 
-char OSAL::Attribute::getType(int index) {
-    if(index < 0 || index >= value.size()) {
-        return -1;
+char OSAL::Attribute::getType() {
+    if (types.size() == 0 || types.size() > 1) {
+        return TYPE_ARRAY;
     }
-    return types[index];
+
+    return types[0];
 }
 
-std::u16string OSAL::Attribute::getAsString(int index) {
-    if(index < 0 || index >= value.size()) {
+std::u16string OSAL::Attribute::getAsString() {
+    if (value.size() == 0) {
         return u"null";
     }
-    return value[index];
+    return value[0];
 }
 
-int OSAL::Attribute::getAsInt(int index) {
-    std::u16string s = getAsString(index);
+int OSAL::Attribute::getAsInt() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return 0;
     }
     return stringToInt(s);
 }
 
-double OSAL::Attribute::getAsDouble(int index) {
-    std::u16string s = getAsString(index);
+double OSAL::Attribute::getAsDouble() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return 0;
     }
     return stringToDouble(s);
 }
 
-bool OSAL::Attribute::getAsBool(int index) {
-    std::u16string s = getAsString(index);
+bool OSAL::Attribute::getAsBool() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return false;
     }
     return s.compare(u"true") == 0;
 }
 
-oui::Color OSAL::Attribute::getAsColor(int index) {
-    std::u16string s = getAsString(index);
+oui::Color OSAL::Attribute::getAsColor() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return oui::Color::BLACK;
     }
