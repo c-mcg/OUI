@@ -25,15 +25,10 @@ namespace oui {
                 //E.g if "a" has substitutions "b", "c"
                 //Then "a: x y;" becomes "b: x; c: y;"
 
-            APPLY_WHOLE,//All attributes are copied for each substitution
+            APPLY_WHOLE//All attributes are copied for each substitution
                 //E.g if "a" has substitutions "b", "c"
                 //Then "a: x y;" becomes "b: x y; c: x y;"
 
-            APPLY_INDEXED//Attributes are applied respectively to indexed attributes
-                //E.g if "a" has subtitution "b"
-                //Then "a: x y;" becomes "b_length: 2; b_0: x; b_1: y;"
-                //Most likely, the substitution will have the same name ("a" would have substitution "a")
-                //This is possible because the new variables have suffixes and will not look for the original substitution again
         };
 
         //The current list of substitutions that each parse attribute is run through

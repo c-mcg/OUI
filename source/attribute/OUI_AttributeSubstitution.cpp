@@ -59,65 +59,26 @@ bool oui::AttributeSubstitution::applySubstitution(const std::string& name, OSAL
     SubstitutionType substitutionType = subIt->second.type;
     std::vector<std::string> substitutions = subIt->second.substitutions;
 
-    //Indexed substitution
-    //Substitutes an array in place of the attribute
-    //See `AttributeSubstitution::SubstitutionType` for examples
-    if (substitutionType == APPLY_INDEXED) {
-
-        int length = profile->getInt(substitutions.at(0) + "_length");
-
-        //Remove any existing attributes that correspond with this substitution
-        for (int i = value.getNumValues(); i < length; i++) {
-            profile->removeAttribute(substitutions.at(0) + "_" + std::to_string(i));
-        }
-
-        //Set the length attribute
-        profile->setAttribute(substitutions.at(0) + "_length", value.getNumValues());
-
-        //Set indexed attributes
-        for (int i = 0; i < value.getNumValues(); i++) {
-
-            //Populate new attribute value
-            Attribute val = Attribute(); //TODO this little block is starting to look too familiar
-            switch (value.getType(i)) {
-                case OSAL::TYPE_INT:
-                    val = value.getAsInt(i);
-                    break;
-                case OSAL::TYPE_STRING:
-                    val = std::u16string(value.getAsString(i));
-                    break;
-                case OSAL::TYPE_DOUBLE:
-                    val = value.getAsDouble(i);
-                    break;
-                case OSAL::TYPE_BOOL:
-                    val = value.getAsBool(i);
-                    break;
-            }
-
-            //Set indexed attribute
-            profile->setAttribute(substitutions.at(0) + "_" + std::to_string(i), val);
-        }
-        return true;
-    }
-    
-
     //Respective substitution
     //Substitutes multiple attributes respectively to the specified substitutions
     //See `AttributeSubstitution::SubstitutionType` for examples
     if (substitutionType == APPLY_RESPECTIVELY) {
 
+        std::vector<OSAL::Attribute> osalAttributes = value.getAsArray();
+
         //Run through the list of attributes to apply respectively
-        for (int i = 0; i < substitutions.size() && i < value.getNumValues(); i++) {
+        for (int i = 0; i < substitutions.size() && i < osalAttributes.size(); i++) {
+            OSAL::Attribute osalAttribute = osalAttributes[i];
                 
             //Here is a small optimization
             //This puts the new attribute back to be substituted only if it needs to be
             auto subIt2 = attributeSubs.find(substitutions.at(i));
             if (subIt2 != attributeSubs.end()) {
 
-                std::u16string attributeStringValue = value.getAsString(i);
+                std::u16string attributeStringValue = osalAttribute.getAsString();
 
                 //Put quotations back around the attribute if it's a string
-                if (value.getType(i) == OSAL::TYPE_STRING) {
+                if (osalAttribute.getType() == OSAL::TYPE_STRING) {
                     attributeStringValue = u"\"" + attributeStringValue + u"\"";
                 }
 
@@ -132,24 +93,7 @@ bool oui::AttributeSubstitution::applySubstitution(const std::string& name, OSAL
             }
 
             //If the attribute didn't need to be parsed again, we'll just create it now
-            Attribute val = Attribute();
-            //Popuplating the new attribute, seen this too many times
-            switch (value.getType(i)) {
-                case OSAL::TYPE_INT:
-                    val = value.getAsInt(i);
-                    break;
-                case OSAL::TYPE_STRING:
-                    val = std::u16string(value.getAsString(i));
-                    break;
-                case OSAL::TYPE_DOUBLE:
-                    val = value.getAsDouble(i);
-                    break;
-                case OSAL::TYPE_BOOL:
-                    val = value.getAsBool(i);
-                    break;
-            }
-
-            //Set the attribute directly
+            Attribute val = Attribute(osalAttribute);
             profile->setAttribute(substitutions.at(i), val);
     
         }

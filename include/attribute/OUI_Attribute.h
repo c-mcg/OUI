@@ -3,6 +3,7 @@
 
 #include "OUI_Export.h"
 #include "gfx/OUI_Color.h"
+#include "osal/OSAL_Attribute.h"
 
 namespace oui {
 
@@ -16,6 +17,7 @@ namespace oui {
         public: bool boolVal = false;
         public: double doubleVal = 0;
         public: Color colorVal = Color::BLACK;
+        public: std::vector<Attribute> arrayVal;
 
         public: ~Attribute();
         public: Attribute();
@@ -28,6 +30,16 @@ namespace oui {
         public: Attribute(bool value);
         public: Attribute(double value);
         public: Attribute(Color value);
+        public: Attribute(std::vector<Attribute> value);
+        public: Attribute(OSAL::Attribute value);
+
+        public: std::u16string asString();
+        public: int asInt();
+        public: bool asBool();
+        public: double asDouble();
+        public: Color asColor();
+        public: std::vector<Attribute> asArray();
+        public: std::vector<std::u16string> asStringArray();
 
         public: std::u16string toString();
         public: bool equals(Attribute other);

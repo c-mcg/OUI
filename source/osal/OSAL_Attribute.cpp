@@ -12,14 +12,14 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
     std::vector<std::u16string> tokens;
     std::u16string token = u"";
     for (unsigned int i = 0; i < value.length(); i++) {
-        if (value.at(i) == u' ') {
+        if (isspace(value.at(i)) && token != u"") {
             tokens.push_back(token);
             token = u"";
             continue;
         }
         token += value.at(i);
     }
-    if (token.length() > 0) {
+    if (token != u"") {
         tokens.push_back(token);
     }
 
@@ -76,6 +76,12 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
     }
 }
 
+
+OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value, char type) :
+    originalString{value}, name{name} {
+    addValue(type, value);
+}
+
 std::string OSAL::Attribute::getName() {
     return name;
 }
@@ -84,51 +90,65 @@ int OSAL::Attribute::getNumValues() {
     return (int) value.size();
 }
 
-char OSAL::Attribute::getType(int index) {
-    if(index < 0 || index >= value.size()) {
-        return -1;
+char OSAL::Attribute::getType() {
+    if (types.size() == 0 || types.size() > 1) {
+        return TYPE_ARRAY;
     }
-    return types[index];
+
+    return types[0];
 }
 
-std::u16string OSAL::Attribute::getAsString(int index) {
-    if(index < 0 || index >= value.size()) {
+std::u16string OSAL::Attribute::getAsString() {
+    if (value.size() == 0) {
         return u"null";
     }
-    return value[index];
+    return value[0];
 }
 
-int OSAL::Attribute::getAsInt(int index) {
-    std::u16string s = getAsString(index);
+int OSAL::Attribute::getAsInt() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return 0;
     }
     return stringToInt(s);
 }
 
-double OSAL::Attribute::getAsDouble(int index) {
-    std::u16string s = getAsString(index);
+double OSAL::Attribute::getAsDouble() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return 0;
     }
     return stringToDouble(s);
 }
 
-bool OSAL::Attribute::getAsBool(int index) {
-    std::u16string s = getAsString(index);
+bool OSAL::Attribute::getAsBool() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return false;
     }
     return s.compare(u"true") == 0;
 }
 
-oui::Color OSAL::Attribute::getAsColor(int index) {
-    std::u16string s = getAsString(index);
+oui::Color OSAL::Attribute::getAsColor() {
+    std::u16string s = getAsString();
     if(s == u"null") {
         return oui::Color::BLACK;
     }
 
     return oui::Color::fromString(s);
+}
+
+std::vector<OSAL::Attribute> OSAL::Attribute::getAsArray() {
+    std::vector<Attribute> attributeArray;
+    auto typeIt = types.begin();
+    auto valueIt = value.begin();
+    while(typeIt != types.end()) {
+        attributeArray.push_back(Attribute("osal_attribute_array_val", *valueIt, *typeIt));
+        typeIt++;
+        valueIt++;
+    }
+
+    return attributeArray;
 }
 
 std::u16string OSAL::Attribute::getOriginalString() {

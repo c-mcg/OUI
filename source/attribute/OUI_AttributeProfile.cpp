@@ -57,7 +57,7 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
     }
 
     // All attributes with multiple values should have been substituted away by now
-    if (value.getNumValues() > 1) {
+    if (value.getNumValues() > 1 && value.getType() != OSAL::TYPE_ARRAY) {
         throw ArgumentException(
             "AttributeProfile",
             "setAttribute",
@@ -74,25 +74,8 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
     }
 
     //Populate the new attribute value
-    Attribute val = Attribute();
-    switch (value.getType()) {
-        case OSAL::TYPE_INT:
-            val = value.getAsInt();
-            break;
-        case OSAL::TYPE_STRING:
-            val = value.getAsString();
-            break;
-        case OSAL::TYPE_DOUBLE:
-            val = value.getAsDouble();
-            break;
-        case OSAL::TYPE_BOOL:
-            val = value.getAsBool();
-            break;
-        case OSAL::TYPE_COLOR:
-            val = value.getAsColor();
-            break;
-    }
-    
+    Attribute val = Attribute(value);
+
     //Finally, add the attribute to our attributes list
     attributes.insert({name, val});
 }
@@ -100,7 +83,7 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
 void oui::AttributeProfile::setAttribute(const std::string& name, Attribute value) {
 
     //See if we can get a valid substitution
-    if (AttributeSubstitution::hasSubstitution(name)) {
+    if (AttributeSubstitution::hasSubstitution(name) && value.type != OSAL::TYPE_ARRAY) {
 
         //If the attribute is a string, we will put it back in automatically
         if (value.type == OSAL::TYPE_STRING) {
@@ -179,18 +162,7 @@ int oui::AttributeProfile::getInt(const std::string& name) {
         return 0;
     }
 
-    //Attribute exists and is an integer
-    if (attribute->type == OSAL::TYPE_INT) {
-        return attribute->intVal;
-    }
-    
-    
-    throw ArgumentException(
-        "AttributeProfile",
-        "getInt",
-        "Tried to get a int value from attribute that is not an int (attribute: " + name + ")",
-        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-    );
+    return attribute->asInt();
 }
 
 std::u16string oui::AttributeProfile::getString(const std::string& name) {
@@ -201,17 +173,7 @@ std::u16string oui::AttributeProfile::getString(const std::string& name) {
         return u"";
     }
 
-    //Attribute exists and is a string
-    if (attribute->type == OSAL::TYPE_STRING) {
-        return attribute->stringVal;
-    }
-    
-    throw ArgumentException(
-        "AttributeProfile",
-        "getString",
-        "Tried to get a string value from attribute that is not a string (attribute: " + name + ")",
-        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-    );
+    return attribute->asString();
 }
 
 bool oui::AttributeProfile::getBool(const std::string& name) {
@@ -223,16 +185,7 @@ bool oui::AttributeProfile::getBool(const std::string& name) {
     }
 
     //Attribute exists and is a bool
-    if (attribute->type == OSAL::TYPE_BOOL) {
-        return attribute->boolVal;
-    }
-
-    throw ArgumentException(
-        "AttributeProfile",
-        "getBool",
-        "Tried to get a boolean value from attribute that is not a boolean (attribute: " + name + ")",
-        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-    );
+    return attribute->asBool();
 }
 
 double oui::AttributeProfile::getDouble(const std::string& name) {
@@ -243,17 +196,7 @@ double oui::AttributeProfile::getDouble(const std::string& name) {
         return 0.0;
     }
 
-    //Attribute exists and is a double
-    if (attribute->type == OSAL::TYPE_DOUBLE) {
-        return attribute->doubleVal;
-    }
-        
-    throw ArgumentException(
-        "AttributeProfile",
-        "getDouble",
-        "Tried to get a double value from attribute that is not a double (attribute: " + name + ")",
-        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-    );
+    return attribute->asDouble();
 }
 
 oui::Color oui::AttributeProfile::getColor(const std::string& name) {
@@ -263,17 +206,28 @@ oui::Color oui::AttributeProfile::getColor(const std::string& name) {
         return Color::BLACK;
     }
 
-    //Attribute exists and is a double
-    if (attribute->type == OSAL::TYPE_COLOR) {
-        return attribute->colorVal;
+    return attribute->asColor();
+}
+
+std::vector<oui::Attribute> oui::AttributeProfile::getArray(const std::string& name) {
+    Attribute* attribute = hasAttribute(name);
+
+    if (attribute == NULL) {
+        return std::vector<Attribute>();
     }
-        
-    throw ArgumentException(
-        "AttributeProfile",
-        "getColor",
-        "Tried to get a color value from attribute that is not a color (attribute: " + name + ")",
-        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
-    );
+
+    //Attribute exists and is a double
+    return attribute->asArray();
+}
+
+std::vector<std::u16string> oui::AttributeProfile::getStringArray(const std::string& name) {
+    Attribute* attribute = hasAttribute(name);
+
+    if (attribute == NULL) {
+        return std::vector<std::u16string>();
+    }
+
+    return attribute->asStringArray();
 }
 
 void oui::AttributeProfile::removeAttribute(const std::string& name) {//TODO substitutions
