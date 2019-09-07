@@ -1,6 +1,7 @@
 #include "attribute/OUI_Attribute.h"
 #include "osal/OSAL_Attribute.h"
 #include "util/OUI_StringUtil.h"
+#include "exception/OUI_ArgumentException.h"
 
 #include <iostream>
 
@@ -40,13 +41,13 @@ oui::Attribute::Attribute(const char* value) :
     Attribute(std::string(value)) {
 }
 
-oui::Attribute::Attribute(const std::u16string value) :
-    type{OSAL::TYPE_STRING}, stringVal{value} {
-}
-
 oui::Attribute::Attribute(const char16_t* value) :
     Attribute(std::u16string(value)) {
 
+}
+
+oui::Attribute::Attribute(const std::u16string value) :
+    type{OSAL::TYPE_STRING}, stringVal{value} {
 }
 
 oui::Attribute::Attribute(bool value) {
@@ -96,6 +97,94 @@ oui::Attribute::Attribute(OSAL::Attribute value) {
             arrayVal = ouiArray;
             break;
     }
+}
+
+std::u16string oui::Attribute::asString() {
+    if (type != OSAL::TYPE_STRING) {
+        throw ArgumentException(
+            "Attribute",
+            "asString",
+            "Tried to get a string value from attribute that is not a string",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return stringVal;
+}
+
+int oui::Attribute::asInt() {
+    if (type != OSAL::TYPE_INT) {
+        throw ArgumentException(
+            "Attribute",
+            "asInt",
+            "Tried to get an int value from attribute that is not an int",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return intVal;
+}
+
+double oui::Attribute::asDouble() {
+    if (type != OSAL::TYPE_DOUBLE) {
+        throw ArgumentException(
+            "Attribute",
+            "asDouble",
+            "Tried to get a double value from attribute that is not a double",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return doubleVal;
+}
+
+bool oui::Attribute::asBool() {
+    if (type != OSAL::TYPE_BOOL) {
+        throw ArgumentException(
+            "Attribute",
+            "asBool",
+            "Tried to get a bool value from attribute that is not a bool",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return boolVal;
+}
+
+oui::Color oui::Attribute::asColor() {
+    if (type != OSAL::TYPE_COLOR) {
+        throw ArgumentException(
+            "Attribute",
+            "asColor",
+            "Tried to get a color value from attribute that is not a color",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return colorVal;
+}
+
+std::vector<oui::Attribute> oui::Attribute::asArray() {
+    if (type != OSAL::TYPE_ARRAY) {
+        throw ArgumentException(
+            "Attribute",
+            "asArray",
+            "Tried to get an array value from attribute that is not an array",
+            "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+        );
+    }
+
+    return arrayVal;
+}
+
+std::vector<std::u16string> oui::Attribute::asStringArray() {
+    auto attributeArray = asArray();
+    std::vector<std::u16string> stringArray;
+    for(auto it = attributeArray.begin(); it != attributeArray.end(); it++) {
+        stringArray.push_back(it->asString());
+    }
+
+    return stringArray;
 }
 
 std::u16string oui::Attribute::toString() {

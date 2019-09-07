@@ -33,6 +33,14 @@ namespace oui {
         public: Attribute(std::vector<Attribute> value);
         public: Attribute(OSAL::Attribute value);
 
+        public: std::u16string asString();
+        public: int asInt();
+        public: bool asBool();
+        public: double asDouble();
+        public: Color asColor();
+        public: std::vector<Attribute> asArray();
+        public: std::vector<std::u16string> asStringArray();
+
         public: std::u16string toString();
         public: bool equals(Attribute other);
         public: Attribute* clone();

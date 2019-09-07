@@ -12,14 +12,14 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
     std::vector<std::u16string> tokens;
     std::u16string token = u"";
     for (unsigned int i = 0; i < value.length(); i++) {
-        if (value.at(i) == u' ') {
+        if (isspace(value.at(i)) && token != u"") {
             tokens.push_back(token);
             token = u"";
             continue;
         }
         token += value.at(i);
     }
-    if (token.length() > 0) {
+    if (token != u"") {
         tokens.push_back(token);
     }
 

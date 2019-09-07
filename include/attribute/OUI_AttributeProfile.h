@@ -76,6 +76,9 @@ namespace oui {
         //Gets the value of an array attribute
         public: OUI_API std::vector<Attribute> getArray(const std::string& name);
 
+        //Gets the value of a string array attribute
+        public: OUI_API std::vector<std::u16string> getStringArray(const std::string& name);
+
         //Removes an attribute if it exists
         //TODO this should be a bool, and maybe throw some errors in the engine if it doesn't work
         public: OUI_API void removeAttribute(const std::string& name);

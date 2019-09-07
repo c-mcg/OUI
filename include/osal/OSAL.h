@@ -138,8 +138,9 @@ namespace OSAL {
                     } else if(isspace(c)) {//White space after attribute name
                         state = STATE_ATTR_COLON;
                     } else if(c == ':') {//Found ':'
-                        state = STATE_START_ATTR_VAL;
                         currAttribute = convertUTF16toUTF8(currToken);
+                        currToken = u"";
+                        state = STATE_START_ATTR_VAL;
                     } else {//Invalid char
                         error = true;
                     }
@@ -147,9 +148,9 @@ namespace OSAL {
 
                 case STATE_ATTR_COLON://Looking for ':' after attribute name
                     if(c == ':') {//continue if white space
-                        state = STATE_START_ATTR_VAL;
                         currAttribute = convertUTF16toUTF8(currToken);
                         currToken = u"";
+                        state = STATE_START_ATTR_VAL;
                     } else if(!isspace(c)) {//Invalid char
                         error = true;
                     }
@@ -158,19 +159,19 @@ namespace OSAL {
                 case STATE_START_ATTR_VAL://Looking for attribute value
                     if(isdigit(c)) {//Start building value
                         state = STATE_BUILD_ATTR_VAL;
-                        currToken = c;
+                        currToken += c;
                         type = Attribute::INT;
                     } else if(isalpha(c)) {//Start building value
                         state = STATE_BUILD_ATTR_VAL;
-                        currToken = c;
+                        currToken += c;
                         type = Attribute::STRING;
                     } else if(c == '#') {//Start building value
                         state = STATE_BUILD_ATTR_VAL;
-                        currToken = c;
+                        currToken += c;
                         type = Attribute::COLOR;
                     } else if(c == '\'' || c == '"') {
                         state = STATE_BUILD_ATTR_VAL;
-                        currToken = c;
+                        currToken += c;
                         stringLiteral = c == '\'' ? 1 : 2;
                         type = Attribute::STRING;
                     } else if(!isspace(c)) {//Invalid char
@@ -211,16 +212,17 @@ namespace OSAL {
                         }
                         currToken += c;
                         lastChar = c;
-                    } else if(isValidChar(c) || c == ' ') {//Add character
+                    } else if(isValidChar(c)) {//Add character
                         currToken += c;
                         lastChar = c;
-                        if (c == ' ' && type != -1) {
+                    } else if(isspace(c)) {
+                        currToken += c;
+                        lastChar = c;
+                        if (type != -1) {
                             varTypes.push_back((char) type);
                             type = -1;//This should make it so multiple types are allowed
                         }
-                    } else if(c != '\n' && isspace(c)) {
-                        currToken += c;
-                        lastChar = c;
+                        state = STATE_START_ATTR_VAL;
                     } else if(c == ';') {//Time to look for another attribute
                         if (type != -1) {
                             varTypes.push_back((char) type);
@@ -229,7 +231,7 @@ namespace OSAL {
                         attributes.push_back(Attribute(currAttribute, currToken.c_str()));
                         varTypes = std::vector<char>();
                         state = STATE_START_ATTRS;
-                    } else if(c != '\n') {//Invalid char
+                    } else {//Invalid char
                         error = true;
                     }
                     break;

@@ -451,16 +451,16 @@ void oui::Window::onMouseDown(ComponentEvent* compEvent) {
         if (menu != NULL && rcOptions.size() != 0) {
             setSelectedComponent(c);
 
-            std::u16string arguments = u"";
+            std::vector<Attribute> options;
             for (int i = 0; i < rcOptions.size(); i++) {
-                arguments += u"\"" + rcOptions.at(i) + u"\"" + (i < rcOptions.size() - 1 ? u" " : u"");
+                options.push_back(rcOptions[i]);
             }
 
 #ifdef _DEBUG
-            arguments += u" Inspect";
+            options.push_back(u" Inspect");
 #endif
 
-            menu->parseAttribute("options", arguments);
+            menu->setAttribute("options", options);
             if (mouseX + menu->getWidth() > getWidth()) {
                 mouseX = getWidth() - menu->getWidth();
             }

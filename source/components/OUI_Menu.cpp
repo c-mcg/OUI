@@ -27,7 +27,7 @@ oui::Menu::Menu(const std::string& name, const std::string& classes, EventDispat
     setAttribute("option-height", 20);
     parseAttribute("font", u"notoserif 14");
 
-    parseAttribute("options", u"");
+    setAttribute("options", std::vector<Attribute>());
 }
 
 

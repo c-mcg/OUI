@@ -108,11 +108,7 @@ void oui::ComponentAttributeManager::setProfile(const std::u16string& profileNam
         visible = profile->getBool("visible");
 
         //Right-click-options
-        std::vector<std::u16string> options;
-        for (int i = 0; i < profile->getInt("right-click-options_length"); i++) {
-            options.push_back(profile->getString("right-click-options_" + std::to_string(i)));
-        }
-        rightClickOptions = options;
+        rightClickOptions = profile->getStringArray("right-click-options");
 
         std::u16string cursor = profile->getString("cursor");
         if (cursor == u"default") {

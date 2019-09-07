@@ -48,7 +48,7 @@ oui::Style* oui::Component::getDefaultComponentStyle() {
         profile->setAttribute("min-width", 0);
         profile->setAttribute("min-height", 0);
         profile->setAttribute("z-index", 0);
-        profile->setAttribute("right-click-options_length", 0);
+        profile->setAttribute("right-click-options", std::vector<Attribute>());
         profile->setAttribute("permanent", false);
 
         style->addProfile(u"default", profile);
