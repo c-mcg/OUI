@@ -74,25 +74,8 @@ void oui::AttributeProfile::setAttribute(const std::string& name, OSAL::Attribut
     }
 
     //Populate the new attribute value
-    Attribute val = Attribute();
-    switch (value.getType()) {
-        case OSAL::TYPE_INT:
-            val = value.getAsInt();
-            break;
-        case OSAL::TYPE_STRING:
-            val = value.getAsString();
-            break;
-        case OSAL::TYPE_DOUBLE:
-            val = value.getAsDouble();
-            break;
-        case OSAL::TYPE_BOOL:
-            val = value.getAsBool();
-            break;
-        case OSAL::TYPE_COLOR:
-            val = value.getAsColor();
-            break;
-    }
-    
+    Attribute val = Attribute(value);
+
     //Finally, add the attribute to our attributes list
     attributes.insert({name, val});
 }
@@ -272,6 +255,26 @@ oui::Color oui::AttributeProfile::getColor(const std::string& name) {
         "AttributeProfile",
         "getColor",
         "Tried to get a color value from attribute that is not a color (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
+}
+
+std::vector<oui::Attribute> oui::AttributeProfile::getArray(const std::string& name) {
+    Attribute* attribute = hasAttribute(name);
+
+    if (attribute == NULL) {
+        return std::vector<Attribute>();
+    }
+
+    //Attribute exists and is a double
+    if (attribute->type == OSAL::TYPE_ARRAY) {
+        return attribute->arrayVal;
+    }
+        
+    throw ArgumentException(
+        "AttributeProfile",
+        "getArray",
+        "Tried to get an array value from attribute that is not an array (attribute: " + name + ")",
         "Either the attribute is incorrectly set, or you should be using a getter for a different type"
     );
 }

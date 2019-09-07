@@ -4,7 +4,6 @@
 #include "OUI_Attribute.h"
 #include "OUI_AttributeSubstitution.h"
 
-
 namespace oui {
 
     /** 
@@ -74,6 +73,9 @@ namespace oui {
         //Gets the value of a color attribute
         public: OUI_API Color getColor(const std::string& name);
 
+        //Gets the value of an array attribute
+        public: OUI_API std::vector<Attribute> getArray(const std::string& name);
+
         //Removes an attribute if it exists
         //TODO this should be a bool, and maybe throw some errors in the engine if it doesn't work
         public: OUI_API void removeAttribute(const std::string& name);
@@ -92,6 +94,8 @@ namespace oui {
 
         //Creates a new AttributeProfile will all of the attribute values flattened from default profiles
         public: OUI_API AttributeProfile* flatten();
+
+
 
     };
 

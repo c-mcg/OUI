@@ -69,6 +69,35 @@ oui::Attribute::Attribute(std::vector<Attribute> value) {
     arrayVal = value;
 }
 
+oui::Attribute::Attribute(OSAL::Attribute value) {
+    this->type = value.getType();
+    switch (this->type) {
+        case OSAL::TYPE_INT:
+            intVal = value.getAsInt();
+            break;
+        case OSAL::TYPE_STRING:
+            stringVal = value.getAsString();
+            break;
+        case OSAL::TYPE_DOUBLE:
+            doubleVal = value.getAsDouble();
+            break;
+        case OSAL::TYPE_BOOL:
+            boolVal = value.getAsBool();
+            break;
+        case OSAL::TYPE_COLOR:
+            colorVal = value.getAsColor();
+            break;
+        case OSAL::TYPE_ARRAY:
+            std::vector<OSAL::Attribute> osalArray = value.getAsArray();
+            std::vector<oui::Attribute> ouiArray;
+            for (auto it = osalArray.begin(); it != osalArray.end(); it++) {
+                ouiArray.push_back(oui::Attribute(*it));
+            }
+            arrayVal = ouiArray;
+            break;
+    }
+}
+
 std::u16string oui::Attribute::toString() {
     switch (type) {
         case OSAL::TYPE_INT:

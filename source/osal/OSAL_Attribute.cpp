@@ -76,6 +76,12 @@ OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value)
     }
 }
 
+
+OSAL::Attribute::Attribute(const std::string& name, const std::u16string& value, char type) :
+    originalString{value}, name{name} {
+    addValue(type, value);
+}
+
 std::string OSAL::Attribute::getName() {
     return name;
 }
@@ -129,6 +135,19 @@ oui::Color OSAL::Attribute::getAsColor(int index) {
     }
 
     return oui::Color::fromString(s);
+}
+
+std::vector<OSAL::Attribute> OSAL::Attribute::getAsArray() {
+    std::vector<Attribute> attributeArray;
+    auto typeIt = types.begin();
+    auto valueIt = value.begin();
+    while(typeIt != types.end()) {
+        attributeArray.push_back(Attribute("osal_attribute_array_val", *valueIt, *typeIt));
+        typeIt++;
+        valueIt++;
+    }
+
+    return attributeArray;
 }
 
 std::u16string OSAL::Attribute::getOriginalString() {

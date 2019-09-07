@@ -26,11 +26,15 @@ namespace OSAL {
             static const char BOOL = TYPE_BOOL;
             static const char COLOR = TYPE_COLOR;
 
-
             /**
              * Creates a new attribute with the specified name and value
              */
             Attribute(const std::string& name, const std::u16string& value);
+            
+            /**
+             * Creates a new attribute with the specified name and value
+             */
+            Attribute(const std::string& name, const std::u16string& value, char type);
 
             /**
              * Returns the name of the attribute
@@ -77,6 +81,12 @@ namespace OSAL {
              * Zero is default index for one value attributes
              */
             oui::Color getAsColor(int index = 0);
+
+            /**
+             * Gets the value at the specified index as a Color
+             * Zero is default index for one value attributes
+             */
+            std::vector<Attribute> getAsArray();
 
             /**
              * Gets the original value string
