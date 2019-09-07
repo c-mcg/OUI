@@ -15,6 +15,7 @@ namespace OSAL {
     static const char TYPE_DOUBLE = 2;
     static const char TYPE_BOOL = 3;
     static const char TYPE_COLOR = 4;
+    static const char TYPE_ARRAY = 5;
     class Attribute {
 
         public:

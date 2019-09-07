@@ -22,6 +22,8 @@ oui::Attribute::Attribute(const Attribute& a) {
         doubleVal = a.doubleVal;
     } else if (a.type == OSAL::TYPE_COLOR) {
         colorVal = a.colorVal;
+    } else if (a.type == OSAL::TYPE_ARRAY) {
+        arrayVal = a.arrayVal;
     }
 }
 
@@ -62,6 +64,11 @@ oui::Attribute::Attribute(Color value) {
     colorVal = value;
 }
 
+oui::Attribute::Attribute(std::vector<Attribute> value) {
+    type = OSAL::TYPE_COLOR;
+    arrayVal = value;
+}
+
 std::u16string oui::Attribute::toString() {
     switch (type) {
         case OSAL::TYPE_INT:
@@ -74,6 +81,16 @@ std::u16string oui::Attribute::toString() {
             return doubleToString(doubleVal);
         case OSAL::TYPE_COLOR:
             return convertUTF8toUTF16(colorVal.toString());
+        case OSAL::TYPE_ARRAY:
+            std::u16string arrayString = u"[";
+            for (auto it = arrayVal.begin(); it != arrayVal.end(); it++) {
+                arrayString += (*it).toString();
+                if (it != arrayVal.end() - 1) {
+                    arrayString == u", ";
+                }
+            }
+            arrayString += u"]";
+            return arrayString;
     }
     return stringVal;
 }
@@ -108,7 +125,10 @@ oui::Attribute* oui::Attribute::clone() {
         case OSAL::TYPE_COLOR:
             return new Attribute(colorVal);
             break;
+        case OSAL::TYPE_ARRAY:
+            return new Attribute(arrayVal);
+            break;
     }
 
-    return NULL;//This should be a breakpoint as it should never happen
+    return NULL;// TODO (error?) This should be a breakpoint as it should never happen
 }
