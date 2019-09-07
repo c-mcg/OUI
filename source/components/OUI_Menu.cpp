@@ -43,7 +43,7 @@ bool oui::Menu::addChild(Component* child) {
 
 oui::Button* oui::Menu::addOption(const std::u16string& option) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    return addOption(option, attributeManager->getNumOptions());
+    return addOption(option, getInt("num-options"));
 }
 oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
@@ -53,7 +53,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     int fontSize = attributeManager->getFontSize();
     Color hoverColor = attributeManager->getHoverColor();
     int minWidth = attributeManager->getMinWidth();
-    int numOptions = attributeManager->getNumOptions();
+    int numOptions = getInt("num-options");
 
     //Create button for option
     Button* b = new Button("option_" + std::to_string(index), "menuOption");
@@ -172,7 +172,7 @@ oui::Component* oui::Menu::getTarget() {
 
 std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = attributeManager->getNumOptions();
+    int numOptions = getInt("num-options");
     return addOptions(options, numOptions);
 }
 
@@ -186,7 +186,7 @@ std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string
 
 bool oui::Menu::removeOption(int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = attributeManager->getNumOptions();
+    int numOptions = getInt("num-options");
     if (index < 0 || index >= numOptions) {
         return false;
     }
@@ -209,7 +209,7 @@ int oui::Menu::resetOptions(int startIndex) {
     int minWidth = attributeManager->getMinWidth();
     int fontSize = attributeManager->getFontSize();
     std::u16string font = attributeManager->getFont();
-    int numOptions = attributeManager->getNumOptions();
+    int numOptions = getInt("num-options");
     int optionHeight = attributeManager->getOptionHeight();
     int padding = attributeManager->getPadding();
 

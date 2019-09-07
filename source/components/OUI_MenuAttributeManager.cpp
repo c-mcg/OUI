@@ -28,21 +28,26 @@ void oui::MenuAttributeManager::setProfile(const std::u16string& profileName) {
         fontSize = profile->getInt("font-size");
 
         //Options
-        // bool optionsChanged = false;
-        // std::vector<std::u16string> options;
-        // for (int i = 0; i < profile->getInt("options_length"); i++) {
-        //     options.push_back(profile->getString("options_" + std::to_string(i)));
-        //     if (i >= this->options.size() || options.at(i) != this->options.at(i)) {
-        //         optionsChanged = true;
-        //     }
-        // }
-        // if (optionsChanged) {
-        //     Menu* menu = static_cast<Menu*>(component);
-        //     setOptions(options);
-        //     int borderWidth = profile->getInt("border-width");
-        //     int biggestWidth = menu->resetOptions();
-        //     parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
-        // }
+        bool optionsChanged = false;
+        std::vector<std::u16string> newOptions = profile->getStringArray("options");
+        if (newOptions.size() != options.size()) {
+            optionsChanged = true;
+        } else {
+            for (int i = 0; i < newOptions.size(); i++) {
+                if (newOptions[i] != options[i]) {
+                    optionsChanged = true;
+                    break;
+                }
+            }
+        }
+        if (optionsChanged) {
+            Menu* menu = static_cast<Menu*>(component);
+            setOptions(newOptions);
+            numOptions = newOptions.size();
+            int borderWidth = profile->getInt("border-width");
+            int biggestWidth = menu->resetOptions();
+            parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
+        }
     }
     
     ContainerAttributeManager::setProfile(profileName);
