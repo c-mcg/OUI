@@ -17,13 +17,11 @@ oui::Menu::Menu(const std::string& name, const std::string& classes, EventDispat
 
     // TODO use default style like other components
     setAttribute("border-style", u"solid");
-    setAttribute("border-color-r", 0);
-    setAttribute("border-color-g", 0);
-    setAttribute("border-color-b", 0);
-    setAttribute("border-color-a", 128);
-    parseAttribute("bg-color", u"225 225 225 255");
+    setAttribute("border-color", Color(0, 0, 0, 128));
+    setAttribute("bg-color1", Color::WHITE);
+    setAttribute("bg-color2", Color::WHITE);
 
-    parseAttribute("hover-color", u"200 200 200 255");
+    setAttribute("hover-color", Color(200, 200, 200, 255));
     setAttribute("padding", 4);
     setAttribute("min-width", 100);
     setAttribute("option-height", 20);
@@ -86,12 +84,8 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
     //Apply hover colour
     Color c = hoverColor;
-    b->setAttribute("bg-color1-r", c.getR(), u"hover");
-    b->setAttribute("bg-color2-r", c.getR(), u"hover");
-    b->setAttribute("bg-color1-g", c.getG(), u"hover");
-    b->setAttribute("bg-color2-g", c.getG(), u"hover");
-    b->setAttribute("bg-color1-b", c.getB(), u"hover");
-    b->setAttribute("bg-color2-b", c.getB(), u"hover");
+    b->setAttribute("bg-color1", c, u"hover");
+    b->setAttribute("bg-color2", c, u"hover");
 
     //Add button click event handler
     b->addEventListener("click", [this, b](ComponentEvent* e) {

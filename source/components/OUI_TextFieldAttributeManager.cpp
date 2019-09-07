@@ -3,7 +3,7 @@
 
 oui::TextFieldAttributeManager::TextFieldAttributeManager():
     text{text}, font{font}, textColor{Color::BLACK}, caratWidth{0},
-    caratColor{Color::BLACK}, caratHeightOffset{0}, highlightColor{Color::BLACK},
+    caratColor{Color::BLACK}, caratHeightOffset{0}, highlightColor{Color::WHITE},
     ComponentAttributeManager()
 {
 
@@ -22,17 +22,17 @@ void oui::TextFieldAttributeManager::setProfile(const std::u16string& profileNam
         font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), component->getWindow());
 
         //Text-color
-        textColor =Color(profile->getInt("text-color-r"), profile->getInt("text-color-g"), profile->getInt("text-color-b"), profile->getInt("text-color-a"));
+        textColor = profile->getColor("text-color");
 
         //Carat-width
         caratWidth = profile->getInt("carat-width");
         //Carat-color
-        caratColor = Color(profile->getInt("carat-color-r"), profile->getInt("carat-color-g"), profile->getInt("carat-color-b"), profile->getInt("carat-color-a"));
+        caratColor = profile->getColor("carat-color");
         //Carat-h-offset
         caratHeightOffset = profile->getInt("carat-h-offset");
 
         //highlight-color
-        highlightColor = Color(profile->getInt("highlight-color-r"), profile->getInt("highlight-color-g"), profile->getInt("highlight-color-b"), profile->getInt("highlight-color-a"));
+        highlightColor = profile->getColor("highlight-color");
 
     }
 }

@@ -4,6 +4,7 @@
 #include <codecvt>
 #include <algorithm>
 #include <functional>
+#include <cctype>
 
 #if _MSC_VER >= 1900
 
@@ -117,20 +118,32 @@ bool stringEndsWith(std::string string, std::string ending) {
     return true;
 }
 
-// std::u16string::const_iterator findInString(const std::u16string& string, const char toFind) {
-// 	const char16_t toFind16 = (char16_t) toFind;
-// 	return std::search(string.cbegin(), string.cend(), std::boyer_moore_searcher(&toFind16, &toFind16)); 
-// }
+std::string trimString(std::string s) {
+    // https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+    // trim from start (in place)
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
 
-// std::u16string::const_iterator findInString(const std::u16string& string, const char16_t toFind) {
-// 	return std::search(string.cbegin(), string.cend(), std::boyer_moore_searcher(&toFind, &toFind)); 
-// }
+    // trim from end (in place)
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
 
-// std::u16string::const_iterator findInString(const std::u16string& string, const std::string& toFind) {
-// 	const std::u16string toFind16 = convertUTF8toUTF16(toFind);
-// 	return std::search(string.cbegin(), string.cend(), std::boyer_moore_searcher(toFind16.begin(), toFind16.end())); 
-// }
+    return s;
+}
 
-// std::u16string::const_iterator findInString(const std::u16string& string, const std::u16string& toFind) {
-// 	return std::search(string.cbegin(), string.cend(), std::boyer_moore_searcher(toFind.begin(), toFind.end())); 
-// }
+std::u16string trimString(std::u16string s) {
+    // https://stackoverflow.com/questions/216823/whats-the-best-way-to-trim-stdstring
+    // trim from start (in place)
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+
+    // trim from end (in place)
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+
+    return s;
+}

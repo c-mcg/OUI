@@ -93,26 +93,13 @@ int oui::initialize() {
     AttributeSubstitution::addSubstitution("location", {"x-percent", "y-percent", "x-offset", "y-offset"});
     AttributeSubstitution::addSubstitution("centered", std::vector<std::string>({"centered-x", "centered-y"}), AttributeSubstitution::APPLY_WHOLE);
     AttributeSubstitution::addSubstitution("bg-color", std::vector<std::string>({"bg-color1", "bg-color2"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("bg-color1", {"bg-color1-r", "bg-color1-g", "bg-color1-b", "bg-color1-a"});
-    AttributeSubstitution::addSubstitution("bg-color2", {"bg-color2-r", "bg-color2-g", "bg-color2-b", "bg-color2-a"});
-    AttributeSubstitution::addSubstitution("bg-color-r", std::vector<std::string>({"bg-color1-r", "bg-color2-r"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("bg-color-g", std::vector<std::string>({"bg-color1-g", "bg-color2-g"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("bg-color-b", std::vector<std::string>({"bg-color1-b", "bg-color2-b"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("bg-color-a", std::vector<std::string>({"bg-color1-a", "bg-color2-a"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("border-color", {"border-color-r", "border-color-g", "border-color-b", "border-color-a"});
     AttributeSubstitution::addSubstitution("right-click-options", "right-click-options", AttributeSubstitution::APPLY_INDEXED);
 
     //FONT (button, label, textfield)
     AttributeSubstitution::addSubstitution("font", std::vector<std::string>({"font-face", "font-size"}));
-    AttributeSubstitution::addSubstitution("text-color", {"text-color-r", "text-color-g", "text-color-b", "text-color-a"});
 
     //Menu
-    AttributeSubstitution::addSubstitution("hover-color", {"hover-color-r", "hover-color-g", "hover-color-b", "hover-color-a"});
     AttributeSubstitution::addSubstitution("options", "options", AttributeSubstitution::APPLY_INDEXED);
-
-    //TextField
-    AttributeSubstitution::addSubstitution("carat-color", {"carat-color-r", "carat-color-g", "carat-color-b", "carat-color-a"});
-    AttributeSubstitution::addSubstitution("highlight-color", {"highlight-color-r", "highlight-color-g", "highlight-color-b", "highlight-color-a"});
 
     OS()->initialize();
 

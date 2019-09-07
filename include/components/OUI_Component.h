@@ -102,7 +102,7 @@ namespace oui {
         
     //Usage functions
         //This parses a value as if it were an OSAL attribute
-        //This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("bg-color", u"0 0 0 255")"
+        //This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("text", u"'Hello There!'")"
         public: OUI_API void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
         public: OUI_API bool contains(int localX, int localY);
         public: void updateSize();

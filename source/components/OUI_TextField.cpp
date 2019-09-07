@@ -22,16 +22,16 @@ oui::TextField::TextField(const std::string& name, const std::string& classes, E
     // TODO use default styling like other comps
     setAttribute("text", u"");
     parseAttribute("font", u"notoserif 14");
-    parseAttribute("bg-color1", u"240 240 240 255");
-    parseAttribute("bg-color2", u"230 230 230 255");
+    setAttribute("bg-color1", Color(240, 240, 240, 255));
+    setAttribute("bg-color2", Color(230, 230, 230, 255));
     setAttribute("border-style", u"solid");
-    parseAttribute("border-color", u"0 0 0 64");
-    parseAttribute("text-color", u"0 0 0 255");
+    setAttribute("border-color", Color(0, 0, 0, 64));
+    setAttribute("text-color", Color(0, 0, 0, 255));
     setAttribute("cursor", u"text");
     setAttribute("carat-width", 1);
-    parseAttribute("carat-color", u"0 0 0 255");
+    setAttribute("carat-color", Color(0, 0, 0, 255));
     setAttribute("carat-h-offset", 2);
-    parseAttribute("highlight-color", u"200 200 255 255");
+    setAttribute("highlight-color", Color(200, 200, 255, 255));
     parseAttribute("size", u"0 0 150 25");
     
     addEventListener("mousedown", std::bind(&TextField::onMouseDown, this, std::placeholders::_1));

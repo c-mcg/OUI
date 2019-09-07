@@ -8,11 +8,16 @@
 namespace oui {
 
     class OUI_API Color {
+        public: static Color fromString(std::u16string string);
+
+        public: static Color NONE;
+        public: static Color WHITE;
         public: static Color BLACK;
 
         private:uint32_t rgba;
 
         public: Color();
+        public: Color(Color& color);
         public: explicit Color(uint32_t rgba);
         public: Color(int r, int g, int b, int a = 255);
 
@@ -22,7 +27,10 @@ namespace oui {
         public:int getG();
         public:int getB();
 
+        public: Color setA(int a);
+
         public: bool equals(Color c);
+        public: std::string toString();
     };
 
 }

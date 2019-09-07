@@ -68,10 +68,7 @@ void oui::AttributeManager::updateAttributeVariable(const std::string& attribute
     std::string originalName = attributeName;
     std::string name = attributeName;
     int index = -1;
-    if (stringEndsWith(name, "-r") || stringEndsWith(name, "-g") ||
-        stringEndsWith(name, "-b") || stringEndsWith(name, "-a")){ // is r, g, b, or a for color
-        name = name.substr(0, name.length() - 2);
-    } else if (stringEndsWith(name, "_length")) { // Is length of an array
+    if (stringEndsWith(name, "_length")) { // Is length of an array
         name = name.substr(0, name.length() - 7);
     } else if (name.length() > 2 && name.at(name.length() - 2) == '_') { // Is a value of an array
         try {
@@ -120,13 +117,7 @@ void oui::AttributeManager::updateAttributeVariable(const std::string& attribute
         *doubleValue = value.doubleVal;
     } else if (info.variableType == AttributeManager::COLOR) {
         Color* colorVal = static_cast<Color*>(info.variablePointer);
-        
-        int r = stringEndsWith(originalName, "-r") ? value.intVal : colorVal->getR();
-        int g = stringEndsWith(originalName, "-g") ? value.intVal : colorVal->getG();
-        int b = stringEndsWith(originalName, "-b") ? value.intVal : colorVal->getB();
-        int a = stringEndsWith(originalName, "-a") ? value.intVal : colorVal->getA();
-
-        *colorVal = Color(r, g, b, a);
+        *colorVal = value.colorVal;
     }
             
     if (info.variableType == AttributeManager::STRING_ARRAY) {

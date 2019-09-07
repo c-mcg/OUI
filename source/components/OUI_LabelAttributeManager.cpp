@@ -22,7 +22,7 @@ void oui::LabelAttributeManager::setProfile(const std::u16string& profileName)  
         font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), component->getWindow());
 
         //Text-color
-        textColor = Color(profile->getInt("text-color-r"), profile->getInt("text-color-g"), profile->getInt("text-color-b"), profile->getInt("text-color-a"));
+        textColor = profile->getColor("text-color");
 
     }
 

@@ -67,8 +67,10 @@ void oui::Window::initializeWindow(int width, int height) {
     windowBar->setAttribute("cursor", u"pointer");
     windowBar->parseAttribute("size", u"100 0 0 26");
     windowBar->setAttribute("z-index", 10);
-    windowBar->parseAttribute("bg-color", u"208 208 208 255");
-    windowBar->parseAttribute("bg-color", u"0 0 0 255");
+    windowBar->setAttribute("bg-color1", Color(208, 208, 208, 255));
+    windowBar->setAttribute("bg-color2", Color(208, 208, 208, 255));
+    windowBar->setAttribute("bg-color1", Color::BLACK);
+    windowBar->setAttribute("bg-color2", Color::BLACK);
 
     windowBar->addEventListener("mousedown", [this](ComponentEvent* e) {
         auto comp = e->getTarget();
@@ -106,7 +108,8 @@ void oui::Window::initializeWindow(int width, int height) {
     });
     minimizeBtn->parseAttribute("location", u"100 0 -73 0");
     minimizeBtn->parseAttribute("size", u"0 0 25 25");
-    minimizeBtn->parseAttribute("bg-color", u"200 200 200 255");
+    minimizeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
+    minimizeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
     minimizeBtn->setAttribute("border-style", u"solid");
     minimizeBtn->setAttribute("image", u"minimize-btn.png");
 
@@ -118,7 +121,8 @@ void oui::Window::initializeWindow(int width, int height) {
     });
     maximizeBtn->parseAttribute("location", u"100 0 -49 0");
     maximizeBtn->parseAttribute("size", u"0 0 25 25");
-    maximizeBtn->parseAttribute("bg-color", u"200 200 200 255");
+    maximizeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
+    maximizeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
     maximizeBtn->setAttribute("border-style", u"solid");
     maximizeBtn->setAttribute("image", u"maximize-btn1.png");
 
@@ -132,7 +136,8 @@ void oui::Window::initializeWindow(int width, int height) {
 
     closeBtn->parseAttribute("location", u"100 0 -25 0");
     closeBtn->parseAttribute("size", u"0 0 25 25");
-    closeBtn->parseAttribute("bg-color", u"200 200 200 255");
+    closeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
+    closeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
     closeBtn->setAttribute("border-style", u"solid");
     closeBtn->setAttribute("image", u"close-btn.png");
 
@@ -153,7 +158,8 @@ void oui::Window::initializeWindow(int width, int height) {
     });
     addChild(menu);
 
-    parseAttribute("bg-color", u"255 255 255 255");
+    setAttribute("bg-color1", Color(255, 255, 255, 255));
+    setAttribute("bg-color2", Color(255, 255, 255, 255));
     setAttribute("border-style", u"solid");
     getAttributeManager()->setProfile(u"default");
 }

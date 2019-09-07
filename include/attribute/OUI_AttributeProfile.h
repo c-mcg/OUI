@@ -70,6 +70,9 @@ namespace oui {
 
         //Gets the value of a double attribute
         public: OUI_API double getDouble(const std::string& name);
+        
+        //Gets the value of a color attribute
+        public: OUI_API Color getColor(const std::string& name);
 
         //Removes an attribute if it exists
         //TODO this should be a bool, and maybe throw some errors in the engine if it doesn't work

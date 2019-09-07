@@ -164,6 +164,10 @@ namespace OSAL {
                         state = STATE_BUILD_ATTR_VAL;
                         currToken = c;
                         type = Attribute::STRING;
+                    } else if(c == '#') {//Start building value
+                        state = STATE_BUILD_ATTR_VAL;
+                        currToken = c;
+                        type = Attribute::COLOR;
                     } else if(c == '\'' || c == '"') {
                         state = STATE_BUILD_ATTR_VAL;
                         currToken = c;
@@ -232,7 +236,7 @@ namespace OSAL {
 
             }
             if(error) {//Error
-                std::cout << "Error in sheet " << convertUTF16toUTF8(fileName).c_str() << " on line " << lineNumber << " char " << currChar << " '" << c << "' state=" << ((int)state) << " token=" << currToken.c_str() << std::endl;
+                std::cout << "Error in sheet " << convertUTF16toUTF8(fileName).c_str() << " on line " << lineNumber << " char " << currChar << " '" << c << "' state=" << ((int)state) << " token=" << convertUTF16toUTF8(currToken).c_str() << std::endl;
                 return Sheet(u"null", {});
             }
         }

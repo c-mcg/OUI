@@ -2,7 +2,7 @@
 #include "components/OUI_Menu.h"
 
 oui::MenuAttributeManager::MenuAttributeManager():
-    hoverColor{Color::BLACK}, padding{0}, minWidth{0}, optionHeight{0},
+    hoverColor{Color::WHITE}, padding{0}, minWidth{0}, optionHeight{0},
     font{NULL}, fontSize{0},
     ContainerAttributeManager()
 {
@@ -13,7 +13,7 @@ void oui::MenuAttributeManager::setProfile(const std::u16string& profileName) {
     AttributeProfile* profile = style->getProfile(profileName);
     if (profile != NULL) {
 
-        hoverColor = Color(profile->getInt("hover-color-r"), profile->getInt("hover-color-g"), profile->getInt("hover-color-b"), profile->getInt("hover-color-a"));
+        hoverColor = profile->getColor("hover-color");
 
         padding = profile->getInt("padding");
 

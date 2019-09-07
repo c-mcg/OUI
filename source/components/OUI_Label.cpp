@@ -10,8 +10,9 @@ oui::Label::Label(const std::string& name, const std::string& classes, EventDisp
 {
     setAttribute("text", u"");
     parseAttribute("font", u"notoserif 12");
-    parseAttribute("bg-color", u"0 0 0 0");
-    parseAttribute("text-color", u"0 0 0 255");
+    setAttribute("bg-color1", Color::NONE);
+    setAttribute("bg-color2", Color::NONE);
+    setAttribute("text-color", Color::BLACK);
     setAttribute("auto-size", true);
 }
 

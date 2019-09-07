@@ -17,23 +17,11 @@ oui::Style* oui::Button::getDefaultButtonStyle() {
         profile->setAttribute("font-face", u"notoserif");
         profile->setAttribute("font-size", 14);
         profile->setAttribute("cursor", u"pointer");
-        profile->setAttribute("bg-color1-r", 220);
-        profile->setAttribute("bg-color1-g", 220);
-        profile->setAttribute("bg-color1-b", 220);
-        profile->setAttribute("bg-color1-a", 255);
-        profile->setAttribute("bg-color2-r", 220);
-        profile->setAttribute("bg-color2-g", 220);
-        profile->setAttribute("bg-color2-b", 220);
-        profile->setAttribute("bg-color2-a", 255);
+        profile->setAttribute("bg-color1", Color(220, 200, 220, 255));
+        profile->setAttribute("bg-color2", Color(220, 200, 220, 255));
         profile->setAttribute("border-style", u"solid");
-        profile->setAttribute("border-color-r", 0);
-        profile->setAttribute("border-color-g", 0);
-        profile->setAttribute("border-color-b", 0);
-        profile->setAttribute("border-color-a", 64);
-        profile->setAttribute("text-color-r", 24);
-        profile->setAttribute("text-color-g", 24);
-        profile->setAttribute("text-color-b", 24);
-        profile->setAttribute("text-color-a", 255);
+        profile->setAttribute("border-color", Color(0, 0, 0, 64));
+        profile->setAttribute("text-color", Color(24, 24, 24, 255));
         profile->setAttribute("width-percent", 0);
         profile->setAttribute("height-percent", 0);
         profile->setAttribute("width-offset", 125);
@@ -42,14 +30,8 @@ oui::Style* oui::Button::getDefaultButtonStyle() {
 
         AttributeProfile* hoverProfile = new AttributeProfile("Button::defaultStyle['hover']", Component::getDefaultComponentStyle()->getProfile(u"hover"));
 
-        hoverProfile->setAttribute("bg-color1-r", 230);
-        hoverProfile->setAttribute("bg-color1-g", 230);
-        hoverProfile->setAttribute("bg-color1-b", 230);
-        hoverProfile->setAttribute("bg-color1-a", 255);
-        hoverProfile->setAttribute("bg-color2-r", 230);
-        hoverProfile->setAttribute("bg-color2-g", 230);
-        hoverProfile->setAttribute("bg-color2-b", 230);
-        hoverProfile->setAttribute("bg-color2-a", 255);
+        hoverProfile->setAttribute("bg-color1", Color(230, 230, 230, 255));
+        hoverProfile->setAttribute("bg-color2", Color(230, 230, 230, 255));
 
         style->addProfile(u"default", profile);
         style->addProfile(u"hover", hoverProfile);

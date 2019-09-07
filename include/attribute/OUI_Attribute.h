@@ -2,6 +2,7 @@
 #define OUI_ATTRIBUTE_H
 
 #include "OUI_Export.h"
+#include "gfx/OUI_Color.h"
 
 namespace oui {
 

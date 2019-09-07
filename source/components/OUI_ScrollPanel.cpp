@@ -35,7 +35,8 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->setAttribute("x-offset", vertical ? -SCROLLBAR_SIZE : 0);
     scrollBar->setAttribute("y-offset", vertical ? 0 : -SCROLLBAR_SIZE);
 
-    scrollBar->parseAttribute("bg-color", u"230 230 230 255");
+    scrollBar->setAttribute("bg-color1", Color(230, 230, 230, 255));
+    scrollBar->setAttribute("bg-color2", Color(230, 230, 230, 255));
     scrollBar->setAttribute("z-index", 10);
 
     scrollBar->addEventListener("scroll", [this, vertical](ComponentEvent* compEvent) {
@@ -52,11 +53,13 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     button1->setAttribute("height-offset", SCROLLBAR_SIZE);
     button1->parseAttribute("location", u"0 0 0 0");
 
-    button1->parseAttribute("bg-color", u"0 0 0 0");
+    button1->setAttribute("bg-color1", Color::NONE);
+    button1->setAttribute("bg-color2", Color::NONE);
     button1->setAttribute("border-style", u"none");
 
     button1->setAttribute("image", vertical ? "up-arrow.png" : "left-arrow.png");
-    button1->parseAttribute("bg-color", u"190 190 190 255", u"hover");
+    button1->setAttribute("bg-color1", Color(190, 190, 190, 255), u"hover");
+    button1->setAttribute("bg-color2", Color(190, 190, 190, 255), u"hover");
 
     button1->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
@@ -77,11 +80,13 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     button2->setAttribute("x-offset", vertical ? 0 : -SCROLLBAR_SIZE);
     button2->setAttribute("y-offset", vertical ? -SCROLLBAR_SIZE : 0);
 
-    button2->parseAttribute("bg-color", u"0 0 0 0");
+    button2->setAttribute("bg-color1", Color::NONE);
+    button2->setAttribute("bg-color2", Color::NONE);
     button2->setAttribute("border-style", u"none");
 
     button2->setAttribute("image", vertical ? "down-arrow.png" : "right-arrow.png");
-    button2->parseAttribute("bg-color", u"190 190 190 255", u"hover");
+    button2->setAttribute("bg-color1", Color(190, 190, 190, 255), u"hover");
+    button2->setAttribute("bg-color2", Color(190, 190, 190, 255), u"hover");
 
     button2->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
@@ -104,8 +109,10 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     bar->setAttribute("x-offset", vertical ? 0 : SCROLLBAR_SIZE);
     bar->setAttribute("y-offset", vertical ? SCROLLBAR_SIZE : 0);
     
-    bar->parseAttribute("bg-color", u"180 180 180 255");
-    bar->parseAttribute("bg-color", u"160 160 160 255", u"hover");
+    bar->setAttribute("bg-color1", Color(180, 180, 180, 255));
+    bar->setAttribute("bg-color2", Color(180, 180, 180, 255));
+    bar->setAttribute("bg-color1", Color(160, 160, 160, 255), u"hover");
+    bar->setAttribute("bg-color2", Color(160, 160, 160, 255), u"hover");
     bar->setAttribute("border-style", u"none");
 
     bar->addEventListener("mousedown", [this, vertical](ComponentEvent* compEvent) {

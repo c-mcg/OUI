@@ -19,10 +19,11 @@ namespace OSAL {
 
         public:
 
-            static const char STRING = 0;
-            static const char INT = 1;
-            static const char DOUBLE = 2;
-            static const char BOOL = 3;
+            static const char STRING = TYPE_STRING;
+            static const char INT = TYPE_INT;
+            static const char DOUBLE = TYPE_DOUBLE;
+            static const char BOOL = TYPE_BOOL;
+            static const char COLOR = TYPE_COLOR;
 
 
             /**

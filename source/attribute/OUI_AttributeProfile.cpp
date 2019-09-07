@@ -256,6 +256,26 @@ double oui::AttributeProfile::getDouble(const std::string& name) {
     );
 }
 
+oui::Color oui::AttributeProfile::getColor(const std::string& name) {
+    Attribute* attribute = hasAttribute(name);
+
+    if (attribute == NULL) {
+        return Color::BLACK;
+    }
+
+    //Attribute exists and is a double
+    if (attribute->type == OSAL::TYPE_COLOR) {
+        return attribute->colorVal;
+    }
+        
+    throw ArgumentException(
+        "AttributeProfile",
+        "getColor",
+        "Tried to get a color value from attribute that is not a color (attribute: " + name + ")",
+        "Either the attribute is incorrectly set, or you should be using a getter for a different type"
+    );
+}
+
 void oui::AttributeProfile::removeAttribute(const std::string& name) {//TODO substitutions
 
     auto it = attributes.find(name);

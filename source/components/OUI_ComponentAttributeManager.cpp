@@ -2,8 +2,8 @@
 #include "components/OUI_Component.h"
 
 oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle): 
-    visible{true}, interactable{true}, opacity{255}, backgroundColor1{Color::BLACK},
-    backgroundColor2{Color::BLACK}, cursor{Component::CURSOR_DEFAULT}, borderStyle{Component::BORDER_NONE},
+    visible{true}, interactable{true}, opacity{255}, backgroundColor1{Color::WHITE},
+    backgroundColor2{Color::WHITE}, cursor{Component::CURSOR_DEFAULT}, borderStyle{Component::BORDER_NONE},
     borderWidth{1}, borderColor{Color::BLACK}, centeredX{false}, centeredY{false},
     xPercent{0}, yPercent{0}, xOffset{0}, yOffset{0}, z{0}, minWidth{0}, minHeight{0},
     widthPercent{0}, heightPercent{0}, widthOffset{0}, heightOffset{0},
@@ -79,8 +79,8 @@ void oui::ComponentAttributeManager::setProfile(const std::u16string& profileNam
         heightOffset = profile->getInt("height-offset");
 
         //Background
-        backgroundColor1 = Color(profile->getInt("bg-color1-r"), profile->getInt("bg-color1-g"), profile->getInt("bg-color1-b"), profile->getInt("bg-color1-a"));
-        backgroundColor2 = Color(profile->getInt("bg-color2-r"), profile->getInt("bg-color2-g"), profile->getInt("bg-color2-b"), profile->getInt("bg-color2-a"));
+        backgroundColor1 = profile->getColor("bg-color1");
+        backgroundColor2 = profile->getColor("bg-color2");
 
         //Centered
         //TODO substitute and stuff
@@ -88,7 +88,7 @@ void oui::ComponentAttributeManager::setProfile(const std::u16string& profileNam
         centeredY = profile->getBool("centered-y");
 
         //Border
-        borderColor = Color(profile->getInt("border-color-r"), profile->getInt("border-color-g"), profile->getInt("border-color-b"), profile->getInt("border-color-a"));
+        borderColor = profile->getColor("border-color");
         borderWidth = profile->getInt("border-width");
         std::u16string borderStyle = profile->getString("border-style");
         if(borderStyle == u"none") {

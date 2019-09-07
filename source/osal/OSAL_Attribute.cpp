@@ -127,7 +127,8 @@ oui::Color OSAL::Attribute::getAsColor(int index) {
     if(s == u"null") {
         return oui::Color::BLACK;
     }
-    return oui::Color(std::stoul(convertUTF16toUTF8(s), nullptr, 16));
+
+    return oui::Color::fromString(s);
 }
 
 std::u16string OSAL::Attribute::getOriginalString() {
@@ -141,7 +142,8 @@ bool OSAL::Attribute::isValid() {
 
 void OSAL::Attribute::addValue(char type, std::u16string value) {
 
-    if (type == TYPE_STRING && stringStartsWith(value, u"#")) {
+    // std::cout << convertUTF16toUTF8(trimString(value)).c_str() << std::endl;
+    if (type == TYPE_STRING && stringStartsWith(trimString(value), u"#")) {
         types.push_back(TYPE_COLOR);
         this->value.push_back(value);
         return;
