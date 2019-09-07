@@ -93,13 +93,9 @@ int oui::initialize() {
     AttributeSubstitution::addSubstitution("location", {"x-percent", "y-percent", "x-offset", "y-offset"});
     AttributeSubstitution::addSubstitution("centered", std::vector<std::string>({"centered-x", "centered-y"}), AttributeSubstitution::APPLY_WHOLE);
     AttributeSubstitution::addSubstitution("bg-color", std::vector<std::string>({"bg-color1", "bg-color2"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("right-click-options", "right-click-options", AttributeSubstitution::APPLY_INDEXED);
 
     //FONT (button, label, textfield)
     AttributeSubstitution::addSubstitution("font", std::vector<std::string>({"font-face", "font-size"}));
-
-    //Menu
-    AttributeSubstitution::addSubstitution("options", "options", AttributeSubstitution::APPLY_INDEXED);
 
     OS()->initialize();
 
