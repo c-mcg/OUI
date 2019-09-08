@@ -14,7 +14,7 @@ namespace oui {
 
             ScrollPanelAttributeManager();
 
-            virtual void setProfile(const std::u16string& profile) override;
+            virtual void refreshProfile() override;
             
     };
 

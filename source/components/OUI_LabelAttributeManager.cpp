@@ -6,31 +6,27 @@ oui::LabelAttributeManager::LabelAttributeManager():
     autoSize{false}, text{u""}, font{NULL}, textColor{Color::BLACK},
     ComponentAttributeManager()
 {
+    std::unordered_map<std::string, AttributeVariableInfo> variableMap({
+        { "auto-size", {AttributeManager::BOOL, &autoSize} },
+        { "text", {AttributeManager::STRING, &text} },
+        { "font", {AttributeManager::FONT, &font} },
+        { "font-face", {AttributeManager::FONT, &font} },
+        { "font-size", {AttributeManager::FONT, &font} },
+        { "text-color", {AttributeManager::COLOR, &textColor} },
+        { "text-color", {AttributeManager::COLOR, &textColor} },
+    });
 
+    updateVariableMap(variableMap);
 }
 
-void oui::LabelAttributeManager::setProfile(const std::u16string& profileName)  {
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
+void oui::LabelAttributeManager::refreshProfile()  {
+    ComponentAttributeManager::refreshProfile();
 
-        //Auto-size
-        autoSize = profile->getBool("auto-size");
-
-        text = profile->getString("text");
-
-        //Font
-        font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), component->getWindow());
-
-        //Text-color
-        textColor = profile->getColor("text-color");
-
-    }
-
-    if (autoSize) {
+    if (autoSize && font != NULL) {
         parseAttribute("size", u"0 0 " + intToString(font->getStringWidth(text)) + u" " + intToString(font->getStringHeight(text)));
     }
 
-    ComponentAttributeManager::setProfile(profileName);
+    ComponentAttributeManager::refreshProfile();
 }
 
 oui::Color oui::LabelAttributeManager::getTextColor() {

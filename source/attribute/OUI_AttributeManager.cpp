@@ -44,49 +44,53 @@ void oui::AttributeManager::setProfile(const std::u16string& profileName) {
         return;
     }
 
+    auto oldProfile = currentProfile;
+
     currentProfileName = profileName;
     currentProfile = profile;
+
+    if (currentProfile != oldProfile) {
+        refreshProfile();
+    }
 }
 
 void oui::AttributeManager::refreshProfile() {
-    setProfile(currentProfileName);
+    auto it = variableMap.begin();
+    for (; it != variableMap.end(); it++) {
+        std::string name = it->first;
+        std::vector<std::string> substituteNames = AttributeSubstitution::getSubtituteNames(name);
+        for (auto it = substituteNames.begin(); it != substituteNames.end(); it++) {
+            std::string substituteName = *it;
+            Attribute value = getAttribute(substituteName);
+            updateAttributeVariable(substituteName, value);
+        }
+    }
 }
 
 void oui::AttributeManager::parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile) {
-    
     style->getOrCreateProfile(profile)->parseAttribute(name, value);
-    component->flagProfileUpdate();
+
+    if (profile == currentProfileName) {
+        std::vector<std::string> substituteNames = AttributeSubstitution::getSubtituteNames(name);
+        for (auto it = substituteNames.begin(); it != substituteNames.end(); it++) {
+            std::string substituteName = *it;
+            updateAttributeVariable(substituteName, getAttribute(substituteName));
+        }
+    }
 }
 
 void oui::AttributeManager::setAttribute(const std::string& name, Attribute a, const std::u16string& profile) {
     style->getOrCreateProfile(profile)->setAttribute(name, a);
-    component->flagProfileUpdate();
+
+    if (profile == currentProfileName) {
+        updateAttributeVariable(name, a);
+    }
 }
 
 void oui::AttributeManager::updateAttributeVariable(const std::string& attributeName, Attribute value) {
     
     std::string originalName = attributeName;
     std::string name = attributeName;
-    int index = -1;
-    if (stringEndsWith(name, "_length")) { // Is length of an array
-        name = name.substr(0, name.length() - 7);
-    } else if (name.length() > 2 && name.at(name.length() - 2) == '_') { // Is a value of an array
-        try {
-            std::string indexStr = name.substr(name.length() - 1, 1);    
-            index = std::stoi(indexStr);
-            name = name.substr(0, name.length() - 3);
-        } catch(std::invalid_argument) {
-            index = -1;
-        }
-    } else if (name.length() > 3 && name.at(name.length() - 3) == '_') { // Is a value of an array
-        try {
-            std::string indexStr = name.substr(name.length() - 2, 2);    
-            index = std::stoi(indexStr);
-            name = name.substr(0, name.length() - 3);
-        } catch(std::invalid_argument) {
-            index = -1;
-        }
-    }
 
     auto it = variableMap.find(name);
     if (it == variableMap.end()) {
@@ -98,36 +102,33 @@ void oui::AttributeManager::updateAttributeVariable(const std::string& attribute
 
     if (info.variableType == AttributeManager::STRING) {
         std::u16string* stringValue = static_cast<std::u16string*>(info.variablePointer);
-        *stringValue = value.stringVal;
+        *stringValue = value.type == OSAL::TYPE_STRING ? value.asString() : u"";
     } else if (info.variableType == AttributeManager::INT) {
         int* intValue = static_cast<int*>(info.variablePointer);
-        *intValue = value.intVal;
-
-        if (name == "opacity") {
-            Graphics* graphics = component->getGraphics();
-            if (graphics != NULL) {
-                graphics->setAlpha(*intValue);
-            }
-        }
+        *intValue = value.type == OSAL::TYPE_INT ? value.asInt() : 0;
     } else if (info.variableType == AttributeManager::BOOL) {
         bool* boolValue = static_cast<bool*>(info.variablePointer);
-        *boolValue = value.boolVal;
+        *boolValue = value.type == OSAL::TYPE_BOOL ? value.asBool() : false;
     } else if (info.variableType == AttributeManager::DOUBLE) {
         double* doubleValue = static_cast<double*>(info.variablePointer);
-        *doubleValue = value.doubleVal;
+        *doubleValue = value.type == OSAL::TYPE_DOUBLE ? value.asDouble() : 0.0;
     } else if (info.variableType == AttributeManager::COLOR) {
         Color* colorVal = static_cast<Color*>(info.variablePointer);
-        *colorVal = value.colorVal;
-    }
-            
-    if (info.variableType == AttributeManager::STRING_ARRAY) {
+        *colorVal = value.type == OSAL::TYPE_COLOR ? value.asColor() : Color::BLACK;
+    } else if (info.variableType == AttributeManager::STRING_ARRAY) {
         std::vector<std::u16string>* stringArrayVal = static_cast<std::vector<std::u16string>*>(info.variablePointer);
-        
-        if (index != -1) {
-            (*stringArrayVal)[index] = value.stringVal;
-        } else if(stringEndsWith(originalName, "_length")) {
-            stringArrayVal->resize(value.intVal);
+        *stringArrayVal = value.asStringArray();
+    } else if (info.variableType == AttributeManager::IMAGE) {
+        Image** imageValue = static_cast<Image**>(info.variablePointer);
+        if (component->getWindow() != NULL) {
+            std::u16string imagePath = value.asString();
+            *imageValue = Image::loadImage(imagePath, component->getWindow());
         }
+    } else if (info.variableType == AttributeManager::FONT) {
+        Font** fontValue = static_cast<Font**>(info.variablePointer);
+        std::u16string fontName = attributeName == "font-face" ? value.asString() : getString("font-face");
+        int fontSize = attributeName == "font-size" ? value.asInt() : getInt("font-size");
+        *fontValue = Font::getFont(fontName, fontSize, component->getWindow());
     }
 
 }
@@ -196,6 +197,6 @@ void oui::AttributeManager::deriveAttributesForComponent(StyleSheet* styleSheet)
 
     //currentStyle->combineStyle(definedStyle);
 
-    component->flagProfileUpdate();
+    refreshProfile();
     this->style = currentStyle;
 }

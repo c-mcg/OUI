@@ -47,6 +47,17 @@ bool oui::AttributeSubstitution::hasSubstitution(const std::string& name) {
     return attributeSubs.find(name) != attributeSubs.end();
 }
 
+std::vector<std::string> oui::AttributeSubstitution::getSubtituteNames(const std::string& name) {
+    auto subIt = attributeSubs.find(name);
+
+    if (subIt == attributeSubs.end()) {
+        return std::vector<std::string>{name};
+    }
+
+    return subIt->second.substitutions;
+}
+
+
 bool oui::AttributeSubstitution::applySubstitution(const std::string& name, OSAL::Attribute value, AttributeProfile* profile) {
 
     auto subIt = attributeSubs.find(name);

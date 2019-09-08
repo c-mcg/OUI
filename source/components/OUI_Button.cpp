@@ -47,7 +47,6 @@ oui::Button::~Button() {
 }
 
 oui::Button::Button(const std::string& name, const std::string& classes, EventDispatcher* eventDispatcher, ButtonAttributeManager* attributeManager) :
-    image{NULL},
     Component("button", name, classes, false, eventDispatcher, attributeManager)
 {
     eventDispatcher->addEventListener("click", [this](ComponentEvent* event) {
@@ -63,26 +62,17 @@ oui::Button::Button(const std::string& name, const std::string& classes, EventDi
 void oui::Button::addedToContainer(Container* parent) {
     ButtonAttributeManager* attributeManager = getAttributeManager();
     Component::addedToContainer(parent);
-    if(window != NULL) {
-        std::u16string imageString = attributeManager->getImageString();
-        if(image == NULL && imageString.length() > 0) {
-            image = Image::loadImage(imageString, window);
-            flagGraphicsUpdate();
-        }
-    }
 }
 
 void oui::Button::redraw() {
     ButtonAttributeManager* attributeManager = getAttributeManager();
     Component::redraw();
 
+    Image* image = attributeManager->getImage();
+
     // Draw image
     if(image != NULL) {
-        if(isHovered()) {
-            //TODO
-        } else {
-            graphics->drawImage(getImage(), getWidth() / 2 - image->getWidth() / 2, getHeight() / 2 - image->getHeight() / 2);
-        }
+        graphics->drawImage(image, getWidth() / 2 - image->getWidth() / 2, getHeight() / 2 - image->getHeight() / 2);
     }
 
     // Draw text
@@ -98,10 +88,6 @@ void oui::Button::redraw() {
 
     // Draw border overtop of everything
     drawBorder();
-}
-
-oui::Image* oui::Button::getImage() {
-    return image;
 }
 
 oui::ButtonAttributeManager* oui::Button::getAttributeManager() {

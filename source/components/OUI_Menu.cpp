@@ -49,7 +49,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
     int padding = attributeManager->getPadding();
     int optionHeight = attributeManager->getOptionHeight();
-    std::u16string fontName = attributeManager->getFont();
+    std::u16string fontName = attributeManager->getFontName();
     int fontSize = attributeManager->getFontSize();
     Color hoverColor = attributeManager->getHoverColor();
     int minWidth = attributeManager->getMinWidth();
@@ -104,8 +104,11 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
     //TODO style
     Font* font = Font::getFont(fontName, fontSize, window);
-    int biggestWidth = font->getStringWidth(b->getString("text"));
-    biggestWidth = biggestWidth < minWidth ? minWidth : biggestWidth;
+    int biggestWidth = 0;
+    if (font != NULL) {
+        font->getStringWidth(b->getString("text"));
+        biggestWidth = biggestWidth < minWidth ? minWidth : biggestWidth;
+    }
 
     //Reorganize options if inserted
     if (numOptions > 0) {
@@ -208,7 +211,7 @@ int oui::Menu::resetOptions(int startIndex) {
     int borderWidth = attributeManager->getBorderWidth();
     int minWidth = attributeManager->getMinWidth();
     int fontSize = attributeManager->getFontSize();
-    std::u16string font = attributeManager->getFont();
+    std::u16string font = attributeManager->getFontName();
     int numOptions = getInt("num-options");
     int optionHeight = attributeManager->getOptionHeight();
     int padding = attributeManager->getPadding();

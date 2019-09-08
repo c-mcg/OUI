@@ -15,6 +15,9 @@ oui::Image::Image() {
 }
 
 oui::Image* oui::Image::loadImage(const std::u16string& path, Window* window) {
+    if (window == NULL) {
+        return NULL;
+    }
 
     auto it = cachedImages.find(window);
     if (it != cachedImages.end()) {

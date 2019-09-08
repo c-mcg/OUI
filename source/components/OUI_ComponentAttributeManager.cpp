@@ -30,97 +30,32 @@ oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle):
         { "y-offset", {AttributeManager::INT, &yOffset} },
         { "z-index", {AttributeManager::INT, &z} },
         { "interactable", {AttributeManager::BOOL, &interactable} },
-        { "minWidth", {AttributeManager::INT, &minWidth} },
-        { "minHeight", {AttributeManager::INT, &minHeight} },
-        { "widthPercent", {AttributeManager::INT, &widthPercent} },
-        { "heightPercent", {AttributeManager::INT, &heightPercent} },
-        { "widthOffset", {AttributeManager::INT, &widthOffset} },
-        { "heightOffset", {AttributeManager::INT, &heightOffset} },
-        { "backgroundColor1", {AttributeManager::COLOR, &backgroundColor1} },
-        { "backgroundColor2", {AttributeManager::COLOR, &backgroundColor2} },
-        { "centeredX", {AttributeManager::BOOL, &centeredX} },
-        { "centeredY", {AttributeManager::BOOL, &centeredY} },
-        { "borderColor", {AttributeManager::COLOR, &borderColor} },
-        { "borderWidth", {AttributeManager::INT, &borderWidth} },
-        { "borderStyle", {AttributeManager::STRING, &borderStyle} },
+        { "min-width", {AttributeManager::INT, &minWidth} },
+        { "min-height", {AttributeManager::INT, &minHeight} },
+        { "width-percent", {AttributeManager::INT, &widthPercent} },
+        { "height-percent", {AttributeManager::INT, &heightPercent} },
+        { "width-offset", {AttributeManager::INT, &widthOffset} },
+        { "height-offset", {AttributeManager::INT, &heightOffset} },
+        { "bg-color1", {AttributeManager::COLOR, &backgroundColor1} },
+        { "bg-color2", {AttributeManager::COLOR, &backgroundColor2} },
+        { "centered-x", {AttributeManager::BOOL, &centeredX} },
+        { "centered-y", {AttributeManager::BOOL, &centeredY} },
+        { "border-color", {AttributeManager::COLOR, &borderColor} },
+        { "border-width", {AttributeManager::INT, &borderWidth} },
+        { "border-style", {AttributeManager::STRING, &borderStyle} },
         { "opacity", {AttributeManager::INT, &opacity} },
         { "visible", {AttributeManager::BOOL, &visible} },
         { "right-click-options", {AttributeManager::STRING_ARRAY, &rightClickOptions} },
         { "cursor", {AttributeManager::STRING, &cursor} },
     });
 
-    // AttributeManager::updateVariableMap(variableMap);
+    updateVariableMap(variableMap);
 }
 
-void oui::ComponentAttributeManager::setProfile(const std::u16string& profileName) {
-    AttributeManager::setProfile(profileName);
-    AttributeProfile* profile = style->getProfile(profileName);
-    Graphics* graphics = component->getGraphics();
-    if (profile != NULL) {
+void oui::ComponentAttributeManager::refreshProfile() {
+    AttributeManager::refreshProfile();
 
-        //Location
-        xPercent = profile->getInt("x-percent");
-        yPercent = profile->getInt("y-percent");
-        xOffset = profile->getInt("x-offset");
-        yOffset = profile->getInt("y-offset");
-
-        //Z-index
-        z = profile->getInt("z-index");
-
-        //Interactable
-        interactable = profile->getBool("interactable");
-
-        //Size
-        minWidth = profile->getInt("min-width");
-        minHeight = profile->getInt("min-height");
-        widthPercent = profile->getInt("width-percent");
-        heightPercent = profile->getInt("height-percent");
-        widthOffset = profile->getInt("width-offset");
-        heightOffset = profile->getInt("height-offset");
-
-        //Background
-        backgroundColor1 = profile->getColor("bg-color1");
-        backgroundColor2 = profile->getColor("bg-color2");
-
-        //Centered
-        //TODO substitute and stuff
-        centeredX = profile->getBool("centered-x");
-        centeredY = profile->getBool("centered-y");
-
-        //Border
-        borderColor = profile->getColor("border-color");
-        borderWidth = profile->getInt("border-width");
-        std::u16string borderStyle = profile->getString("border-style");
-        if(borderStyle == u"none") {
-            this->borderStyle = Component::BORDER_NONE;
-        } else if (borderStyle == u"solid") {
-            this->borderStyle = Component::BORDER_SOLID;
-        }
-
-        //Opacity
-        //TODO remove opacity var
-        opacity = profile->getInt("opacity");
-        if (graphics != NULL) {
-            graphics->setAlpha(opacity);
-        }
-
-        //Visible
-        visible = profile->getBool("visible");
-
-        //Right-click-options
-        rightClickOptions = profile->getStringArray("right-click-options");
-
-        std::u16string cursor = profile->getString("cursor");
-        if (cursor == u"default") {
-            this->cursor = Component::CURSOR_DEFAULT;
-        } else if (cursor == u"pointer") {
-            this->cursor = Component::CURSOR_POINTER;
-        } else if (cursor == u"text") {
-            this->cursor = Component::CURSOR_TEXT;
-        }
-
-    }
-
+    component->flagGraphicsUpdate();
     component->updateSize();
 }
 
@@ -202,4 +137,15 @@ int oui::ComponentAttributeManager::getHeightOffset() {
 
 std::vector<std::u16string> oui::ComponentAttributeManager::getRightClickOptions() {
     return rightClickOptions;
+}
+
+void oui::ComponentAttributeManager::updateAttributeVariable(const std::string& attributeName, Attribute value) {
+    if (attributeName == "opacity") {
+        Graphics* graphics = component->getGraphics();
+        if (graphics != NULL) {
+            graphics->setAlpha(value.asInt());
+        }
+    }
+
+    AttributeManager::updateAttributeVariable(attributeName, value);
 }

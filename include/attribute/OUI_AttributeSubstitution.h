@@ -43,6 +43,8 @@ namespace oui {
         //Returns true if substitution exists, false if not
         public: OUI_API static bool hasSubstitution(const std::string& name);
 
+        public: OUI_API static std::vector<std::string> getSubtituteNames(const std::string& name);
+
         //public: static AttributeSubstitution getSubstitution(const std::u16string& name);//This is weird because we need to throw an error
 
         //Performs a substitution and adds the new attributes to the attribute profile

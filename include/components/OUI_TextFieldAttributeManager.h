@@ -14,8 +14,6 @@ namespace oui {
 
             TextFieldAttributeManager();
 
-            virtual void setProfile(const std::u16string& profile) override;
-            
             Color getTextColor();
             Font* getFont();
             Color getCaratColor();

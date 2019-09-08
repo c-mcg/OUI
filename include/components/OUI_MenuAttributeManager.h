@@ -15,12 +15,12 @@ namespace oui {
 
             MenuAttributeManager();
 
-            virtual void setProfile(const std::u16string& profile) override;
+            virtual void refreshProfile() override;
             
             int getNumOptions();//TODO this is harder than it looks to remove
             std::vector<std::u16string> getOptions();
         
-            std::u16string getFont();
+            std::u16string getFontName();
             int getFontSize();
             int getMinWidth();
             int getOptionHeight();
@@ -34,7 +34,7 @@ namespace oui {
             int numOptions;//TODO this is harder than it looks to remove
             std::vector<std::u16string> options;
         
-            std::u16string font;
+            std::u16string fontName;
             int fontSize;
             int minWidth;
             int optionHeight;

@@ -27,6 +27,8 @@ namespace oui {
         public: static const char COLOR = OSAL::TYPE_COLOR;
         public: static const char ARRAY = OSAL::TYPE_ARRAY;
         public: static const char STRING_ARRAY = 1000;
+        public: static const char FONT = 1001;
+        public: static const char IMAGE = 1002;
 
         public:
 
@@ -60,14 +62,12 @@ namespace oui {
             Style* definedStyle;
             Style* style;
 
+            std::u16string currentProfileName;
+            AttributeProfile* currentProfile;
+
         private:
 
             std::unordered_map<std::string, AttributeVariableInfo> variableMap;
-
-            std::u16string currentProfileName;
-            AttributeProfile* currentProfile;
-        
-        
 
     };
 }

@@ -73,7 +73,7 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     tag{tag}, name{name}, needsProcessing{needsProcessing},
     window{NULL}, graphics{NULL}, parent{NULL},
     x{0}, y{0}, screenX{0}, screenY{0}, scrollOffsetX{0}, scrollOffsetY{0},
-    width{0}, height{0}, profileUpdate{false}, graphicsUpdate{true},
+    width{0}, height{0}, graphicsUpdate{true},
     hovered{false}, selected{false}, mouseDown{false},
     mouseX{0}, mouseY{0}, eventDispatcher{eventDispatcher}, attributeManager{attributeManager}
 {
@@ -158,13 +158,8 @@ void oui::Component::addedToContainer(Container* parent) {
     }
 
     if (graphics != NULL) {
-        attributeManager->setProfile(u"default");
-        attributeManager->setProfile(u"default");
-        // Component::setProfile(u"default");//TODO this needs to be here to ensure graphics are initialized but why?
-        attributeManager->setProfile(u"default");
+        attributeManager->refreshProfile();
     }
-
-    flagProfileUpdate();
 }
 
 /* END OF PROCESSING */
@@ -380,17 +375,6 @@ void oui::Component::flagGraphicsUpdate(bool flagParent) {
 bool oui::Component::needsGraphicsUpdate() {
     return graphicsUpdate;
 }
-void oui::Component::flagProfileUpdate() {
-    profileUpdate = true;
-    flagGraphicsUpdate();
-}
-bool oui::Component::needsProfileUpdate() {
-    return profileUpdate;
-}
-void oui::Component::clearProfileUpdate() {
-    profileUpdate = false;
-}
-
 /* END OF GRAPHICS */
 
 /* START OF STATE */
@@ -423,7 +407,6 @@ bool oui::Component::isMouseDown() {
 void oui::Component::setHovered(bool hovered) {
     if (this->hovered != hovered) {
         attributeManager->setProfile(hovered ? u"hover" : u"default");
-        this->flagProfileUpdate();
         this->hovered = hovered;
         if (parent != NULL && hovered) {
             parent->setHovered(true);

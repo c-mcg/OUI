@@ -68,7 +68,6 @@ namespace oui {
 
     //Graphics
         private: bool graphicsUpdate;
-        private: bool profileUpdate;//This was added to try to take out the setProfile call when updating graphics. @see oui::Container::redrawChildren()
 
     //State
         bool hovered, mouseDown;
@@ -149,9 +148,6 @@ namespace oui {
         public: OUI_API Graphics* getGraphics();
         public: OUI_API void flagGraphicsUpdate(bool flagParent = true);
         public: OUI_API bool needsGraphicsUpdate();
-        public: OUI_API void flagProfileUpdate();
-        public: OUI_API bool needsProfileUpdate();
-        public: OUI_API void clearProfileUpdate();
         
     //State
         public: OUI_API int getMouseX();

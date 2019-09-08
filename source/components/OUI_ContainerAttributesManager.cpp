@@ -17,14 +17,14 @@ oui::ContainerAttributeManager::ContainerAttributeManager():
 }
 
 
-void oui::ContainerAttributeManager::setProfile(const std::u16string& profile) {
+void oui::ContainerAttributeManager::refreshProfile() {
     Container* container = static_cast<Container*>(component);
 
     int width = container->getWidth();
     int height = container->getHeight();
     Graphics* graphics = container->getGraphics();
 
-    ComponentAttributeManager::setProfile(profile);
+    ComponentAttributeManager::refreshProfile();
     if (graphics != NULL) {
         if (width != graphics->getWidth() || height != graphics->getHeight()) {
             container->flagGraphicsUpdateAll();

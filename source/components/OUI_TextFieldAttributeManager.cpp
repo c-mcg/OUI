@@ -6,35 +6,19 @@ oui::TextFieldAttributeManager::TextFieldAttributeManager():
     caratColor{Color::BLACK}, caratHeightOffset{0}, highlightColor{Color::WHITE},
     ComponentAttributeManager()
 {
+    std::unordered_map<std::string, AttributeVariableInfo> variableMap({
+        { "text", {AttributeManager::STRING, &text} },
+        { "font", {AttributeManager::FONT, &font} },
+        { "font-face", {AttributeManager::FONT, &font} },
+        { "font-size", {AttributeManager::FONT, &font} },
+        { "text-color", {AttributeManager::COLOR, &textColor} },
+        { "carat-width", {AttributeManager::INT, &caratWidth} },
+        { "carat-color", {AttributeManager::COLOR, &caratColor} },
+        { "carat-h-offset", {AttributeManager::INT, &caratHeightOffset} },
+        { "highlight-color", {AttributeManager::COLOR, &highlightColor} },
+    });
 
-}
-
-void oui::TextFieldAttributeManager::setProfile(const std::u16string& profileName) {
-    ComponentAttributeManager::setProfile(profileName);
-
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
-
-        //Text
-        text = profile->getString("text");
-
-        //Font
-        font = Font::getFont(profile->getString("font-face"), profile->getInt("font-size"), component->getWindow());
-
-        //Text-color
-        textColor = profile->getColor("text-color");
-
-        //Carat-width
-        caratWidth = profile->getInt("carat-width");
-        //Carat-color
-        caratColor = profile->getColor("carat-color");
-        //Carat-h-offset
-        caratHeightOffset = profile->getInt("carat-h-offset");
-
-        //highlight-color
-        highlightColor = profile->getColor("highlight-color");
-
-    }
+    updateVariableMap(variableMap);
 }
 
 oui::Color oui::TextFieldAttributeManager::getTextColor() {

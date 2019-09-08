@@ -279,11 +279,7 @@ void oui::Container::redrawChildren() {
                 }
                 zIndexes[z].push_back(c);
             }
-            if (c->needsProfileUpdate()) {
-                c->refreshProfile();
-                c->clearProfileUpdate();
-                c->redraw();
-            } else if(c->needsGraphicsUpdate()) {
+            if(c->needsGraphicsUpdate()) {
                 c->refreshProfile();
                 c->redraw();
             }

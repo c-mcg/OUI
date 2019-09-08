@@ -15,7 +15,7 @@ namespace oui {
             ~ContainerAttributeManager();
             ContainerAttributeManager();
 
-            virtual void setProfile(const std::u16string& profile) override;
+            virtual void refreshProfile() override;
 
             virtual void deriveAttributesForComponent(StyleSheet* styleSheet = NULL) override;
 

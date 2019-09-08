@@ -14,7 +14,7 @@ namespace oui {
 
             LabelAttributeManager();
 
-            virtual void setProfile(const std::u16string& profile) override;
+            virtual void refreshProfile() override;
             
             Color getTextColor();
             Font* getFont();

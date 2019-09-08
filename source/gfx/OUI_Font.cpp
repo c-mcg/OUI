@@ -16,6 +16,10 @@ oui::Font::Font() {
 }
 
 oui::Font* oui::Font::getFont(const std::u16string& name, int size, Window* window) {
+    if (window == NULL) {
+        return NULL;
+    }
+
     auto nameIt = fontNames.find(window);
     auto sizeIt = fontSizes.find(window);
     auto fontIt = cachedFonts.find(window);

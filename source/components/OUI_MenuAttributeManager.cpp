@@ -3,54 +3,49 @@
 
 oui::MenuAttributeManager::MenuAttributeManager():
     hoverColor{Color::WHITE}, padding{0}, minWidth{0}, optionHeight{0},
-    font{NULL}, fontSize{0},
+    fontName{u""}, fontSize{0},
     ContainerAttributeManager()
 {
+    std::unordered_map<std::string, AttributeVariableInfo> variableMap({
+        { "hover-color", {AttributeManager::COLOR, &hoverColor} },
+        { "padding", {AttributeManager::INT, &padding} },
+        { "min-width", {AttributeManager::INT, &minWidth} },
+        { "option-height", {AttributeManager::INT, &optionHeight} },
+        { "font-face", {AttributeManager::STRING, &fontName} },
+        { "font-size", {AttributeManager::INT, &fontSize} },
+        { "options", {AttributeManager::STRING_ARRAY, &options} },
+    });
 
+    updateVariableMap(variableMap);
 }
 
-void oui::MenuAttributeManager::setProfile(const std::u16string& profileName) {
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
+void oui::MenuAttributeManager::refreshProfile() {
+    auto oldOptions = getOptions();
+    ContainerAttributeManager::refreshProfile();
 
-        hoverColor = profile->getColor("hover-color");
-
-        padding = profile->getInt("padding");
-
-        minWidth = profile->getInt("min-width");
-
-        optionHeight = profile->getInt("option-height");
-
-        minWidth = profile->getInt("min-width");
-
-        //Font
-        font = profile->getString("font-face");
-        fontSize = profile->getInt("font-size");
-
-        //Options
-        bool optionsChanged = false;
-        std::vector<std::u16string> newOptions = profile->getStringArray("options");
-        if (newOptions.size() != options.size()) {
-            optionsChanged = true;
-        } else {
-            for (int i = 0; i < newOptions.size(); i++) {
-                if (newOptions[i] != options[i]) {
-                    optionsChanged = true;
-                    break;
-                }
+    //Options
+    bool optionsChanged = false;
+    std::vector<std::u16string> newOptions = getOptions();
+    if (newOptions.size() != oldOptions.size()) {
+        optionsChanged = true;
+    } else {
+        for (int i = 0; i < newOptions.size(); i++) {
+            if (newOptions[i] != oldOptions[i]) {
+                optionsChanged = true;
+                break;
             }
         }
-        if (optionsChanged) {
-            Menu* menu = static_cast<Menu*>(component);
-            setOptions(newOptions);
-            numOptions = newOptions.size();
-            int borderWidth = profile->getInt("border-width");
-            int biggestWidth = menu->resetOptions();
-            parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
-        }
+    }
+    if (optionsChanged) {
+        Menu* menu = static_cast<Menu*>(component);
+        setOptions(newOptions);
+        numOptions = newOptions.size();
+        int borderWidth = getBorderWidth();
+        int biggestWidth = menu->resetOptions();
+        parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
     }
     
-    ContainerAttributeManager::setProfile(profileName);
+    ContainerAttributeManager::refreshProfile();
 }
 
 int oui::MenuAttributeManager::getNumOptions() {
@@ -60,8 +55,8 @@ std::vector<std::u16string> oui::MenuAttributeManager::getOptions() {
     return options;
 }
 
-std::u16string oui::MenuAttributeManager::getFont() {
-    return font;
+std::u16string oui::MenuAttributeManager::getFontName() {
+    return fontName;
 }
 int oui::MenuAttributeManager::getFontSize() {
     return fontSize;

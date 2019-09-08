@@ -21,12 +21,9 @@ namespace oui {
 
             OUI_API void addedToContainer(Container* container) override;
 
-            OUI_API Image* getImage();
-
         protected:
 
         private:
-            Image* image;
 
             ButtonAttributeManager* getAttributeManager();
 

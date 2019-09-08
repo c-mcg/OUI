@@ -13,8 +13,8 @@ namespace oui {
 
             ComponentAttributeManager(Style* defaultStyle = NULL);
 
-            virtual void setProfile(const std::u16string& profile) override;
-
+            virtual void refreshProfile();
+            
             // Behaviour
             bool isVisible();
             bool isInteractable();
@@ -45,6 +45,8 @@ namespace oui {
             int getHeightPercent();
             int getWidthOffset();
             int getHeightOffset();
+
+            virtual void updateAttributeVariable(const std::string& attributeName, Attribute value) override;
 
             std::vector<std::u16string> getRightClickOptions();
 

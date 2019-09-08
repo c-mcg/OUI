@@ -209,11 +209,6 @@ int oui::Window::process() {
         }
     }
 
-    if (needsProfileUpdate()) {
-        refreshProfile();
-        clearProfileUpdate();
-    }
-
     Container::process();
 
     for (int i = 0; i < processableChildren.size(); i++) {

@@ -7,7 +7,7 @@ oui::WindowAttributeManager::WindowAttributeManager():
 
 }
 
-void oui::WindowAttributeManager::setProfile(const std::u16string& profileName) {
+void oui::WindowAttributeManager::refreshProfile() {
     Window* window = static_cast<Window*>(component);
     bool wasVisible = isVisible();
     int width = window->getWidth();
@@ -15,22 +15,19 @@ void oui::WindowAttributeManager::setProfile(const std::u16string& profileName) 
     int x = window->getX();
     int y = window->getY();
 
-    ContainerAttributeManager::setProfile(profileName);
+    ContainerAttributeManager::refreshProfile();
 
-    AttributeProfile* profile = style->getProfile(profileName);
-    if (profile != NULL) {
 
-        bool newVisible = profile->getBool("visible");
-        if (wasVisible != newVisible) {
-            //setVisible(newVisible);
-            if (newVisible) {
-                window->showWindow();
-            } else {
-                window->hideWindow();
-            }
+    bool newVisible = isVisible();
+    if (wasVisible != newVisible) {
+        //setVisible(newVisible);
+        if (newVisible) {
+            window->showWindow();
+        } else {
+            window->hideWindow();
         }
-
     }
+
     
     if (width != window->getWidth() || height != window->getHeight()) {
         window->setSize(window->getWidth(), window->getHeight());
