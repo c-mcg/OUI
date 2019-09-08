@@ -8,6 +8,8 @@
 #include "OUI_Window.h"
 #include "exception/OUI_ArgumentException.h"
 
+#include "util/OUI_ComponentUtil.h"
+
 oui::Container::~Container() {
     std::vector<Component*>::iterator it;
     for (it = children.begin(); it != children.end(); ) {
@@ -82,43 +84,6 @@ void oui::Container::setSelected(bool selected) {
             children.at(i)->setSelected(false);
         }
     }
-}
-
-oui::Component* oui::Container::getComponentAt(int x, int y) {
-    Component* component = NULL;
-
-    std::unordered_map<int, std::vector<Component*>> zIndexes;
-    for (unsigned int i = 0; i < children.size(); i++) {
-        Component* child = children.at(i);
-        int z = child->getAttribute("z-index", 0).intVal; // TODO getInt with default value
-
-        if(child->getBool("visible") && child->getBool("interactable")) {
-            if(z != 0) {
-                if(zIndexes.find(z) == zIndexes.end()) {
-                    zIndexes[z] = std::vector<Component*>();
-                }
-                zIndexes[z].push_back(child);
-            }
-            if(child->contains(x - (isWindow() ? 0 : this->getX()), y - (isWindow() ? 0 : this->getY()))) {
-                component = child->isContainer() ? ((Container*)(child))->getComponentAt(x - (isWindow() ? 0 : getX()), y - (isWindow() ? 0 : getY())) : child;
-                break;
-            }
-        }
-    }
-    //std::sort(zIndexes.begin(), zIndexes.end(), std::less<int>());
-    std::unordered_map<int, std::vector<Component*>>::iterator it;
-    for(it = zIndexes.begin(); it != zIndexes.end(); ++it) {
-        std::vector<Component*> comps = it->second;
-        for(unsigned int i = 0; i < comps.size(); i++) {
-            if(comps.at(i)->contains(x - (isWindow() ? 0 : this->getX()), y - (isWindow() ? 0 : this->getY()))) {
-                component = comps.at(i)->isContainer() ? static_cast<Container*>(comps.at(i))->getComponentAt(x - (isWindow() ? 0 : getX()), y - (isWindow() ? 0 : getY())) : comps.at(i);
-                goto break_outer_loop;
-            }
-        }
-    }
-break_outer_loop:
-
-    return component != NULL ? component: this;
 }
 
 int oui::Container::getIndexOf(const std::string& name) {
@@ -260,6 +225,10 @@ oui::Container* oui::Container::getChildCont(int index) {
     return NULL;
 }
 
+std::vector<oui::Component*> oui::Container::getChildren() {
+    return std::vector<oui::Component*>(children);
+}
+
 void oui::Container::redraw() {
     Component::redraw();
     redrawChildren();
@@ -267,33 +236,18 @@ void oui::Container::redraw() {
 }
 
 void oui::Container::redrawChildren() {
-    std::unordered_map<int, std::vector<Component*>> zIndexes;
-
-    for(unsigned int i = 0; i < children.size(); i++) {
-        Component* c = children.at(i);
-        if(c->getBool("visible")) {
-            int z = c->getInt("z-index");
-            if(z != 0) {
-                if(zIndexes.find(z) == zIndexes.end()) {
-                    zIndexes[z] = std::vector<Component*>();
-                }
-                zIndexes[z].push_back(c);
-            }
-            if(c->needsGraphicsUpdate()) {
-                c->refreshProfile();
-                c->redraw();
-            }
-            c->getGraphics()->renderToGraphics(c->getX(), c->getY(), graphics);
-        }
-    }
-    //std::sort(zIndexes.begin(), zIndexes.end(), std::less<int>());
-
-    std::unordered_map<int, std::vector<Component*>>::iterator it;
-    for(it = zIndexes.begin(); it != zIndexes.end(); ++it) {
+    auto componentsByZIndex = util::orderByZIndex(getChildren());
+    for(auto it = componentsByZIndex.begin(); it != componentsByZIndex.end(); it++) {
         std::vector<Component*> comps = it->second;
         for(unsigned int i = 0; i < comps.size(); i++) {
             Component* c = comps.at(i);
+
+            if (!c->getAttributeManager()->isVisible()) {
+                continue;
+            }
+
             if (c->needsGraphicsUpdate()) {
+                c->refreshProfile();
                 c->redraw();
             }
             c->getGraphics()->renderToGraphics(c->getX(), c->getY(), graphics);

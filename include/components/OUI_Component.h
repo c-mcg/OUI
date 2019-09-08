@@ -45,6 +45,8 @@ namespace oui {
 
             virtual OUI_API void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
+            virtual OUI_API ComponentAttributeManager* getAttributeManager();
+
         protected:
             Window* window;
             Container* parent;
@@ -103,7 +105,6 @@ namespace oui {
         //This parses a value as if it were an OSAL attribute
         //This method is much slower than setAttribute, but handles multiple parameters in the value. E.g: "parseAttribute("text", u"'Hello There!'")"
         public: OUI_API void parseAttribute(const std::string& name, const std::u16string& value, const std::u16string& profile = u"default");
-        public: OUI_API bool contains(int localX, int localY);
         public: void updateSize();
 
     //Containers
@@ -111,10 +112,6 @@ namespace oui {
         public: OUI_API virtual bool isContainer();
         public: OUI_API virtual Window* getWindow();
         public: OUI_API virtual Container* getParent();
-        //Recursively checks parents for the specified component
-        public: OUI_API bool isChildOf(Component* c);
-        //Recursively looks for a parent with the specified tag
-        public: OUI_API bool isChildOf(const std::string& tag);
 
     //Identification
         public: OUI_API std::string getTag();

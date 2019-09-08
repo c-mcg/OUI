@@ -16,9 +16,7 @@ namespace oui {
 
             void redraw() override;
 
-        private:
-
-            LabelAttributeManager* getAttributeManager();
+            virtual LabelAttributeManager* getAttributeManager() override;
 
     };
 }

@@ -61,16 +61,17 @@ bool oui::SDLWindow::setCursor(std::u16string cursor) {
     SDL_SystemCursor newCursor;
     if (cursor == CURSOR_DEFAULT) {
         newCursor = SDL_SYSTEM_CURSOR_ARROW;
-    }
-    if (cursor == CURSOR_POINTER) {
+    } else if (cursor == CURSOR_POINTER) {
         newCursor = SDL_SYSTEM_CURSOR_HAND;
-    }
-    if (cursor == CURSOR_RESIZE) {
+    } else if (cursor == CURSOR_RESIZE) {
         newCursor = SDL_SYSTEM_CURSOR_SIZENWSE;
-    }
-    if (cursor == CURSOR_TEXT) {
+    } else if (cursor == CURSOR_TEXT) {
         newCursor = SDL_SYSTEM_CURSOR_IBEAM;
+    } else {
+        std::cout <<"No cursor found! " << convertUTF16toUTF8(cursor).c_str() << std::endl;
+        newCursor = SDL_SYSTEM_CURSOR_ARROW;
     }
+
     if (this->baseCursor != NULL) {
         //	SDL_FreeCursor(baseCursor);
     }
@@ -119,7 +120,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
             case SDL_WINDOWEVENT_RESTORED:
                 break;
             case SDL_WINDOWEVENT_ENTER:
-                cursorType = u"none";
+                cursorType = u"default";
                 break;
             case SDL_WINDOWEVENT_LEAVE:
                 setHovered(false);

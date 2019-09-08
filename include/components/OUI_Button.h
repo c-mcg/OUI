@@ -21,11 +21,7 @@ namespace oui {
 
             OUI_API void addedToContainer(Container* container) override;
 
-        protected:
-
-        private:
-
-            ButtonAttributeManager* getAttributeManager();
+            OUI_API virtual ButtonAttributeManager* getAttributeManager() override;
 
     };
 }

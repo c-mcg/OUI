@@ -33,9 +33,9 @@ namespace oui {
             OUI_API void scrollX(int speed);
             OUI_API void scrollY(int speed);
 
-        private:
+            OUI_API virtual ScrollPanelAttributeManager* getAttributeManager() override;
 
-            ScrollPanelAttributeManager* getAttributeManager();
+        private:
 
             void onScroll(ComponentEvent* e);
 

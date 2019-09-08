@@ -29,10 +29,11 @@ namespace oui {
             void removeAllOptionComponents();
             std::vector<Button*> addOptions(const std::vector<std::u16string>& options);
 
-        private:
-            Component* target;
+            OUI_API virtual MenuAttributeManager* getAttributeManager() override;
 
-            MenuAttributeManager* getAttributeManager();
+        private:
+
+            Component* target;
 
             Button* addOption(const std::u16string& option);
             Button* addOption(const std::u16string& option, int index);

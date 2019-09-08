@@ -2,11 +2,12 @@
 
 #include "OUI_window.h"
 #include "event/OUI_ScrollEvent.h"
+#include "util/OUI_ComponentUtil.h"
 
 oui::MouseEvent* oui::MouseEvent::create(std::string type, bool bubbles, Window* window, int button, std::vector<int> buttons, int movementX, int movementY) {
     int mouseX = window->getMouseX();
     int mouseY = window->getMouseY();
-    Component* originalTarget = window->getComponentAt(mouseX, mouseY);
+    Component* originalTarget = util::getComponentAt(window, mouseX, mouseY);
     
     int localX = mouseX - originalTarget->getScreenX();
     int localY = mouseY - originalTarget->getScreenY();

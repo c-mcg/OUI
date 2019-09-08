@@ -13,7 +13,7 @@
 const std::u16string oui::Component::BORDER_NONE = u"none";
 const std::u16string oui::Component::BORDER_SOLID = u"solid";
 
-const std::u16string oui::Component::CURSOR_DEFAULT = u"none";
+const std::u16string oui::Component::CURSOR_DEFAULT = u"default";
 const std::u16string oui::Component::CURSOR_POINTER = u"pointer";
 const std::u16string oui::Component::CURSOR_RESIZE = u"resize";
 const std::u16string oui::Component::CURSOR_TEXT = u"text";
@@ -188,10 +188,6 @@ void oui::Component::setAttribute(const std::string& name, Attribute value, cons
     attributeManager->setAttribute(name, value, profileName);
 }
 
-bool oui::Component::contains(int localX, int localY) {
-    return localX >= getX() && localX <= getX() + getWidth() && localY >= getY() && localY <= getY() + getHeight();
-}
-
 /* END OF USAGE FUNCTIONS */
 
 /* START CONTAINERS */
@@ -207,18 +203,6 @@ oui::Window* oui::Component::getWindow() {
 }
 oui::Container* oui::Component::getParent() {
     return parent;
-}
-bool oui::Component::isChildOf(Component* c) {
-    if (parent != NULL) {
-        return parent == c ? true : parent->isChildOf(c);
-    }
-    return false;
-}
-bool oui::Component::isChildOf(const std::string& tag) {
-    if (parent != NULL) {
-        return parent->compareTag(tag) ? true : parent->isChildOf(tag);
-    }
-    return false;
 }
 
 /* END CONTAINERS */
@@ -450,6 +434,9 @@ void oui::Component::deriveAttributesForComponent(StyleSheet* styleSheet) {
     attributeManager->deriveAttributesForComponent(styleSheet);
 }
 
+oui::ComponentAttributeManager* oui::Component::getAttributeManager() {
+    return attributeManager;
+}
 
 void oui::Component::refreshProfile() {
     if (parent != NULL || tag == "window") {

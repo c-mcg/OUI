@@ -15,7 +15,7 @@ oui::Image::Image() {
 }
 
 oui::Image* oui::Image::loadImage(const std::u16string& path, Window* window) {
-    if (window == NULL) {
+    if (window == NULL || path == u"") {
         return NULL;
     }
 

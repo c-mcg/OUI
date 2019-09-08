@@ -35,9 +35,9 @@ namespace oui {
 
             void updateTextPosition();
         
-        private:
+            virtual TextFieldAttributeManager* getAttributeManager() override;
 
-            TextFieldAttributeManager* getAttributeManager();
+        private:
 
             int drawX;
             int selectStart;

@@ -27,8 +27,6 @@ namespace oui {
 
             OUI_API virtual void redrawChildren();
 
-            OUI_API Component* getComponentAt(int x, int y);
-
             OUI_API int getIndexOf(const std::string& name);
             OUI_API int getIndexOf(Component* c);
 
@@ -46,6 +44,8 @@ namespace oui {
             OUI_API virtual Component* getChild(int index);
             OUI_API Container* getChildCont(const std::string& name);
             OUI_API Container* getChildCont(int index);
+            OUI_API virtual std::vector<Component*> getChildren();
+
 
             OUI_API void setHovered(bool hovered) override;
             OUI_API void setMouseDown(bool mouseDown) override;
@@ -56,13 +56,12 @@ namespace oui {
 
             OUI_API virtual StyleSheet* getAllStyleSheets();
 
+            OUI_API virtual ContainerAttributeManager* getAttributeManager() override;
+
         protected:
         
             std::vector<Component*> children;
             std::vector<Component*> processableChildren;
-
-        private: 
-            ContainerAttributeManager* getAttributeManager();
 
     };
 
