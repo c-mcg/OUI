@@ -46,12 +46,6 @@ namespace oui {
             virtual void setAttribute(const std::string& name, Attribute a, const std::u16string& profile=u"default");
             virtual void updateAttributeVariable(const std::string& name, Attribute value);
 
-            virtual int getInt(std::string name);
-            virtual double getDouble(std::string name);
-            virtual std::u16string getString(std::string name);
-            virtual bool getBool(std::string name);
-
-            virtual Attribute getAttribute(std::string name, Attribute defaultVal=0);
 
             virtual void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
@@ -64,6 +58,13 @@ namespace oui {
 
             std::u16string currentProfileName;
             AttributeProfile* currentProfile;
+
+            virtual int getInt(std::string name);
+            virtual double getDouble(std::string name);
+            virtual std::u16string getString(std::string name);
+            virtual bool getBool(std::string name);
+
+            virtual Attribute getAttribute(std::string name, Attribute defaultVal=0);
 
         private:
 

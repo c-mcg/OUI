@@ -57,8 +57,8 @@ void oui::Window::initializeWindow(int width, int height) {
     height = height / 2;
     setAttribute("width-offset", width);
     setAttribute("height-offset", height);
-    int widthOffset = getInt("width-offset");
-    int heightOffset = getInt("height-offset");
+    int widthOffset = width;
+    int heightOffset = height;
     
 
     Panel* windowBar = new Panel("window-bar", "");
@@ -186,7 +186,9 @@ int oui::Window::process() {
     if (moving) {
         int newX = globalMouseX - moveOffX;
         int newY = globalMouseY - moveOffY;
-        if (newX != getInt("x-offset") || newY != getInt("y-offset")) {
+        int xOffset = attributeManager->getXOffset();
+        int yOffset = attributeManager->getYOffset();
+        if (newX != xOffset || newY != yOffset) {
             this->setAttribute("x-offset", newX);
             this->setAttribute("y-offset", newY);
         }
@@ -479,7 +481,8 @@ void oui::Window::onKeyDown(ComponentEvent* compEvent) {
 }
 
 void oui::Window::redraw() {
-    if (getBool("visible")) {
+    bool visible = getAttributeManager()->isVisible();
+    if (visible) {
         Graphics* g = graphics;
 
         Container::redraw();
@@ -586,7 +589,7 @@ oui::Component* oui::Window::getSelectedComponent() {
 
 void oui::Window::closeRightClickMenu() {
     Component* menu = getChild("rightClickMenu");
-    if (menu != NULL && menu->getBool("visible")) {
+    if (menu != NULL && menu->getAttributeManager()->isVisible()) {
         menu->setAttribute("visible", false);
     }
 }

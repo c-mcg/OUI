@@ -62,7 +62,7 @@ int oui::TextField::process() {
 
 
 std::vector<std::u16string> oui::TextField::getRightClickOptions() {
-    std::vector<std::u16string> options = Component::getRightClickOptions();
+    std::vector<std::u16string> options = attributeManager->getRightClickOptions();
     options.insert(options.begin(), u"Paste");
     options.insert(options.begin(), u"Copy");
     options.insert(options.begin(), u"Cut");

@@ -115,7 +115,7 @@ bool oui::Container::isContainer() {
      while (children.size() > permanentOffset) {
 
          //If a permanent child is at the "bottom" we bump the offset up to leave it there
-         if (children.at(permanentOffset)->getBool("permanent")) {
+         if (children.at(permanentOffset)->getAttributeManager()->isPermanent()) {
              permanentOffset++;
              continue;
          }
@@ -145,7 +145,7 @@ oui::Component* oui::Container::removeChild(int index, bool shouldDelete) {
     }
 
     Component* c = children.at(index);
-    if (!c->getBool("permanent")) {
+    if (!c->getAttributeManager()->isPermanent()) {
 
         if (c->needsProcessing) {
             onProcessableChildRemoved(c);

@@ -38,11 +38,6 @@ namespace oui {
 
             void addEventListener(std::string type, EventHandler handler);
 
-            virtual OUI_API int getInt(std::string name);
-            virtual OUI_API double getDouble(std::string name);
-            virtual OUI_API std::u16string getString(std::string name);
-            virtual OUI_API bool getBool(std::string name);
-
             virtual OUI_API void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
             virtual OUI_API ComponentAttributeManager* getAttributeManager();
@@ -91,7 +86,6 @@ namespace oui {
         public: OUI_API Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing=false, EventDispatcher* eventDispatcher=new EventDispatcher(), ComponentAttributeManager* attributeManager = new ComponentAttributeManager());
 
         public: void setAttribute(const std::string& name, Attribute val, const std::u16string& profile=u"default");
-        public: OUI_API Attribute getAttribute(const std::string& name, Attribute defaultVal=0);
 
     //Processing and Drawing
         public: OUI_API virtual int process();

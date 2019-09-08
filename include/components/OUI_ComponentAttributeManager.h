@@ -18,6 +18,7 @@ namespace oui {
             // Behaviour
             bool isVisible();
             bool isInteractable();
+            bool isPermanent();
 
             // Styling
             int getOpacity();
@@ -55,6 +56,7 @@ namespace oui {
             // Behaviour
             bool visible;
             bool interactable;
+            bool permanent;
 
             // Styling
             int opacity;
@@ -86,7 +88,6 @@ namespace oui {
             int heightOffset;
 
             std::vector<std::u16string> rightClickOptions;
-
 
     };
 

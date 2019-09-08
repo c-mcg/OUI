@@ -216,7 +216,7 @@ void oui::ScrollPanel::redraw() {
 
         if (scrollingY || resetY) {//TODO resizing is kinda glitchy sometimes (visibility check here is a cheaphax fix)
             Component* c = getChildCont("verticalScrollBar")->getChild("bar");
-            if (!c->getParent()->getBool("visible")) {
+            if (!c->getParent()->getAttributeManager()->isVisible()) {
                 scrollPosY = 0;
                 resetY = true;
             }
@@ -251,7 +251,7 @@ void oui::ScrollPanel::redraw() {
         }
         if (scrollingX || resetX) {
             Component* c = getChildCont("horizontalScrollBar")->getChild("bar");
-            if (!c->getParent()->getBool("visible")) {
+            if (!c->getParent()->getAttributeManager()->isVisible()) {
                 scrollPosX = 0;
                 resetX = true;
             }
@@ -316,13 +316,13 @@ void oui::ScrollPanel::handleResize() {
 
     //Resize to avoid overlap
     int width, height;
-    width = vSB->getBool("visible") ? -SCROLLBAR_SIZE : 0;
+    width = vSB->getAttributeManager()->isVisible() ? -SCROLLBAR_SIZE : 0;
     height = SCROLLBAR_SIZE;
     hSB->setAttribute("width-offset", width);
     hSB->setAttribute("height-offset", height);
 
     width = SCROLLBAR_SIZE;
-    height = hSB->getBool("visible") ? -SCROLLBAR_SIZE : 0;
+    height = hSB->getAttributeManager()->isVisible() ? -SCROLLBAR_SIZE : 0;
     vSB->setAttribute("width-offset", width);
     vSB->setAttribute("height-offset", height);
 

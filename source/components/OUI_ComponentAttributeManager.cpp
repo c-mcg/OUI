@@ -2,7 +2,7 @@
 #include "components/OUI_Component.h"
 
 oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle): 
-    visible{true}, interactable{true}, opacity{255}, backgroundColor1{Color::WHITE},
+    visible{true}, interactable{true}, permanent{false}, opacity{255}, backgroundColor1{Color::WHITE},
     backgroundColor2{Color::WHITE}, cursor{Component::CURSOR_DEFAULT}, borderStyle{Component::BORDER_NONE},
     borderWidth{1}, borderColor{Color::BLACK}, centeredX{false}, centeredY{false},
     xPercent{0}, yPercent{0}, xOffset{0}, yOffset{0}, z{0}, minWidth{0}, minHeight{0},
@@ -45,6 +45,7 @@ oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle):
         { "border-style", {AttributeManager::STRING, &borderStyle} },
         { "opacity", {AttributeManager::INT, &opacity} },
         { "visible", {AttributeManager::BOOL, &visible} },
+        { "permanent", {AttributeManager::BOOL, &permanent} },
         { "right-click-options", {AttributeManager::STRING_ARRAY, &rightClickOptions} },
         { "cursor", {AttributeManager::STRING, &cursor} },
     });
@@ -65,6 +66,9 @@ bool oui::ComponentAttributeManager::isVisible() {
 }
 bool oui::ComponentAttributeManager::isInteractable() {
     return interactable;
+}
+bool oui::ComponentAttributeManager::isPermanent() {
+    return permanent;
 }
 
 // Styling

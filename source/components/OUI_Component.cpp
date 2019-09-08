@@ -102,11 +102,6 @@ void oui::Component::addEventListener(std::string type, EventHandler handler) {
     eventDispatcher->addEventListener(type, handler);
 }
 
-oui::Attribute oui::Component::getAttribute(const std::string& name, Attribute defaultValue) {
-    return attributeManager->getAttribute(name, defaultValue);
-}
-
-
 /* START OF PROCESSING */
 
 int oui::Component::process() {
@@ -410,24 +405,7 @@ std::u16string oui::Component::getCursor() {
 }
 
 std::vector<std::u16string> oui::Component::getRightClickOptions() {
-    std::vector<std::u16string> options;
-    for (int i = 0; i < getInt("right-click-options_length"); i++) {
-        options.push_back(getString("right-click-options_" + std::to_string(i)));
-    }
-    return options;
-}
-
-int oui::Component::getInt(std::string name) {
-    return attributeManager->getInt(name);
-}
-double oui::Component::getDouble(std::string name) {
-    return attributeManager->getDouble(name);
-}
-std::u16string oui::Component::getString(std::string name) {
-    return attributeManager->getString(name);
-}
-bool oui::Component::getBool(std::string name) {
-    return attributeManager->getBool(name);
+    return attributeManager->getRightClickOptions();
 }
 
 void oui::Component::deriveAttributesForComponent(StyleSheet* styleSheet) {

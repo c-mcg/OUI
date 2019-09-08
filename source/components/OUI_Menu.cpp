@@ -43,7 +43,8 @@ bool oui::Menu::addChild(Component* child) {
 
 oui::Button* oui::Menu::addOption(const std::u16string& option) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    return addOption(option, getInt("num-options"));
+    int numOptions = attributeManager->getNumOptions();
+    return addOption(option, numOptions);
 }
 oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
@@ -53,7 +54,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     int fontSize = attributeManager->getFontSize();
     Color hoverColor = attributeManager->getHoverColor();
     int minWidth = attributeManager->getMinWidth();
-    int numOptions = getInt("num-options");
+    int numOptions = attributeManager->getNumOptions();
 
     //Create button for option
     Button* b = new Button("option_" + std::to_string(index), "menuOption");
@@ -61,7 +62,7 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
     b->setAttribute("text", option);
 
-    int borderWidth = getInt("border-width");
+    int borderWidth = attributeManager->getBorderWidth();
 
     //Set size
     b->setAttribute("width-percent", 100);
@@ -97,7 +98,8 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
             buttonName.substr(underscoreIndex, buttonName.length() - underscoreIndex).c_str()
         );
 
-        MenuEvent* event = MenuEvent::create("click", target, this, optionIndex, b->getString("text"));
+        std::u16string buttonText = b->getAttributeManager()->getText();
+        MenuEvent* event = MenuEvent::create("click", target, this, optionIndex, buttonText);
         target->getEventDispatcher()->dispatchEvent(event);
         delete event;
     });
@@ -106,7 +108,8 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     Font* font = Font::getFont(fontName, fontSize, window);
     int biggestWidth = 0;
     if (font != NULL) {
-        font->getStringWidth(b->getString("text"));
+        std::u16string buttonText = b->getAttributeManager()->getText();
+        font->getStringWidth(buttonText);
         biggestWidth = biggestWidth < minWidth ? minWidth : biggestWidth;
     }
 
@@ -144,7 +147,8 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
             //Continue calculating biggest width
             if (currentButton->getWidth() > biggestWidth) {
-                biggestWidth = font->getStringWidth(currentButton->getString("text"));
+                std::u16string currentButtonText = currentButton->getAttributeManager()->getText();
+                biggestWidth = font->getStringWidth(currentButtonText);
             }
         }
 
@@ -175,7 +179,7 @@ oui::Component* oui::Menu::getTarget() {
 
 std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = getInt("num-options");
+    int numOptions = attributeManager->getNumOptions();
     return addOptions(options, numOptions);
 }
 
@@ -189,7 +193,7 @@ std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string
 
 bool oui::Menu::removeOption(int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = getInt("num-options");
+    int numOptions = attributeManager->getNumOptions();
     if (index < 0 || index >= numOptions) {
         return false;
     }
@@ -212,7 +216,7 @@ int oui::Menu::resetOptions(int startIndex) {
     int minWidth = attributeManager->getMinWidth();
     int fontSize = attributeManager->getFontSize();
     std::u16string font = attributeManager->getFontName();
-    int numOptions = getInt("num-options");
+    int numOptions = attributeManager->getNumOptions();
     int optionHeight = attributeManager->getOptionHeight();
     int padding = attributeManager->getPadding();
 
@@ -227,7 +231,8 @@ int oui::Menu::resetOptions(int startIndex) {
         b2->parseAttribute("font", font + u" " + intToString(fontSize));
         b2->setAttribute("border-style", u"none");
         if (b2->getWidth() > biggestWidth) {
-            biggestWidth = f->getStringWidth(b2->getString("text"));
+            std::u16string buttonText = b2->getAttributeManager()->getText();
+            biggestWidth = f->getStringWidth(buttonText);
         }
     }
     return biggestWidth;
