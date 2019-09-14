@@ -2,7 +2,7 @@
 #define OUI_SDL_WINDOW_H
 
 #include "OUI_Export.h"
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 
 
 struct SDL_Window;

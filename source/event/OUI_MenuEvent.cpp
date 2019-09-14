@@ -1,6 +1,6 @@
 #include "event/OUI_MenuEvent.h"
 
-#include "OUI_window.h"
+#include "window/OUI_window.h"
 
 oui::MenuEvent* oui::MenuEvent::create(std::string type, Component* originalTarget, Menu* menu, int optionIndex, std::u16string option) {
     return new MenuEvent(type, originalTarget, menu, optionIndex, option);

@@ -1,6 +1,6 @@
 #include "event/OUI_MouseEvent.h"
 
-#include "OUI_window.h"
+#include "window/OUI_window.h"
 #include "event/OUI_ScrollEvent.h"
 #include "util/OUI_ComponentUtil.h"
 

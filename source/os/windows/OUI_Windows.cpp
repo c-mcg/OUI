@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 
 oui::WindowsOS::WindowsOS() : OperatingSystem() {
 

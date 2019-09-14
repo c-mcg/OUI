@@ -1,7 +1,7 @@
 
 #include "gfx/OUI_Image.h"
 #include <iostream>
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "util/OUI_StringUtil.h"
 
 std::unordered_map<oui::Window*, std::unordered_map<std::u16string, oui::Image*>> oui::Image::cachedImages = std::unordered_map<oui::Window*, std::unordered_map<std::u16string, oui::Image*>>();

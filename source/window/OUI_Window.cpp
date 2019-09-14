@@ -1,5 +1,5 @@
 #include "os/OUI_OS.h"
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include <SDL.h>
 #include "OUI.h"
 #include <iostream>
@@ -195,6 +195,7 @@ int oui::Window::process() {
     }
 
     OS()->getGlobalMousePos(this, globalMouseX, globalMouseY);
+    
 
     if (moving) {
         int newX = globalMouseX - moveOffX;

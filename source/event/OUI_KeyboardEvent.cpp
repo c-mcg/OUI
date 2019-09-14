@@ -1,6 +1,6 @@
 #include "event/OUI_KeyboardEvent.h"
 
-#include "OUI_window.h"
+#include "window/OUI_window.h"
 #include "OUI_KeyCodes.h"
 
 oui::KeyboardEvent* oui::KeyboardEvent::create(std::string type, bool bubbles, Window* window, int key) {

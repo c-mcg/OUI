@@ -1,6 +1,6 @@
 #include "event/OUI_ScrollEvent.h"
 
-#include "OUI_window.h"
+#include "window/OUI_window.h"
 #include "util/OUI_ComponentUtil.h"
 
 oui::ScrollEvent* oui::ScrollEvent::create(bool bubbles, Window* window, std::vector<int> buttons, int movementX, int movementY, int scrollDistance) {

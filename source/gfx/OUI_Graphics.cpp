@@ -1,6 +1,6 @@
 
 #include "gfx/OUI_Graphics.h"
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "util/OUI_StringUtil.h"
 
 #include <iostream>

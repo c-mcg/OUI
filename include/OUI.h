@@ -3,7 +3,7 @@
 
 #include "OUI_Export.h"
 #include "util/OUI_StringUtil.h"
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "components/button/OUI_Button.h"
 #include "components/panel/OUI_Panel.h"
 #include "components/drawablepanel/OUI_DrawablePanel.h"

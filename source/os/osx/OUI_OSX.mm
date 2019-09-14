@@ -9,7 +9,7 @@
 
 #include "os/osx/OUI_OSX.h"
 
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 
 oui::OSX::OSX() : OperatingSystem() {
 

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <sstream>
 #include "OUI_KeyCodes.h"
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
 #include "event/OUI_KeyboardEvent.h"

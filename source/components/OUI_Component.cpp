@@ -1,6 +1,6 @@
 #include "components/OUI_Component.h"
 #include <sstream>
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
 

@@ -1,6 +1,6 @@
 #include "os/OUI_OS.h"
 
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "sdl2/OUI_SDL_Context.h"
 
 #include <SDL.h>

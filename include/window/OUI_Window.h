@@ -12,7 +12,7 @@
 
 #include "event/OUI_ComponentEvent.h"
 #include "event/OUI_WindowEventDispatcher.h"
-#include "components/window/OUI_WindowAttributeManager.h"
+#include "window/OUI_WindowAttributeManager.h"
 
 namespace oui {
 
@@ -74,13 +74,6 @@ namespace oui {
         public: OUI_API virtual int process() override;
         public: OUI_API Graphics* getGraphics();
 
-        public: OUI_API void onSystemMouseMove(ComponentEvent* event);
-        public: OUI_API void onSystemMouseUp(ComponentEvent* event);
-        public: OUI_API void onSystemMouseDown(ComponentEvent* event);
-        public: OUI_API void onSystemScrollWheel(ComponentEvent* event);
-        public: OUI_API void onSystemKeyDown(ComponentEvent* event);
-        public: OUI_API void onSystemKeyUp(ComponentEvent* event);
-        public: OUI_API void onSystemKeyTyped(ComponentEvent* event);
         public: OUI_API void onMouseDown(ComponentEvent* event);
 		public: OUI_API void onKeyDown(ComponentEvent* event);
         

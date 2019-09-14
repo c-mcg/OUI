@@ -1,7 +1,7 @@
 
 #include "gfx/OUI_Font.h"
 #include <iostream>
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

@@ -5,7 +5,7 @@
 #include <map>
 #include <vector>
 
-#include "OUI_Window.h"
+#include "window/OUI_window.h"
 #include "exception/OUI_ArgumentException.h"
 
 #include "util/OUI_ComponentUtil.h"

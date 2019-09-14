@@ -1,5 +1,5 @@
-#include "components/window/OUI_WindowAttributeManager.h"
-#include "OUI_Window.h"
+#include "window/OUI_WindowAttributeManager.h"
+#include "window/OUI_window.h"
 
 oui::WindowAttributeManager::WindowAttributeManager():
     ContainerAttributeManager()
