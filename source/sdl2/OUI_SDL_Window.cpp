@@ -81,7 +81,7 @@ bool oui::SDLWindow::setCursor(std::u16string cursor) {
     return true;
 }
 void oui::SDLWindow::onMinimize(ComponentEvent* event) {
-    Window::onMaximize(event);
+    Window::onMinimize(event);
     SDL_MinimizeWindow(baseWindow);
 }
 void oui::SDLWindow::onMaximize(ComponentEvent* event) {
@@ -95,7 +95,9 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
         switch (event->window.event) {
 
             case SDL_WINDOWEVENT_SHOWN:
-                std::cout << "window shown!!" <<std::endl;
+                if (minimized) {
+                    onSystemUnminimize();
+                }
                 break;
             case SDL_WINDOWEVENT_HIDDEN:
                 std::cout << "window hidden!!" <<std::endl;

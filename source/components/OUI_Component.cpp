@@ -94,6 +94,21 @@ void oui::Component::addEventListener(std::string type, EventHandler handler) {
     eventDispatcher->addEventListener(type, handler);
 }
 
+void oui::Component::addEventConsumer(std::string type) {
+    addEventDefaultConsumer(type);
+    addEventBubbleConsumer(type);
+}
+void oui::Component::addEventDefaultConsumer(std::string type) {
+    addEventListener(type, [](ComponentEvent* e) {
+        e->preventDefault();
+    });
+}
+void oui::Component::addEventBubbleConsumer(std::string type) {
+    addEventListener(type, [](ComponentEvent* e) {
+        e->stopPropagation();
+    });
+}
+
 /* START OF PROCESSING */
 
 int oui::Component::process() {

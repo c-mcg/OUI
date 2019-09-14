@@ -41,6 +41,9 @@ oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, Win
 
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("maximize", std::bind(&Window::onMaximize, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("unmaximize", std::bind(&Window::onUnmaximize, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("minimize", std::bind(&Window::onMinimize, this, std::placeholders::_1));
+    this->eventDispatcher->addEventListener("unminimize", std::bind(&Window::onUnminimize, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("focus", std::bind(&Window::onFocus, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("blur", std::bind(&Window::onBlur, this, std::placeholders::_1));
 
@@ -101,9 +104,15 @@ void oui::Window::initializeWindow(int width, int height) {
     titleLbl->setAttribute("interactable", false);
 
     Button* minimizeBtn = new Button("minimizeBtn", "window-button");
+    minimizeBtn->addEventConsumer("mousedown");
 
     minimizeBtn->addEventListener("click", [this](ComponentEvent* e) {
-        onSystemMinimize();
+        WindowAttributeManager* attributeManager = this->getAttributeManager();
+        if (this->minimized) {
+            onSystemUnminimize();
+        } else {
+            onSystemMinimize();
+        }
         e->stopPropagation();
     });
     minimizeBtn->parseAttribute("location", u"100 0 -73 0");
@@ -114,10 +123,14 @@ void oui::Window::initializeWindow(int width, int height) {
     minimizeBtn->setAttribute("image", u"minimize-btn.png");
 
     Button* maximizeBtn = new Button("maximizeBtn", "window-button");
-
+    maximizeBtn->addEventConsumer("mousedown");
     maximizeBtn->addEventListener("click", [this](ComponentEvent* e) {
-        onSystemMaximize();
-        e->stopPropagation();
+        WindowAttributeManager* attributeManager = this->getAttributeManager();
+        if (this->maximized) {
+            onSystemUnmaximize();
+        } else {
+            onSystemMaximize();
+        }
     });
     maximizeBtn->parseAttribute("location", u"100 0 -49 0");
     maximizeBtn->parseAttribute("size", u"0 0 25 25");
@@ -388,16 +401,18 @@ void oui::Window::onClose(ComponentEvent* compEvent) {
 
 void oui::Window::onMinimize(ComponentEvent* compEvent) {
     // Move this to SDL window
+    minimized = true;
 }
 
 void oui::Window::onUnminimize(ComponentEvent* compEvent) {
     // Move this to SDL window
+    minimized = false;
 }
 
 void oui::Window::onMaximize(ComponentEvent* compEvent) {
     Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
-        maximizeBtn->setAttribute("image", u"maximizeBtn1.png");
+        maximizeBtn->setAttribute("image", u"maximize-btn2.png");
     }
     maximizeX = getX();
     maximizeY = getY();
@@ -422,7 +437,7 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
 void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
     Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
-        maximizeBtn->setAttribute("image", u"maximizeBtn2.png");
+        maximizeBtn->setAttribute("image", u"maximize-btn1.png");
     }
     maximized = false;
 

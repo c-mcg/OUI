@@ -40,6 +40,7 @@ namespace oui {
         protected: int globalMouseX;
         protected: int globalMouseY;
         private: bool maximized;
+        protected: bool minimized;
         private: int maximizeX;
         private: int maximizeY;
         private: int maximizeWidth;

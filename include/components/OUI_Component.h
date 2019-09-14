@@ -30,6 +30,9 @@ namespace oui {
             const bool needsProcessing;
 
             void addEventListener(std::string type, EventHandler handler);
+            void addEventConsumer(std::string type);
+            void addEventDefaultConsumer(std::string type);
+            void addEventBubbleConsumer(std::string type);
 
             virtual OUI_API void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
