@@ -4,8 +4,8 @@
 #include "OUI.h"
 #include <iostream>
 #include <math.h>
-#include "components/OUI_Menu.h"
-#include "components/OUI_ScrollPanel.h"
+#include "components/menu/OUI_Menu.h"
+#include "components/scrollpanel/OUI_ScrollPanel.h"
 #include "util/OUI_StringUtil.h"
 #include "os/OUI_OS.h"
 #include "components/OUI_ComponentLoader.h"

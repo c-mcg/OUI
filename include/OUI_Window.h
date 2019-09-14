@@ -3,16 +3,16 @@
 
 #include "OUI_Export.h"
 #include "gfx/OUI_Graphics.h"
-#include "components/OUI_Container.h"
-#include "components/OUI_Button.h"
-#include "components/OUI_Panel.h"
-#include "components/OUI_Label.h"
+#include "components/container/OUI_Container.h"
+#include "components/button/OUI_Button.h"
+#include "components/panel/OUI_Panel.h"
+#include "components/label/OUI_Label.h"
 #include "event/OUI_EditEvent.h"
 #include <stdint.h>
 
 #include "event/OUI_ComponentEvent.h"
 #include "event/OUI_WindowEventDispatcher.h"
-#include "components/OUI_WindowAttributeManager.h"
+#include "components/window/OUI_WindowAttributeManager.h"
 
 namespace oui {
 

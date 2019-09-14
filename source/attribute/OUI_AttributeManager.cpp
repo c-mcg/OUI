@@ -2,7 +2,7 @@
 
 #include "attribute/OUI_Style.h"
 #include "components/OUI_Component.h"
-#include "components/OUI_Container.h"
+#include "components/container/OUI_Container.h"
 
 oui::AttributeManager::~AttributeManager() {
     delete style;
