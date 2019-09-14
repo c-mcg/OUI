@@ -36,7 +36,7 @@ oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, Win
     shutdown{false}, focused{false}, globalMouseX{0}, globalMouseY{0},
     moving{false}, moveOffX{0}, moveOffY{0}, resizing{false}, resizeX{0}, resizeY{0},
     maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0}, editIndex{0},
-    selectedComponent{NULL}, cursorType{CURSOR_DEFAULT},
+    selectedComponent{NULL}, cursorType{constants::CURSOR_DEFAULT},
     Container("window", "window", "window", false, eventDispatcher, attributeManager) {//TODO let you set a name
 
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
@@ -286,7 +286,7 @@ void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
         // TODO math util
         int dist = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
         if (dist < 15) {
-            setCursor(CURSOR_RESIZE);
+            setCursor(constants::CURSOR_RESIZE);
         } else {
             setCursor(event->getTarget()->getCursor());
         }

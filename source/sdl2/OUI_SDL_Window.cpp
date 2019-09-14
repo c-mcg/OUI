@@ -59,13 +59,13 @@ bool oui::SDLWindow::setCursor(std::u16string cursor) {
     }
     SDL_Cursor* baseCursor;
     SDL_SystemCursor newCursor;
-    if (cursor == CURSOR_DEFAULT) {
+    if (cursor == constants::CURSOR_DEFAULT) {
         newCursor = SDL_SYSTEM_CURSOR_ARROW;
-    } else if (cursor == CURSOR_POINTER) {
+    } else if (cursor == constants::CURSOR_POINTER) {
         newCursor = SDL_SYSTEM_CURSOR_HAND;
-    } else if (cursor == CURSOR_RESIZE) {
+    } else if (cursor == constants::CURSOR_RESIZE) {
         newCursor = SDL_SYSTEM_CURSOR_SIZENWSE;
-    } else if (cursor == CURSOR_TEXT) {
+    } else if (cursor == constants::CURSOR_TEXT) {
         newCursor = SDL_SYSTEM_CURSOR_IBEAM;
     } else {
         std::cout <<"No cursor found! " << convertUTF16toUTF8(cursor).c_str() << std::endl;

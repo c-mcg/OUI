@@ -10,14 +10,6 @@
 
 #endif
 
-const std::u16string oui::Component::BORDER_NONE = u"none";
-const std::u16string oui::Component::BORDER_SOLID = u"solid";
-
-const std::u16string oui::Component::CURSOR_DEFAULT = u"default";
-const std::u16string oui::Component::CURSOR_POINTER = u"pointer";
-const std::u16string oui::Component::CURSOR_RESIZE = u"resize";
-const std::u16string oui::Component::CURSOR_TEXT = u"text";
-
 oui::Style* oui::Component::defaultStyle = NULL;
 
 oui::Style* oui::Component::getDefaultComponentStyle() {
@@ -130,13 +122,13 @@ oui::EventDispatcher* oui::Component::getEventDispatcher() {
 
 void oui::Component::drawBorder() {
     auto borderStyle = attributeManager->getBorderStyle();
-    if(borderStyle == BORDER_NONE) {
+    if(borderStyle == constants::BORDER_NONE) {
         return;
     }
 
     Color borderColor = attributeManager->getBorderColor();
     int borderWidth = attributeManager->getBorderWidth();
-    if(borderStyle == BORDER_SOLID) {
+    if(borderStyle == constants::BORDER_SOLID) {
         graphics->setColor(borderColor);
         for(int i = 0; i < borderWidth; i++) {
             graphics->drawRect(i, i, getWidth() - i * 2, getHeight() - i * 2);

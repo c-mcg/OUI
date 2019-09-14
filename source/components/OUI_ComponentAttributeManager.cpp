@@ -3,7 +3,7 @@
 
 oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle): 
     visible{true}, interactable{true}, permanent{false}, opacity{255}, backgroundColor1{Color::WHITE},
-    backgroundColor2{Color::WHITE}, cursor{Component::CURSOR_DEFAULT}, borderStyle{Component::BORDER_NONE},
+    backgroundColor2{Color::WHITE}, cursor{constants::CURSOR_DEFAULT}, borderStyle{constants::BORDER_NONE},
     borderWidth{1}, borderColor{Color::BLACK}, centeredX{false}, centeredY{false},
     xPercent{0}, yPercent{0}, xOffset{0}, yOffset{0}, z{0}, minWidth{0}, minHeight{0},
     widthPercent{0}, heightPercent{0}, widthOffset{0}, heightOffset{0},

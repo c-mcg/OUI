@@ -23,13 +23,6 @@ namespace oui {
     class Component {
 
         public:
-            static const std::u16string BORDER_NONE;//TODO change to enum
-            static const std::u16string BORDER_SOLID;
-
-            static const std::u16string CURSOR_DEFAULT;
-            static const std::u16string CURSOR_POINTER;
-            static const std::u16string CURSOR_RESIZE;
-            static const std::u16string CURSOR_TEXT;
             static Style* defaultStyle;
 
             static Style* getDefaultComponentStyle();
