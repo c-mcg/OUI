@@ -23,20 +23,9 @@ void oui::MenuAttributeManager::refreshProfile() {
     auto oldOptions = getOptions();
     ContainerAttributeManager::refreshProfile();
 
-    //Options
-    bool optionsChanged = false;
+    // //Options
     std::vector<std::u16string> newOptions = getOptions();
-    if (newOptions.size() != oldOptions.size()) {
-        optionsChanged = true;
-    } else {
-        for (int i = 0; i < newOptions.size(); i++) {
-            if (newOptions[i] != oldOptions[i]) {
-                optionsChanged = true;
-                break;
-            }
-        }
-    }
-    if (optionsChanged) {
+    if (areOptionsDifferent(oldOptions, newOptions)) {
         setOptions(newOptions);
     }
     
@@ -71,7 +60,11 @@ int oui::MenuAttributeManager::getPadding() {
 
 void oui::MenuAttributeManager::updateAttributeVariable(const std::string& attributeName, Attribute value) {
     if (attributeName == "options") {
-        setOptions(value.asStringArray());
+        auto oldOptions = getOptions();
+        auto newOptions = value.asStringArray();
+        if (areOptionsDifferent(oldOptions, newOptions)) {
+            setOptions(newOptions);
+        }
     }
 
     ContainerAttributeManager::updateAttributeVariable(attributeName, value);
@@ -81,9 +74,19 @@ void oui::MenuAttributeManager::setOptions(std::vector<std::u16string> options) 
     Menu* menu = static_cast<Menu*>(component);
     this->options = options;
 
-    // menu->removeAllOptionComponents();
-    // menu->addOptions(this->options);
-    // int borderWidth = getBorderWidth();
-    // int biggestWidth = menu->resetOptions();
-    // parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * getNumOptions() + padding * 2 + borderWidth * 2));
+    menu->setOptions(this->options);
+}
+
+bool oui::MenuAttributeManager::areOptionsDifferent(std::vector<std::u16string> oldOptions, std::vector<std::u16string> newOptions) {
+    if (newOptions.size() != oldOptions.size()) {
+        return true;
+    } else {
+        for (int i = 0; i < newOptions.size(); i++) {
+            if (newOptions[i] != oldOptions[i]) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

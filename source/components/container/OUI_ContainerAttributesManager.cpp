@@ -43,7 +43,7 @@ void oui::ContainerAttributeManager::deriveAttributesForComponent(StyleSheet* st
         }
     }
 
-    if (styleSheet != styleSheet) {
+    if (styleSheet != this->styleSheet) {
         StyleSheet* clone = styleSheet->clone(); //Not inline for debugging
         setStyleSheet(clone);
     }

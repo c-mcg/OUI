@@ -41,11 +41,6 @@ bool oui::Menu::addChild(Component* child) {
     return false;
 }
 
-oui::Button* oui::Menu::addOption(const std::u16string& option) {
-    MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = attributeManager->getNumOptions();
-    return addOption(option, numOptions);
-}
 oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     MenuAttributeManager* attributeManager = getAttributeManager();
     int padding = attributeManager->getPadding();
@@ -113,47 +108,6 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
         biggestWidth = biggestWidth < minWidth ? minWidth : biggestWidth;
     }
 
-    //Reorganize options if inserted
-    if (numOptions > 0) {
-
-        //Rename button at desired index
-        Button* currentButton = static_cast<Button*>(getChild("option_" + std::to_string(index)));
-        currentButton->setName("MENU_TEMP_NAME_" + std::to_string(index));
-
-        //Reorganize remaining items
-        for (int i = index; i < numOptions; i++) {
-            currentButton = static_cast<Button*>(getChild("MENU_TEMP_NAME_" + std::to_string(i)));
-            Button* nextButton = static_cast<Button*>(getChild("option_" + std::to_string(i + 1)));
-
-            //Set next button to temp name
-            if (nextButton != NULL) {
-                nextButton->setName("MENU_TEMP_NAME_" + std::to_string(i + 1));
-            }
-
-            //Rename current button to next button's name
-            currentButton->setName("option_" + std::to_string(i + 1));
-
-            //Set size for button
-            currentButton->setAttribute("width-percent", 100);
-            currentButton->setAttribute("height-percent", 0);
-            currentButton->setAttribute("width-offset", -padding * 2 - borderWidth * 2);
-            currentButton->setAttribute("height-offset", optionHeight);
-
-            //Set location
-            currentButton->setAttribute("x-percent", 0);
-            currentButton->setAttribute("y-percent", 0);
-            currentButton->setAttribute("x-offset", padding + borderWidth);
-            currentButton->setAttribute("y-offset", optionHeight * (i + 1) + padding + borderWidth);
-
-            //Continue calculating biggest width
-            if (currentButton->getWidth() > biggestWidth) {
-                std::u16string currentButtonText = currentButton->getAttributeManager()->getText();
-                biggestWidth = font->getStringWidth(currentButtonText);
-            }
-        }
-
-    }
-
     //Add button child and increment numOptions
     _addChild(b);
     numOptions++;
@@ -177,18 +131,19 @@ oui::Component* oui::Menu::getTarget() {
     return target;
 }
 
-std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options) {
+void oui::Menu::setOptions(const std::vector<std::u16string>& options) {
     MenuAttributeManager* attributeManager = getAttributeManager();
-    int numOptions = attributeManager->getNumOptions();
-    return addOptions(options, numOptions);
-}
-
-std::vector<oui::Button*> oui::Menu::addOptions(const std::vector<std::u16string>& options, int index) {
+    removeAllOptionComponents();
     std::vector<Button*> buttons;
     for (int i = (int) options.size() - 1; i >= 0; i--) {
-        buttons.push_back(addOption(options.at(i), index));
+        buttons.push_back(addOption(options.at(i), i));
     }
-    return buttons;
+    
+    int borderWidth = attributeManager->getBorderWidth();
+    int padding = attributeManager->getPadding();
+    int optionHeight = attributeManager->getOptionHeight();
+    int biggestWidth = resetOptions();
+    parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * options.size() + padding * 2 + borderWidth * 2));
 }
 
 bool oui::Menu::removeOption(int index) {

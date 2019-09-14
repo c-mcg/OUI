@@ -32,6 +32,7 @@ namespace oui {
         private:
 
             void setOptions(std::vector<std::u16string> options);
+            bool areOptionsDifferent(std::vector<std::u16string> oldOptions, std::vector<std::u16string> newOptions);
 
             std::vector<std::u16string> options;
         

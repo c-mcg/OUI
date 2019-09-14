@@ -147,12 +147,12 @@ void oui::Component::drawBorder() {
 void oui::Component::addedToContainer(Container* parent) {
     window = static_cast<Window*>(parent->isWindow() ? parent : parent->window);
     this->parent = parent;
-    attributeManager->deriveAttributesForComponent();
     if (window != NULL) {
         graphics = window->createGraphics(getWidth(), getHeight());
     }
 
     if (graphics != NULL) {
+        attributeManager->deriveAttributesForComponent();
         attributeManager->refreshProfile();
     }
 }
