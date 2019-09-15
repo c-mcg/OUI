@@ -42,6 +42,8 @@ namespace oui {
             void dispatchEvent(ComponentEvent* event);
 
             Window* window;
+            int lastGlobalMouseX;
+            int lastGlobalMouseY;
             
     };
 

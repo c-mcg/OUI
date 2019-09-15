@@ -45,6 +45,7 @@ namespace oui {
             virtual bool isMetaDown();
             virtual bool isShiftDown();
 
+            virtual std::vector<int> getMouseButtonsDown() override;
 
         protected: 
         
@@ -60,7 +61,6 @@ namespace oui {
             int lastMouseY;
 
             std::vector<int> mouseButtonsDown;
-
 
     };
 

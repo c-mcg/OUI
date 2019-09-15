@@ -37,6 +37,8 @@ namespace oui {
             virtual int getMouseX() override;
             virtual int getMouseY() override;
 
+            virtual std::vector<int> getMouseButtonsDown();
+
         protected:
 
             MouseManager* mouseManager;

@@ -52,6 +52,7 @@ oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, Win
 
     this->eventDispatcher->addEventListener("mousedown", std::bind(&Window::onMouseDown, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("keydown", std::bind(&Window::onKeyDown, this, std::placeholders::_1));
+
 }
 
 void oui::Window::initializeWindow(int width, int height) {
@@ -208,6 +209,10 @@ int oui::Window::getMouseX() {
 }
 int oui::Window::getMouseY() {
     return mouseManager->getMouseY();
+}
+
+std::vector<int> oui::Window::getMouseButtonsDown() {
+    return std::vector<int>();
 }
 
 void oui::Window::setContext(Context* context) {

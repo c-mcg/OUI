@@ -5,7 +5,7 @@
 #include "OUI.h"
 
 oui::MouseManager::MouseManager():
-    globalMouseX{0}, globalMouseY{0},
+    globalMouseX{0}, globalMouseY{0}, lastGlobalMouseX{0}, lastGlobalMouseY{0},
     mouseX{0}, mouseY{0},
     window{NULL}
 {
@@ -127,7 +127,31 @@ void oui::MouseManager::onSystemScrollWheel(ComponentEvent* compEvent) {
 }
 
 void oui::MouseManager::process() {
+    int windowX = window->getX();
+    int windowY = window->getY();
+    int windowWidth = window->getWidth();
+    int windowHeight = window->getHeight();
     OS()->getGlobalMousePos(window, globalMouseX, globalMouseY);
+
+    bool mouseOutsideOfWindow = globalMouseX < windowX || globalMouseX > windowX + windowWidth ||
+        globalMouseY < windowY || globalMouseY > windowY +windowHeight;
+    if (mouseOutsideOfWindow &&  (globalMouseX != lastGlobalMouseX || globalMouseY != lastGlobalMouseY)) {
+        MouseEvent* mouseEvent = new MouseEvent(
+            "mousemove", true, NULL, false, 0,
+            window->getMouseButtonsDown(),
+            0, 0, false, false,
+            globalMouseX - lastGlobalMouseX,
+            globalMouseY - lastGlobalMouseY,
+            globalMouseX, globalMouseY,
+            false,
+            windowX - globalMouseX,
+            windowY - globalMouseY
+        );
+        onSystemMouseMove(mouseEvent);
+    }
+
+    lastGlobalMouseX = globalMouseX;
+    lastGlobalMouseY = globalMouseY;
 }
 
 void oui::MouseManager::dispatchEvent(ComponentEvent* event) {

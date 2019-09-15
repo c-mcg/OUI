@@ -276,3 +276,7 @@ bool oui::SDLWindow::isMetaDown() {
 bool oui::SDLWindow::isShiftDown() {
     return shiftDown;
 }
+
+std::vector<int> oui::SDLWindow::getMouseButtonsDown() {
+    return mouseButtonsDown;
+}
