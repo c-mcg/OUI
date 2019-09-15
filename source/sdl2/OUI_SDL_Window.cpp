@@ -158,9 +158,12 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
 
     //TODO native text events: https://wiki.libsdl.org/SDL_TextInputEvent
 
+    int globalMouseX = mouseManager->getGlobalMouseX();
+    int globalMouseY = mouseManager->getGlobalMouseY();
+
     if (event->type == SDL_MOUSEMOTION && (event->motion.windowID == baseWindowId || focused)) {
         MouseEvent* mouseEvent = new MouseEvent("mousemove", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->motion.x, event->motion.y);
-        onSystemMouseMove(mouseEvent);
+        mouseManager->onSystemMouseMove(mouseEvent);
         delete mouseEvent;
     }
 
@@ -171,7 +174,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
         }
 
         MouseEvent* mouseEvent = new MouseEvent("mouseup", true, NULL, false, event->button.button, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
-        onSystemMouseUp(mouseEvent);
+        mouseManager->onSystemMouseUp(mouseEvent);
         delete mouseEvent;
 
         lastMouseX = event->button.x;
@@ -184,7 +187,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
             mouseButtonsDown.push_back(event->button.button);
         }
         MouseEvent* mouseEvent = new MouseEvent("mousedown", true, NULL, false, event->button.button - 1, mouseButtonsDown, 0, 0, false, false, event->button.x - lastMouseX, event->button.x - lastMouseX, globalMouseX, globalMouseY, false, event->button.x, event->button.y);
-        onSystemMouseDown(mouseEvent);
+        mouseManager->onSystemMouseDown(mouseEvent);
         delete mouseEvent;
         lastMouseX = event->button.x;
         lastMouseY = event->button.y;
@@ -200,7 +203,7 @@ void oui::SDLWindow::handleSDLEvent(SDL_Event* event) {
 
     if (event->type == SDL_MOUSEWHEEL && (event->wheel.windowID == baseWindowId || focused)) {
         ScrollEvent* scrollEvent = new ScrollEvent(true, NULL, false, mouseButtonsDown, 0, 0, false, false, 0, 0, globalMouseX, globalMouseY, false, getMouseX(), getMouseY(), event->wheel.y);
-        onSystemScrollWheel(scrollEvent);
+        mouseManager->onSystemScrollWheel(scrollEvent);
         delete scrollEvent;
     }
 

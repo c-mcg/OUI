@@ -31,13 +31,16 @@ oui::Window::~Window() {
     selectedComponent = NULL;
 }
 
-oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, WindowAttributeManager* attributeManager) :
+oui::Window::Window(int width, int height, EventDispatcher* eventDispatcher, WindowAttributeManager* attributeManager, MouseManager* mouseManager) :
     context{NULL}, title{u""},
-    shutdown{false}, focused{false}, globalMouseX{0}, globalMouseY{0},
+    shutdown{false}, focused{false},
     moving{false}, moveOffX{0}, moveOffY{0}, resizing{false}, resizeX{0}, resizeY{0},
     maximized{false}, maximizeX{0}, maximizeY{0}, maximizeWidth{0}, maximizeHeight{0}, editIndex{0},
     selectedComponent{NULL}, cursorType{constants::CURSOR_DEFAULT},
+    mouseManager{mouseManager},
     Container("window", "window", "window", false, eventDispatcher, attributeManager) {//TODO let you set a name
+
+    mouseManager->setWindow(this);
 
     this->eventDispatcher->addEventListener("close", std::bind(&Window::onClose, this, std::placeholders::_1));
     this->eventDispatcher->addEventListener("maximize", std::bind(&Window::onMaximize, this, std::placeholders::_1));
@@ -78,6 +81,8 @@ void oui::Window::initializeWindow(int width, int height) {
     windowBar->addEventListener("mousedown", [this](ComponentEvent* e) {
         auto comp = e->getTarget();
         if (maximized) {
+            int globalMouseX = this->mouseManager->getGlobalMouseX();
+            int globalMouseY = this->mouseManager->getGlobalMouseY();
             onUnmaximize();
 
             // TODO if maximized?
@@ -177,6 +182,34 @@ void oui::Window::initializeWindow(int width, int height) {
     getAttributeManager()->setProfile(u"default");
 }
 
+bool oui::Window::isResizing() {
+    return resizing;
+}
+void oui::Window::startResizing() {
+    int globalMouseX = mouseManager->getGlobalMouseX();
+    int globalMouseY = mouseManager->getGlobalMouseY();
+    closeRightClickMenu();
+    resizeX = getWidth() - (globalMouseX - getX());
+    resizeY = getHeight() - (globalMouseY - getY());
+    resizing = true;
+}
+void oui::Window::stopResizing() {
+    this->resizing = false;
+}
+bool oui::Window::isMoving() {
+    return moving;
+}
+void oui::Window::stopMoving() {
+    this->moving = false;
+}
+
+int oui::Window::getMouseX() {
+    return mouseManager->getMouseX();
+}
+int oui::Window::getMouseY() {
+    return mouseManager->getMouseY();
+}
+
 void oui::Window::setContext(Context* context) {
     this->context = context;
 }
@@ -194,8 +227,10 @@ int oui::Window::process() {
         return -1;
     }
 
-    OS()->getGlobalMousePos(this, globalMouseX, globalMouseY);
-    
+    // Handle global mouse movement
+    mouseManager->process();    
+    int globalMouseX = mouseManager->getGlobalMouseX();
+    int globalMouseY = mouseManager->getGlobalMouseY();
 
     if (moving) {
         int newX = globalMouseX - moveOffX;
@@ -290,92 +325,8 @@ void oui::Window::onSystemBlur(ComponentEvent* compEvent) {
     delete event;
 }
 
-void oui::Window::onSystemMouseMove(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
-    mouseX = rawMouseEvent->windowX;
-    mouseY = rawMouseEvent->windowY;
-    MouseEvent* event = MouseEvent::create("mousemove", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-
-    if (!resizing) {
-        // TODO math util
-        int dist = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
-        if (dist < 15) {
-            setCursor(constants::CURSOR_RESIZE);
-        } else {
-            setCursor(event->getTarget()->getCursor());
-        }
-    }
 
 
-	setHovered(false);
-	event->getTarget()->setHovered(true);
-
-    eventDispatcher->dispatchEvent(event);
-    delete event;
-}
-
-void oui::Window::onSystemMouseUp(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
-    mouseX = rawMouseEvent->windowX;
-    mouseY = rawMouseEvent->windowY;
-
-    MouseEvent* event = MouseEvent::create("mouseup", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-    Component* c = event->getTarget();
-    bool sendClickEvent = c->isMouseDown();
-    moving = false;
-    resizing = false;
-    setMouseDown(false);
-    eventDispatcher->dispatchEvent(event);
-    delete event;
-    
-    // Fire click event
-    if (sendClickEvent) {
-        MouseEvent* clickEvent = MouseEvent::create("click", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-        eventDispatcher->dispatchEvent(clickEvent);
-        delete clickEvent;
-    }
-}
-
-
-void oui::Window::onSystemMouseDown(ComponentEvent* compEvent) {
-    MouseEvent* rawMouseEvent = static_cast<MouseEvent*>(compEvent);
-    mouseX = rawMouseEvent->windowX;
-    mouseY = rawMouseEvent->windowY;
-    MouseEvent* event = MouseEvent::create("mousedown", true, this, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
-    Component* comp = event->getTarget();
-
-    Menu* menu = static_cast<Menu*>(getChild("rightClickMenu"));
-    if (menu != NULL && comp != menu) {
-        menu->setAttribute("visible", false);
-    }
-
-    switch(event->button) {
-        case 0: // Left Click
-            int distToResize = (int) abs(sqrt(pow(globalMouseX - getX() - getWidth(), 2) + pow(globalMouseY - getY() - getHeight(), 2)));
-            if (distToResize < 15) {
-                closeRightClickMenu();
-                resizeX = getWidth() - (globalMouseX - getX());
-                resizeY = getHeight() - (globalMouseY - getY());
-                resizing = true;
-                return;
-            }
-            break;
-    }
-
-    window->setMouseDown(false);
-    comp->setMouseDown(true);
-    setSelectedComponent(comp);
-    
-    eventDispatcher->dispatchEvent(event);
-    delete event;
-}
-
-void oui::Window::onSystemScrollWheel(ComponentEvent* compEvent) {
-    ScrollEvent* rawScrollEvent = static_cast<ScrollEvent*>(compEvent);
-    ScrollEvent* event = ScrollEvent::create(true, this, rawScrollEvent->buttons, rawScrollEvent->movementX, rawScrollEvent->movementY, rawScrollEvent->scrollDistance);
-    eventDispatcher->dispatchEvent(event);
-    delete event;
-}
 
 void oui::Window::onSystemKeyDown(ComponentEvent* compEvent) {
     KeyboardEvent* event = KeyboardEvent::create("keydown", true, this, static_cast<KeyboardEvent*>(compEvent)->key);

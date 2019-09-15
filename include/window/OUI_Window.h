@@ -13,6 +13,7 @@
 #include "event/OUI_ComponentEvent.h"
 #include "event/OUI_WindowEventDispatcher.h"
 #include "window/OUI_WindowAttributeManager.h"
+#include "window/OUI_MouseManager.h"
 
 namespace oui {
 
@@ -25,6 +26,20 @@ namespace oui {
     };
 
     class Window: public Container {
+
+        public:
+
+            bool isResizing();
+            void startResizing();
+            void stopResizing();
+            bool isMoving();
+            void stopMoving();
+            virtual int getMouseX() override;
+            virtual int getMouseY() override;
+
+        protected:
+
+            MouseManager* mouseManager;
         
         private:
 
@@ -34,11 +49,9 @@ namespace oui {
 
         private: bool shutdown;
 
-        //Basic window properties
+        // Basic window properties
         private: std::u16string title;
         protected: std::u16string cursorType;
-        protected: int globalMouseX;
-        protected: int globalMouseY;
         private: bool maximized;
         protected: bool minimized;
         private: int maximizeX;
@@ -50,8 +63,7 @@ namespace oui {
         private: std::vector<EditEvent*> editEvents;
         private: std::vector<QueuedEvent*> queuedEvents;
                   
-
-         //Active window properties
+        // Active window properties
         protected: bool moving;
         private: int moveOffX;
         private: int moveOffY;
@@ -62,7 +74,7 @@ namespace oui {
         private: Component* selectedComponent;
 
         public: OUI_API ~Window();
-        public: OUI_API Window(int width=0, int height=0, EventDispatcher* eventDispatcher=new WindowEventDispatcher(), WindowAttributeManager* attributeManager = new WindowAttributeManager());
+        public: OUI_API Window(int width=0, int height=0, EventDispatcher* eventDispatcher=new WindowEventDispatcher(), WindowAttributeManager* attributeManager = new WindowAttributeManager(), MouseManager* MouseManager=new MouseManager());
 
         protected: void initializeWindow(int width, int height);
 
@@ -118,6 +130,9 @@ namespace oui {
         public: OUI_API virtual void setPosition(int x, int y);
         public: OUI_API virtual bool setCursor(std::u16string cursor);
 
+        public: OUI_API void onSystemKeyDown(ComponentEvent* event);
+        public: OUI_API void onSystemKeyUp(ComponentEvent* event);
+        public: OUI_API void onSystemKeyTyped(ComponentEvent* event);
         public: OUI_API virtual void onSystemClose(ComponentEvent* event=NULL);
         public: OUI_API virtual void onSystemMinimize(ComponentEvent* event=NULL);
         public: OUI_API virtual void onSystemUnminimize(ComponentEvent* event=NULL);

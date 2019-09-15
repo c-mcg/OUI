@@ -137,8 +137,8 @@ namespace oui {
         public: OUI_API bool needsGraphicsUpdate();
         
     //State
-        public: OUI_API int getMouseX();
-        public: OUI_API int getMouseY();
+        public: virtual OUI_API int getMouseX();
+        public: virtual OUI_API int getMouseY();
         //Sets this as the active component in the window
         public: OUI_API virtual void setSelected(bool selected);//TODO it's vague wether this is callable from a runtime
         public: OUI_API bool isSelected();
