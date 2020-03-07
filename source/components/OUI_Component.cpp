@@ -405,8 +405,6 @@ bool oui::Component::isHovered() {
 
 /* END OF STATE */
 
-/* START OF STYLE */
-
 std::u16string oui::Component::getCursor() {
     return attributeManager->getCursor();
 }

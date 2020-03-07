@@ -38,6 +38,9 @@ namespace oui {
 
             virtual OUI_API ComponentAttributeManager* getAttributeManager();
 
+            std::u16string OUI_API getCursor();
+            virtual OUI_API std::vector<std::u16string> getRightClickOptions();
+
         protected:
             Window* window;
             Container* parent;
@@ -148,10 +151,6 @@ namespace oui {
         public: OUI_API virtual void setHovered(bool hovered);
         public: OUI_API virtual bool isHovered();
 
-    //Styling
-        //Creates a new StyleSheet via `Component::getAllStyleSheets()` and applies them to this component
-        public: OUI_API std::u16string getCursor();
-        public: OUI_API virtual std::vector<std::u16string> getRightClickOptions();
         public: OUI_API virtual void refreshProfile();
 /* END OF METHODS */
     };
