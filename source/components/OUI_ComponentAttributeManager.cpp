@@ -1,5 +1,8 @@
 #include "components/OUI_ComponentAttributeManager.h"
 #include "components/OUI_Component.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle): 
     visible{true}, interactable{true}, permanent{false}, opacity{255}, backgroundColor1{Color::WHITE},
@@ -24,30 +27,30 @@ oui::ComponentAttributeManager::ComponentAttributeManager(Style* defaultStyle):
     hoverProfile->addDefaultProfile(defaultProfile);
 
     std::unordered_map<std::string, AttributeVariableInfo> variableMap({
-        { "x-percent", {AttributeManager::INT, &xPercent} },
-        { "y-percent", {AttributeManager::INT, &yPercent} },
-        { "x-offset", {AttributeManager::INT, &xOffset} },
-        { "y-offset", {AttributeManager::INT, &yOffset} },
-        { "z-index", {AttributeManager::INT, &z} },
-        { "interactable", {AttributeManager::BOOL, &interactable} },
-        { "min-width", {AttributeManager::INT, &minWidth} },
-        { "min-height", {AttributeManager::INT, &minHeight} },
-        { "width-percent", {AttributeManager::INT, &widthPercent} },
-        { "height-percent", {AttributeManager::INT, &heightPercent} },
-        { "width-offset", {AttributeManager::INT, &widthOffset} },
-        { "height-offset", {AttributeManager::INT, &heightOffset} },
-        { "bg-color1", {AttributeManager::COLOR, &backgroundColor1} },
-        { "bg-color2", {AttributeManager::COLOR, &backgroundColor2} },
-        { "centered-x", {AttributeManager::BOOL, &centeredX} },
-        { "centered-y", {AttributeManager::BOOL, &centeredY} },
-        { "border-color", {AttributeManager::COLOR, &borderColor} },
-        { "border-width", {AttributeManager::INT, &borderWidth} },
-        { "border-style", {AttributeManager::STRING, &borderStyle} },
-        { "opacity", {AttributeManager::INT, &opacity} },
-        { "visible", {AttributeManager::BOOL, &visible} },
-        { "permanent", {AttributeManager::BOOL, &permanent} },
-        { "right-click-options", {AttributeManager::STRING_ARRAY, &rightClickOptions} },
-        { "cursor", {AttributeManager::STRING, &cursor} },
+        { X_PERCENT, {AttributeManager::INT, &xPercent} },
+        { Y_PERCENT, {AttributeManager::INT, &yPercent} },
+        { X_OFFSET, {AttributeManager::INT, &xOffset} },
+        { Y_OFFSET, {AttributeManager::INT, &yOffset} },
+        { Z_INDEX, {AttributeManager::INT, &z} },
+        { INTERACTABLE, {AttributeManager::BOOL, &interactable} },
+        { MIN_WIDTH, {AttributeManager::INT, &minWidth} },
+        { MIN_HEIGHT, {AttributeManager::INT, &minHeight} },
+        { WIDTH_PERCENT, {AttributeManager::INT, &widthPercent} },
+        { HEIGHT_PERCENT, {AttributeManager::INT, &heightPercent} },
+        { WIDTH_OFFSET, {AttributeManager::INT, &widthOffset} },
+        { HEIGHT_OFFSET, {AttributeManager::INT, &heightOffset} },
+        { BACKGROUND_COLOR_1, {AttributeManager::COLOR, &backgroundColor1} },
+        { BACKGROUND_COLOR_2, {AttributeManager::COLOR, &backgroundColor2} },
+        { CENTERED_X, {AttributeManager::BOOL, &centeredX} },
+        { CENTERED_Y, {AttributeManager::BOOL, &centeredY} },
+        { BORDER_COLOR, {AttributeManager::COLOR, &borderColor} },
+        { BORDER_WIDTH, {AttributeManager::INT, &borderWidth} },
+        { BORDER_STYLE, {AttributeManager::STRING, &borderStyle} },
+        { OPACITY, {AttributeManager::INT, &opacity} },
+        { VISIBLE, {AttributeManager::BOOL, &visible} },
+        { PERMANENT, {AttributeManager::BOOL, &permanent} },
+        { RIGHT_CLICK_OPTIONS, {AttributeManager::STRING_ARRAY, &rightClickOptions} },
+        { CURSOR, {AttributeManager::STRING, &cursor} },
     });
 
     updateVariableMap(variableMap);

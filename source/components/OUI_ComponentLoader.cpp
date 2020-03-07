@@ -8,6 +8,9 @@
 #include "components/panel/OUI_Panel.h"
 #include "components/label/OUI_Label.h"
 #include "components/scrollpanel/OUI_ScrollPanel.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 #include "util/OUI_StringUtil.h"
 
@@ -200,7 +203,7 @@ bool oui::ComponentLoader::loadComponents(const std::u16string& path) {
 
 oui::Panel* oui::ComponentLoader::toPanel() {
     Panel* panel = new Panel("loadedpanel", "");
-    panel->parseAttribute("size", u"100 100 0 0");
+    panel->parseAttribute(SIZE, u"100 100 0 0");
     panel->addOSALStyle(attributes);
     for(unsigned int i = 0; i < components.size(); i++) {
         panel->addChild(components.at(i));

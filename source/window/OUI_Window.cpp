@@ -13,6 +13,9 @@
 #include "event/OUI_WindowEvent.h"
 #include "event/OUI_ScrollEvent.h"
 #include "event/OUI_KeyboardEvent.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 #include <functional>
 
@@ -62,22 +65,22 @@ void oui::Window::initializeWindow(int width, int height) {
 
     width = width / 2;
     height = height / 2;
-    setAttribute("width-offset", width);
-    setAttribute("height-offset", height);
+    setAttribute(WIDTH_OFFSET, width);
+    setAttribute(HEIGHT_OFFSET, height);
     int widthOffset = width;
     int heightOffset = height;
     
 
     Panel* windowBar = new Panel("window-bar", "");
-    windowBar->setAttribute("permanent", true);
-    windowBar->setAttribute("cursor", u"pointer");
-    windowBar->setAttribute("cursor", u"pointer");
-    windowBar->parseAttribute("size", u"100 0 0 26");
-    windowBar->setAttribute("z-index", 10);
-    windowBar->setAttribute("bg-color1", Color(208, 208, 208, 255));
-    windowBar->setAttribute("bg-color2", Color(208, 208, 208, 255));
-    windowBar->setAttribute("bg-color1", Color::BLACK);
-    windowBar->setAttribute("bg-color2", Color::BLACK);
+    windowBar->setAttribute(PERMANENT, true);
+    windowBar->setAttribute(CURSOR, u"pointer");
+    windowBar->setAttribute(CURSOR, u"pointer");
+    windowBar->parseAttribute(SIZE, u"100 0 0 26");
+    windowBar->setAttribute(Z_INDEX, 10);
+    windowBar->setAttribute(BACKGROUND_COLOR_1, Color(208, 208, 208, 255));
+    windowBar->setAttribute(BACKGROUND_COLOR_2, Color(208, 208, 208, 255));
+    windowBar->setAttribute(BACKGROUND_COLOR_1, Color::BLACK);
+    windowBar->setAttribute(BACKGROUND_COLOR_2, Color::BLACK);
 
     windowBar->addEventListener("mousedown", [this](ComponentEvent* e) {
         auto comp = e->getTarget();
@@ -89,7 +92,7 @@ void oui::Window::initializeWindow(int width, int height) {
             // TODO if maximized?
             moveOffX = getWidth() / 2;
             moveOffY = comp->getHeight() / 2;
-            parseAttribute("location", u"0 0 " + intToString(globalMouseX - moveOffX) + u" " + intToString(globalMouseY - moveOffY));
+            parseAttribute(LOCATION, u"0 0 " + intToString(globalMouseX - moveOffX) + u" " + intToString(globalMouseY - moveOffY));
         } else {
             moveOffX = getMouseX();
             moveOffY = getMouseY();
@@ -103,11 +106,11 @@ void oui::Window::initializeWindow(int width, int height) {
     });
 
     Label* titleLbl = new Label("window-title", "windowText");
-    titleLbl->parseAttribute("location", u"0 50 4 0");
-    titleLbl->parseAttribute("font", u"notoserif 14");
-    titleLbl->setAttribute("centered-y", true);
-    titleLbl->setAttribute("auto-size", true);
-    titleLbl->setAttribute("interactable", false);
+    titleLbl->parseAttribute(LOCATION, u"0 50 4 0");
+    titleLbl->parseAttribute(FONT, u"notoserif 14");
+    titleLbl->setAttribute(CENTERED_Y, true);
+    titleLbl->setAttribute(AUTO_SIZE, true);
+    titleLbl->setAttribute(INTERACTABLE, false);
 
     Button* minimizeBtn = new Button("minimizeBtn", "window-button");
     minimizeBtn->addEventConsumer("mousedown");
@@ -121,12 +124,12 @@ void oui::Window::initializeWindow(int width, int height) {
         }
         e->stopPropagation();
     });
-    minimizeBtn->parseAttribute("location", u"100 0 -73 0");
-    minimizeBtn->parseAttribute("size", u"0 0 25 25");
-    minimizeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
-    minimizeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
-    minimizeBtn->setAttribute("border-style", u"solid");
-    minimizeBtn->setAttribute("image", u"minimize-btn.png");
+    minimizeBtn->parseAttribute(LOCATION, u"100 0 -73 0");
+    minimizeBtn->parseAttribute(SIZE, u"0 0 25 25");
+    minimizeBtn->setAttribute(BACKGROUND_COLOR_1, Color(200, 200, 200, 255));
+    minimizeBtn->setAttribute(BACKGROUND_COLOR_2, Color(200, 200, 200, 255));
+    minimizeBtn->setAttribute(BORDER_STYLE, u"solid");
+    minimizeBtn->setAttribute(IMAGE, u"minimize-btn.png");
 
     Button* maximizeBtn = new Button("maximizeBtn", "window-button");
     maximizeBtn->addEventConsumer("mousedown");
@@ -138,12 +141,12 @@ void oui::Window::initializeWindow(int width, int height) {
             onSystemMaximize();
         }
     });
-    maximizeBtn->parseAttribute("location", u"100 0 -49 0");
-    maximizeBtn->parseAttribute("size", u"0 0 25 25");
-    maximizeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
-    maximizeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
-    maximizeBtn->setAttribute("border-style", u"solid");
-    maximizeBtn->setAttribute("image", u"maximize-btn1.png");
+    maximizeBtn->parseAttribute(LOCATION, u"100 0 -49 0");
+    maximizeBtn->parseAttribute(SIZE, u"0 0 25 25");
+    maximizeBtn->setAttribute(BACKGROUND_COLOR_1, Color(200, 200, 200, 255));
+    maximizeBtn->setAttribute(BACKGROUND_COLOR_2, Color(200, 200, 200, 255));
+    maximizeBtn->setAttribute(BORDER_STYLE, u"solid");
+    maximizeBtn->setAttribute(IMAGE, u"maximize-btn1.png");
 
     Button* closeBtn = new Button("closeBtn", "window-button");
     closeBtn->addEventListener("click", [this](ComponentEvent* e) {
@@ -153,12 +156,12 @@ void oui::Window::initializeWindow(int width, int height) {
         delete windowEvent;
     });
 
-    closeBtn->parseAttribute("location", u"100 0 -25 0");
-    closeBtn->parseAttribute("size", u"0 0 25 25");
-    closeBtn->setAttribute("bg-color1", Color(200, 200, 200, 255));
-    closeBtn->setAttribute("bg-color2", Color(200, 200, 200, 255));
-    closeBtn->setAttribute("border-style", u"solid");
-    closeBtn->setAttribute("image", u"close-btn.png");
+    closeBtn->parseAttribute(LOCATION, u"100 0 -25 0");
+    closeBtn->parseAttribute(SIZE, u"0 0 25 25");
+    closeBtn->setAttribute(BACKGROUND_COLOR_1, Color(200, 200, 200, 255));
+    closeBtn->setAttribute(BACKGROUND_COLOR_2, Color(200, 200, 200, 255));
+    closeBtn->setAttribute(BORDER_STYLE, u"solid");
+    closeBtn->setAttribute(IMAGE, u"close-btn.png");
 
     windowBar->addChild(titleLbl);
     windowBar->addChild(minimizeBtn);
@@ -167,19 +170,19 @@ void oui::Window::initializeWindow(int width, int height) {
     addChild(windowBar);
 
     Menu* menu = new Menu("rightClickMenu", "rightClickMenu");
-    menu->parseAttribute("size", u"0 0 200 100");
-    menu->setAttribute("visible", false);
-    menu->setAttribute("z-index", 15);
+    menu->parseAttribute(SIZE, u"0 0 200 100");
+    menu->setAttribute(VISIBLE, false);
+    menu->setAttribute(Z_INDEX, 15);
 
     menu->addEventListener("click", [this, menu](ComponentEvent* e) {
-        menu->setAttribute("visible", false);
+        menu->setAttribute(VISIBLE, false);
         setSelectedComponent(menu->getTarget());
     });
     addChild(menu);
 
-    setAttribute("bg-color1", Color(255, 255, 255, 255));
-    setAttribute("bg-color2", Color(255, 255, 255, 255));
-    setAttribute("border-style", u"solid");
+    setAttribute(BACKGROUND_COLOR_1, Color(255, 255, 255, 255));
+    setAttribute(BACKGROUND_COLOR_2, Color(255, 255, 255, 255));
+    setAttribute(BORDER_STYLE, u"solid");
     getAttributeManager()->setProfile(u"default");
 }
 
@@ -243,13 +246,13 @@ int oui::Window::process() {
         int xOffset = attributeManager->getXOffset();
         int yOffset = attributeManager->getYOffset();
         if (newX != xOffset || newY != yOffset) {
-            this->setAttribute("x-offset", newX);
-            this->setAttribute("y-offset", newY);
+            this->setAttribute(X_OFFSET, newX);
+            this->setAttribute(Y_OFFSET, newY);
         }
     }
 
     if (resizing) {
-        this->parseAttribute("size", u"0 0 " + intToString(globalMouseX - getX() + resizeX) + u" " + intToString(globalMouseY - getY() + resizeY));
+        this->parseAttribute(SIZE, u"0 0 " + intToString(globalMouseX - getX() + resizeX) + u" " + intToString(globalMouseY - getY() + resizeY));
     }
 
 
@@ -369,7 +372,7 @@ void oui::Window::onUnminimize(ComponentEvent* compEvent) {
 void oui::Window::onMaximize(ComponentEvent* compEvent) {
     Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
-        maximizeBtn->setAttribute("image", u"maximize-btn2.png");
+        maximizeBtn->setAttribute(IMAGE, u"maximize-btn2.png");
     }
     maximizeX = getX();
     maximizeY = getY();
@@ -385,8 +388,8 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
 
     OS()->getMaximizeSize(this, maximizedX, maximizedY, maximizedWidth, maximizedHeight);
 
-    parseAttribute("location", u"0 0 " + intToString(maximizedX) + u" " + intToString(maximizedY));
-    parseAttribute("size", u"0 0 " + intToString(maximizedWidth) + u" " + intToString(maximizedHeight));
+    parseAttribute(LOCATION, u"0 0 " + intToString(maximizedX) + u" " + intToString(maximizedY));
+    parseAttribute(SIZE, u"0 0 " + intToString(maximizedWidth) + u" " + intToString(maximizedHeight));
     maximized = true;
     refreshProfile();
 }
@@ -394,12 +397,12 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
 void oui::Window::onUnmaximize(ComponentEvent* compEvent) {
     Button* maximizeBtn = static_cast<Button*>(((Container*) getChild("window-bar"))->getChild("maximizeBtn"));
     if (maximizeBtn != NULL) {
-        maximizeBtn->setAttribute("image", u"maximize-btn1.png");
+        maximizeBtn->setAttribute(IMAGE, u"maximize-btn1.png");
     }
     maximized = false;
 
-    parseAttribute("location", u"0 0 " + intToString(maximizeX) + u" " + intToString(maximizeY));
-    parseAttribute("size", u"0 0 " + intToString(maximizeWidth) + u" " + intToString(maximizeHeight));
+    parseAttribute(LOCATION, u"0 0 " + intToString(maximizeX) + u" " + intToString(maximizeY));
+    parseAttribute(SIZE, u"0 0 " + intToString(maximizeWidth) + u" " + intToString(maximizeHeight));
     refreshProfile();
 }
 
@@ -429,15 +432,15 @@ void oui::Window::onMouseDown(ComponentEvent* compEvent) {
             options.push_back(u" Inspect");
 #endif
 
-            menu->setAttribute("options", options);
+            menu->setAttribute(OPTIONS, options);
             if (mouseX + menu->getWidth() > getWidth()) {
                 mouseX = getWidth() - menu->getWidth();
             }
             if (mouseY + menu->getHeight() > getHeight()) {
                 mouseY -= menu->getHeight();
             }
-            menu->parseAttribute("location", u"0 0 " + intToString(mouseX) + u" " + intToString(mouseY));
-            menu->setAttribute("visible", true);
+            menu->parseAttribute(LOCATION, u"0 0 " + intToString(mouseX) + u" " + intToString(mouseY));
+            menu->setAttribute(VISIBLE, true);
             menu->setTarget(c);
         }
     }
@@ -479,7 +482,7 @@ void oui::Window::setTitle(const std::u16string& title) {
     if (getChild("window-bar") != NULL) {
         Label* titleLbl = static_cast<Label*>(((Container*) getChild("window-bar"))->getChild("window-title"));
         if (titleLbl != NULL) {
-            titleLbl->setAttribute("text", title);
+            titleLbl->setAttribute(TEXT, title);
         }
     }
 }
@@ -562,7 +565,7 @@ oui::Component* oui::Window::getSelectedComponent() {
 void oui::Window::closeRightClickMenu() {
     Component* menu = getChild("rightClickMenu");
     if (menu != NULL && menu->getAttributeManager()->isVisible()) {
-        menu->setAttribute("visible", false);
+        menu->setAttribute(VISIBLE, false);
     }
 }
 
@@ -576,7 +579,7 @@ void oui::Window::setVisible(bool visible) {
         attributeManager->setProfile(u"default");
     }
 
-    setAttribute("visible", visible);
+    setAttribute(VISIBLE, visible);
 }
 
 

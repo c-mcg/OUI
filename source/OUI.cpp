@@ -5,6 +5,9 @@
 #include <thread>
 #include "attribute/OUI_AttributeSubstitution.h"
 #include "os/OUI_OS.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 #ifdef __linux__//LINUX
     #include "os/linux/OUI_Linux.h"
@@ -89,13 +92,13 @@ int oui::initialize() {
     });
 
     //Component
-    AttributeSubstitution::addSubstitution("size", {"width-percent", "height-percent", "width-offset", "height-offset"});
-    AttributeSubstitution::addSubstitution("location", {"x-percent", "y-percent", "x-offset", "y-offset"});
-    AttributeSubstitution::addSubstitution("centered", std::vector<std::string>({"centered-x", "centered-y"}), AttributeSubstitution::APPLY_WHOLE);
-    AttributeSubstitution::addSubstitution("bg-color", std::vector<std::string>({"bg-color1", "bg-color2"}), AttributeSubstitution::APPLY_WHOLE);
+    AttributeSubstitution::addSubstitution(SIZE, {"width-percent", "height-percent", "width-offset", "height-offset"});
+    AttributeSubstitution::addSubstitution(LOCATION, {"x-percent", "y-percent", "x-offset", "y-offset"});
+    AttributeSubstitution::addSubstitution(CENTERED, std::vector<std::string>({"centered-x", "centered-y"}), AttributeSubstitution::APPLY_WHOLE);
+    AttributeSubstitution::addSubstitution(BACKGROUND_COLOR, std::vector<std::string>({"bg-color1", "bg-color2"}), AttributeSubstitution::APPLY_WHOLE);
 
     //FONT (button, label, textfield)
-    AttributeSubstitution::addSubstitution("font", std::vector<std::string>({"font-face", "font-size"}));
+    AttributeSubstitution::addSubstitution(FONT, std::vector<std::string>({"font-face", "font-size"}));
 
     OS()->initialize();
 

@@ -7,6 +7,9 @@
 #include "util/OUI_StringUtil.h"
 #include "event/OUI_KeyboardEvent.h"
 #include "event/OUI_MenuEvent.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::TextField::~TextField() {
 }
@@ -20,19 +23,19 @@ oui::TextField::TextField(const std::string& name, const std::string& classes, E
     typing = false;
 
     // TODO use default styling like other comps
-    setAttribute("text", u"");
-    parseAttribute("font", u"notoserif 14");
-    setAttribute("bg-color1", Color(240, 240, 240, 255));
-    setAttribute("bg-color2", Color(230, 230, 230, 255));
-    setAttribute("border-style", u"solid");
-    setAttribute("border-color", Color(0, 0, 0, 64));
-    setAttribute("text-color", Color(0, 0, 0, 255));
-    setAttribute("cursor", u"text");
-    setAttribute("carat-width", 1);
-    setAttribute("carat-color", Color(0, 0, 0, 255));
-    setAttribute("carat-h-offset", 2);
-    setAttribute("highlight-color", Color(200, 200, 255, 255));
-    parseAttribute("size", u"0 0 150 25");
+    setAttribute(TEXT, u"");
+    parseAttribute(FONT, u"notoserif 14");
+    setAttribute(BACKGROUND_COLOR_1, Color(240, 240, 240, 255));
+    setAttribute(BACKGROUND_COLOR_2, Color(230, 230, 230, 255));
+    setAttribute(BORDER_STYLE, u"solid");
+    setAttribute(BORDER_COLOR, Color(0, 0, 0, 64));
+    setAttribute(TEXT_COLOR, Color(0, 0, 0, 255));
+    setAttribute(CURSOR, u"text");
+    setAttribute(CARAT_WIDTH, 1);
+    setAttribute(CARAT_COLOR, Color(0, 0, 0, 255));
+    setAttribute(CARAT_H_OFFSET, 2);
+    setAttribute(HIGHLIGHT_COLOR, Color(200, 200, 255, 255));
+    parseAttribute(SIZE, u"0 0 150 25");
     
     addEventListener("mousedown", std::bind(&TextField::onMouseDown, this, std::placeholders::_1));
     addEventListener("keytyped", std::bind(&TextField::onKeyTyped, this, std::placeholders::_1));
@@ -264,7 +267,7 @@ void oui::TextField::setSelected(bool selected) {
 }
 
 void oui::TextField::setText(const std::u16string& text) {
-    setAttribute("text", text);
+    setAttribute(TEXT, text);
 }
 
 void oui::TextField::insertString(const std::u16string& string) {
@@ -278,7 +281,7 @@ void oui::TextField::insertString(const std::u16string& string) {
         moveCarat(true);
     }
     flagGraphicsUpdate();
-    setAttribute("text", text);
+    setAttribute(TEXT, text);
 }
 void oui::TextField::insertChar(char c) {
     TextFieldAttributeManager* attributeManager = getAttributeManager();
@@ -289,7 +292,7 @@ void oui::TextField::insertChar(char c) {
     text.insert(caratIndex, 1, c);
     moveCarat(true);
     flagGraphicsUpdate();
-    setAttribute("text", text);
+    setAttribute(TEXT, text);
 }
 void oui::TextField::deleteChar(bool backspace) {
     TextFieldAttributeManager* attributeManager = getAttributeManager();
@@ -320,7 +323,7 @@ void oui::TextField::deleteChar(bool backspace) {
             }
         }
     }
-    setAttribute("text", text);
+    setAttribute(TEXT, text);
 }
 void oui::TextField::moveCarat(bool right) {
     if (caratIndex == selectStart) {

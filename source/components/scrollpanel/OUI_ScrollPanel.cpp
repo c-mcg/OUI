@@ -5,6 +5,9 @@
 #include "components/button/OUI_Button.h"
 #include "event/OUI_ScrollEvent.h"
 #include "util/OUI_StringUtil.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::ScrollPanel::~ScrollPanel() {
 
@@ -22,22 +25,22 @@ oui::ScrollPanel::ScrollPanel(const std::string& name, const std::string& classe
 void oui::ScrollPanel::createScrollBar(bool vertical) {
 
     Container* scrollBar = new Container("scrollbar", std::string(vertical ? "vertical" : "horizontal") + "ScrollBar", "scrollBar");
-    scrollBar->setAttribute("permanent", true);
+    scrollBar->setAttribute(PERMANENT, true);
 
-    scrollBar->setAttribute("width-percent", vertical ? 0 : 100);
-    scrollBar->setAttribute("height-percent", vertical ? 100 : 0);
-    scrollBar->setAttribute("width-offset", vertical ? SCROLLBAR_SIZE : -SCROLLBAR_SIZE);
-    scrollBar->setAttribute("height-offset", vertical ? -SCROLLBAR_SIZE : SCROLLBAR_SIZE);
+    scrollBar->setAttribute(WIDTH_PERCENT, vertical ? 0 : 100);
+    scrollBar->setAttribute(HEIGHT_PERCENT, vertical ? 100 : 0);
+    scrollBar->setAttribute(WIDTH_OFFSET, vertical ? SCROLLBAR_SIZE : -SCROLLBAR_SIZE);
+    scrollBar->setAttribute(HEIGHT_OFFSET, vertical ? -SCROLLBAR_SIZE : SCROLLBAR_SIZE);
 
 
-    scrollBar->setAttribute("x-percent", vertical ? 100 : 0);
-    scrollBar->setAttribute("y-percent", vertical ? 0 : 100);
-    scrollBar->setAttribute("x-offset", vertical ? -SCROLLBAR_SIZE : 0);
-    scrollBar->setAttribute("y-offset", vertical ? 0 : -SCROLLBAR_SIZE);
+    scrollBar->setAttribute(X_PERCENT, vertical ? 100 : 0);
+    scrollBar->setAttribute(Y_PERCENT, vertical ? 0 : 100);
+    scrollBar->setAttribute(X_OFFSET, vertical ? -SCROLLBAR_SIZE : 0);
+    scrollBar->setAttribute(Y_OFFSET, vertical ? 0 : -SCROLLBAR_SIZE);
 
-    scrollBar->setAttribute("bg-color1", Color(230, 230, 230, 255));
-    scrollBar->setAttribute("bg-color2", Color(230, 230, 230, 255));
-    scrollBar->setAttribute("z-index", 10);
+    scrollBar->setAttribute(BACKGROUND_COLOR_1, Color(230, 230, 230, 255));
+    scrollBar->setAttribute(BACKGROUND_COLOR_2, Color(230, 230, 230, 255));
+    scrollBar->setAttribute(Z_INDEX, 10);
 
     scrollBar->addEventListener("scroll", [this, vertical](ComponentEvent* compEvent) {
         ScrollEvent* event = static_cast<ScrollEvent*>(compEvent);
@@ -49,17 +52,17 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     });
 
     Button* button1 = new Button(vertical ? "upBtn" : "leftBtn", "scrollbarButton");
-    button1->setAttribute("width-offset", SCROLLBAR_SIZE);
-    button1->setAttribute("height-offset", SCROLLBAR_SIZE);
-    button1->parseAttribute("location", u"0 0 0 0");
+    button1->setAttribute(WIDTH_OFFSET, SCROLLBAR_SIZE);
+    button1->setAttribute(HEIGHT_OFFSET, SCROLLBAR_SIZE);
+    button1->parseAttribute(LOCATION, u"0 0 0 0");
 
-    button1->setAttribute("bg-color1", Color::NONE);
-    button1->setAttribute("bg-color2", Color::NONE);
-    button1->setAttribute("border-style", u"none");
+    button1->setAttribute(BACKGROUND_COLOR_1, Color::NONE);
+    button1->setAttribute(BACKGROUND_COLOR_2, Color::NONE);
+    button1->setAttribute(BORDER_STYLE, u"none");
 
-    button1->setAttribute("image", vertical ? "up-arrow.png" : "left-arrow.png");
-    button1->setAttribute("bg-color1", Color(190, 190, 190, 255), u"hover");
-    button1->setAttribute("bg-color2", Color(190, 190, 190, 255), u"hover");
+    button1->setAttribute(IMAGE, vertical ? "up-arrow.png" : "left-arrow.png");
+    button1->setAttribute(BACKGROUND_COLOR_1, Color(190, 190, 190, 255), u"hover");
+    button1->setAttribute(BACKGROUND_COLOR_2, Color(190, 190, 190, 255), u"hover");
 
     button1->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
@@ -72,21 +75,21 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->addChild(button1);
 
     Button* button2 = new Button(vertical ? "downBtn" : "rightBtn", "scrollbarButton");
-    button2->setAttribute("width-offset", SCROLLBAR_SIZE);
-    button2->setAttribute("height-offset", SCROLLBAR_SIZE);
+    button2->setAttribute(WIDTH_OFFSET, SCROLLBAR_SIZE);
+    button2->setAttribute(HEIGHT_OFFSET, SCROLLBAR_SIZE);
 
-    button2->setAttribute("x-percent", vertical ? 0 : 100);
-    button2->setAttribute("y-percent", vertical ? 100 : 0);
-    button2->setAttribute("x-offset", vertical ? 0 : -SCROLLBAR_SIZE);
-    button2->setAttribute("y-offset", vertical ? -SCROLLBAR_SIZE : 0);
+    button2->setAttribute(X_PERCENT, vertical ? 0 : 100);
+    button2->setAttribute(Y_PERCENT, vertical ? 100 : 0);
+    button2->setAttribute(X_OFFSET, vertical ? 0 : -SCROLLBAR_SIZE);
+    button2->setAttribute(Y_OFFSET, vertical ? -SCROLLBAR_SIZE : 0);
 
-    button2->setAttribute("bg-color1", Color::NONE);
-    button2->setAttribute("bg-color2", Color::NONE);
-    button2->setAttribute("border-style", u"none");
+    button2->setAttribute(BACKGROUND_COLOR_1, Color::NONE);
+    button2->setAttribute(BACKGROUND_COLOR_2, Color::NONE);
+    button2->setAttribute(BORDER_STYLE, u"none");
 
-    button2->setAttribute("image", vertical ? "down-arrow.png" : "right-arrow.png");
-    button2->setAttribute("bg-color1", Color(190, 190, 190, 255), u"hover");
-    button2->setAttribute("bg-color2", Color(190, 190, 190, 255), u"hover");
+    button2->setAttribute(IMAGE, vertical ? "down-arrow.png" : "right-arrow.png");
+    button2->setAttribute(BACKGROUND_COLOR_1, Color(190, 190, 190, 255), u"hover");
+    button2->setAttribute(BACKGROUND_COLOR_2, Color(190, 190, 190, 255), u"hover");
 
     button2->addEventListener("click", [this, vertical](ComponentEvent* e) {
         if (vertical) {
@@ -99,21 +102,21 @@ void oui::ScrollPanel::createScrollBar(bool vertical) {
     scrollBar->addChild(button2);
 
     Button* bar = new Button("bar", "scrollbarBar");
-    bar->setAttribute("width-percent", vertical ? 100 : 0);
-    bar->setAttribute("height-percent", vertical ?0 : 100);
-    bar->setAttribute("width-offset", vertical ? 0 : -SCROLLBAR_SIZE * 2);
-    bar->setAttribute("height-offset", vertical ? -SCROLLBAR_SIZE * 2 : 0);
+    bar->setAttribute(WIDTH_PERCENT, vertical ? 100 : 0);
+    bar->setAttribute(HEIGHT_PERCENT, vertical ?0 : 100);
+    bar->setAttribute(WIDTH_OFFSET, vertical ? 0 : -SCROLLBAR_SIZE * 2);
+    bar->setAttribute(HEIGHT_OFFSET, vertical ? -SCROLLBAR_SIZE * 2 : 0);
 
-    bar->setAttribute("x-percent", 0);
-    bar->setAttribute("y-percent", 0);
-    bar->setAttribute("x-offset", vertical ? 0 : SCROLLBAR_SIZE);
-    bar->setAttribute("y-offset", vertical ? SCROLLBAR_SIZE : 0);
+    bar->setAttribute(X_PERCENT, 0);
+    bar->setAttribute(Y_PERCENT, 0);
+    bar->setAttribute(X_OFFSET, vertical ? 0 : SCROLLBAR_SIZE);
+    bar->setAttribute(Y_OFFSET, vertical ? SCROLLBAR_SIZE : 0);
     
-    bar->setAttribute("bg-color1", Color(180, 180, 180, 255));
-    bar->setAttribute("bg-color2", Color(180, 180, 180, 255));
-    bar->setAttribute("bg-color1", Color(160, 160, 160, 255), u"hover");
-    bar->setAttribute("bg-color2", Color(160, 160, 160, 255), u"hover");
-    bar->setAttribute("border-style", u"none");
+    bar->setAttribute(BACKGROUND_COLOR_1, Color(180, 180, 180, 255));
+    bar->setAttribute(BACKGROUND_COLOR_2, Color(180, 180, 180, 255));
+    bar->setAttribute(BACKGROUND_COLOR_1, Color(160, 160, 160, 255), u"hover");
+    bar->setAttribute(BACKGROUND_COLOR_2, Color(160, 160, 160, 255), u"hover");
+    bar->setAttribute(BORDER_STYLE, u"none");
 
     bar->addEventListener("mousedown", [this, vertical](ComponentEvent* compEvent) {
         MouseEvent* event = static_cast<MouseEvent*>(compEvent);
@@ -235,7 +238,7 @@ void oui::ScrollPanel::redraw() {
             if (barY + c->getHeight() > c->getParent()->getHeight() - SCROLLBAR_SIZE) {
                 barY = c->getParent()->getHeight() - SCROLLBAR_SIZE - c->getHeight();
             }
-            c->parseAttribute("location", u"0 0 0 " + intToString(barY));
+            c->parseAttribute(LOCATION, u"0 0 0 " + intToString(barY));
 
             int scrollPosY = (int) (barDifference == 0 ? 0 : (barY - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference));
             for (unsigned int i = 0; i < children.size(); i++) {
@@ -270,7 +273,7 @@ void oui::ScrollPanel::redraw() {
             if (barX + c->getWidth() > c->getParent()->getWidth() - SCROLLBAR_SIZE) {
                 barX = c->getParent()->getWidth() - SCROLLBAR_SIZE - c->getWidth();
             }
-            c->parseAttribute("location", u"0 0 " + intToString(barX).append(u" 0"));
+            c->parseAttribute(LOCATION, u"0 0 " + intToString(barX).append(u" 0"));
 
             int scrollPosX = (int) (barDifference == 0 ? 0 : (barX - SCROLLBAR_SIZE) * (pageDifference / (float) barDifference));
             for (unsigned int i = 0; i < children.size(); i++) {
@@ -311,35 +314,35 @@ void oui::ScrollPanel::handleResize() {
     float hRatio = childWidth / (float) getWidth();
     float vRatio = childHeight / (float) getHeight();
 
-    hSB->setAttribute("visible", childWidth > getWidth());
-    vSB->setAttribute("visible", childHeight > getHeight());
+    hSB->setAttribute(VISIBLE, childWidth > getWidth());
+    vSB->setAttribute(VISIBLE, childHeight > getHeight());
 
     //Resize to avoid overlap
     int width, height;
     width = vSB->getAttributeManager()->isVisible() ? -SCROLLBAR_SIZE : 0;
     height = SCROLLBAR_SIZE;
-    hSB->setAttribute("width-offset", width);
-    hSB->setAttribute("height-offset", height);
+    hSB->setAttribute(WIDTH_OFFSET, width);
+    hSB->setAttribute(HEIGHT_OFFSET, height);
 
     width = SCROLLBAR_SIZE;
     height = hSB->getAttributeManager()->isVisible() ? -SCROLLBAR_SIZE : 0;
-    vSB->setAttribute("width-offset", width);
-    vSB->setAttribute("height-offset", height);
+    vSB->setAttribute(WIDTH_OFFSET, width);
+    vSB->setAttribute(HEIGHT_OFFSET, height);
 
     //Horizontal scrollbar bar resize
     int spaceSize = (getWidth() - SCROLLBAR_SIZE * 2);
     int barSize = (int) (spaceSize / hRatio);
     Component* bar = hSB->getChild("bar");
-    bar->setAttribute("width-offset", barSize);
-    bar->setAttribute("height-offset", 0);
+    bar->setAttribute(WIDTH_OFFSET, barSize);
+    bar->setAttribute(HEIGHT_OFFSET, 0);
     resetX = true;
 
     //Vertical scrollbar bar resize
     spaceSize = (getHeight() - SCROLLBAR_SIZE * 2);
     barSize = (int) (spaceSize / vRatio);
     bar = vSB->getChild("bar");
-    bar->setAttribute("width-offset", 0);
-    bar->setAttribute("height-offset", barSize);
+    bar->setAttribute(WIDTH_OFFSET, 0);
+    bar->setAttribute(HEIGHT_OFFSET, barSize);
     resetY = true;
 }
 

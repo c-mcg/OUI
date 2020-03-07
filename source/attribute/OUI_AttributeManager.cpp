@@ -3,6 +3,9 @@
 #include "attribute/OUI_Style.h"
 #include "components/OUI_Component.h"
 #include "components/container/OUI_Container.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::AttributeManager::~AttributeManager() {
     delete style;
@@ -126,8 +129,8 @@ void oui::AttributeManager::updateAttributeVariable(const std::string& attribute
         }
     } else if (info.variableType == AttributeManager::FONT) {
         Font** fontValue = static_cast<Font**>(info.variablePointer);
-        std::u16string fontName = attributeName == "font-face" ? value.asString() : getString("font-face");
-        int fontSize = attributeName == "font-size" ? value.asInt() : getInt("font-size");
+        std::u16string fontName = attributeName == FONT_FACE ? value.asString() : getString(FONT_FACE);
+        int fontSize = attributeName == FONT_SIZE ? value.asInt() : getInt(FONT_SIZE);
         *fontValue = Font::getFont(fontName, fontSize, component->getWindow());
     }
 

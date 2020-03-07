@@ -1,6 +1,9 @@
 #include "components/container/OUI_ContainerAttributeManager.h"
 
 #include "components/container/OUI_Container.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::ContainerAttributeManager::~ContainerAttributeManager() {
     if (this->styleSheet != NULL) {
@@ -67,7 +70,7 @@ void oui::ContainerAttributeManager::addStyleSheet(StyleSheet* sheet) {
         this->styleSheet->combineStyleSheet(sheet, true);
     }
     deriveAttributesForComponent(this->styleSheet);
-    if (getBool("visible")) {
+    if (getBool(VISIBLE)) {
         refreshProfile();
     }
 }

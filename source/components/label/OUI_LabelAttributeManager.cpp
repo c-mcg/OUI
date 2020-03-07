@@ -1,6 +1,9 @@
 #include "components/label/OUI_LabelAttributeManager.h"
 
 #include "components/OUI_Component.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::LabelAttributeManager::LabelAttributeManager(): 
     autoSize{false}, text{u""}, font{NULL}, textColor{Color::BLACK},
@@ -23,7 +26,7 @@ void oui::LabelAttributeManager::refreshProfile()  {
     ComponentAttributeManager::refreshProfile();
 
     if (autoSize && font != NULL) {
-        parseAttribute("size", u"0 0 " + intToString(font->getStringWidth(text)) + u" " + intToString(font->getStringHeight(text)));
+        parseAttribute(SIZE, u"0 0 " + intToString(font->getStringWidth(text)) + u" " + intToString(font->getStringHeight(text)));
     }
 
     ComponentAttributeManager::refreshProfile();

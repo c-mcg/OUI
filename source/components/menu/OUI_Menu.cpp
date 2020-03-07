@@ -6,6 +6,10 @@
 #include "event/OUI_MenuEvent.h"
 #include "util/OUI_StringUtil.h"
 
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
+
 oui::Menu::~Menu() {
 
 }
@@ -16,18 +20,18 @@ oui::Menu::Menu(const std::string& name, const std::string& classes, EventDispat
     //setSize(0, 0, 150, 30);
 
     // TODO use default style like other components
-    setAttribute("border-style", u"solid");
-    setAttribute("border-color", Color(0, 0, 0, 128));
-    setAttribute("bg-color1", Color::WHITE);
-    setAttribute("bg-color2", Color::WHITE);
+    setAttribute(BORDER_STYLE, u"solid");
+    setAttribute(BORDER_COLOR, Color(0, 0, 0, 128));
+    setAttribute(BACKGROUND_COLOR_1, Color::WHITE);
+    setAttribute(BACKGROUND_COLOR_2, Color::WHITE);
 
-    setAttribute("hover-color", Color(200, 200, 200, 255));
-    setAttribute("padding", 4);
-    setAttribute("min-width", 100);
-    setAttribute("option-height", 20);
-    parseAttribute("font", u"notoserif 14");
+    setAttribute(HOVER_COLOR, Color(200, 200, 200, 255));
+    setAttribute(PADDING, 4);
+    setAttribute(MIN_WIDTH, 100);
+    setAttribute(OPTION_HEIGHT, 20);
+    parseAttribute(FONT, u"notoserif 14");
 
-    setAttribute("options", std::vector<Attribute>());
+    setAttribute(OPTIONS, std::vector<Attribute>());
 }
 
 
@@ -53,35 +57,35 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
 
     //Create button for option
     Button* b = new Button("option_" + std::to_string(index), "menuOption");
-    b->setAttribute("permanent", true);
+    b->setAttribute(PERMANENT, true);
 
-    b->setAttribute("text", option);
+    b->setAttribute(TEXT, option);
 
     int borderWidth = attributeManager->getBorderWidth();
 
     //Set size
-    b->setAttribute("width-percent", 100);
-    b->setAttribute("height-percent", 0);
-    b->setAttribute("width-offset", -padding * 2 - borderWidth * 2);
-    b->setAttribute("height-offset", optionHeight);
+    b->setAttribute(WIDTH_PERCENT, 100);
+    b->setAttribute(HEIGHT_PERCENT, 0);
+    b->setAttribute(WIDTH_OFFSET, -padding * 2 - borderWidth * 2);
+    b->setAttribute(HEIGHT_OFFSET, optionHeight);
 
     //Set location
-    b->setAttribute("x-percent", 0);
-    b->setAttribute("y-percent", 0);
-    b->setAttribute("x-offset", padding + borderWidth);
-    b->setAttribute("y-offset", optionHeight * index + padding + borderWidth);
+    b->setAttribute(X_PERCENT, 0);
+    b->setAttribute(Y_PERCENT, 0);
+    b->setAttribute(X_OFFSET, padding + borderWidth);
+    b->setAttribute(Y_OFFSET, optionHeight * index + padding + borderWidth);
 
     //Font
-    b->setAttribute("font-face", fontName);
-    b->setAttribute("font-size", fontSize);
+    b->setAttribute(FONT_FACE, fontName);
+    b->setAttribute(FONT_SIZE, fontSize);
 
-    b->setAttribute("border-style", u"none");
-    b->setAttribute("center-text", false);
+    b->setAttribute(BORDER_STYLE, u"none");
+    b->setAttribute(CENTER_TEXT, false);
 
     //Apply hover colour
     Color c = hoverColor;
-    b->setAttribute("bg-color1", c, u"hover");
-    b->setAttribute("bg-color2", c, u"hover");
+    b->setAttribute(BACKGROUND_COLOR_1, c, u"hover");
+    b->setAttribute(BACKGROUND_COLOR_2, c, u"hover");
 
     //Add button click event handler
     b->addEventListener("click", [this, b](ComponentEvent* e) {
@@ -113,11 +117,11 @@ oui::Button* oui::Menu::addOption(const std::u16string& option, int index) {
     numOptions++;
 
     //Set size for menu
-    this->setAttribute("num-options", numOptions);
-    this->setAttribute("width-percent", 0);
-    this->setAttribute("height-percent", 0);
-    this->setAttribute("width-offset", biggestWidth + padding * 2 + borderWidth * 2);
-    this->setAttribute("height-offset", optionHeight * numOptions + padding * 2 + borderWidth * 2);
+    this->setAttribute(NUM_OPTIONS, numOptions);
+    this->setAttribute(WIDTH_PERCENT, 0);
+    this->setAttribute(HEIGHT_PERCENT, 0);
+    this->setAttribute(WIDTH_OFFSET, biggestWidth + padding * 2 + borderWidth * 2);
+    this->setAttribute(HEIGHT_OFFSET, optionHeight * numOptions + padding * 2 + borderWidth * 2);
 
     //Return the added button
     return b;
@@ -143,7 +147,7 @@ void oui::Menu::setOptions(const std::vector<std::u16string>& options) {
     int padding = attributeManager->getPadding();
     int optionHeight = attributeManager->getOptionHeight();
     int biggestWidth = resetOptions();
-    parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * options.size() + padding * 2 + borderWidth * 2));
+    parseAttribute(SIZE, u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * options.size() + padding * 2 + borderWidth * 2));
 }
 
 bool oui::Menu::removeOption(int index) {
@@ -156,11 +160,11 @@ bool oui::Menu::removeOption(int index) {
     int optionHeight = attributeManager->getOptionHeight();
     int borderWidth = attributeManager->getBorderWidth();
     Button* b2 = static_cast<Button*>(getChild("option_" + std::to_string(index)));
-    b2->setAttribute("permanent", false);
+    b2->setAttribute(PERMANENT, false);
     removeChild(static_cast<Component*>(b2));
     int biggestWidth = resetOptions(index + 1);
     numOptions--;
-    parseAttribute("size", u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
+    parseAttribute(SIZE, u"0 0 " + intToString(biggestWidth + padding * 2 + borderWidth * 2) + u" " + intToString(optionHeight * numOptions + padding * 2 + borderWidth * 2));
     return true;
 }
 
@@ -181,10 +185,10 @@ int oui::Menu::resetOptions(int startIndex) {
         Button* b2 = static_cast<Button*>(getChild("option_" + std::to_string(i)));
 
         b2->setName("option_" + std::to_string(i));
-        b2->parseAttribute("size", u"100 0 " + intToString(-padding * 2 - borderWidth * 2) + u" " + intToString(optionHeight));
-        b2->parseAttribute("location", u"0 0 " + intToString(padding + borderWidth) + u" " + intToString(optionHeight * (i) + padding + borderWidth));
-        b2->parseAttribute("font", font + u" " + intToString(fontSize));
-        b2->setAttribute("border-style", u"none");
+        b2->parseAttribute(SIZE, u"100 0 " + intToString(-padding * 2 - borderWidth * 2) + u" " + intToString(optionHeight));
+        b2->parseAttribute(LOCATION, u"0 0 " + intToString(padding + borderWidth) + u" " + intToString(optionHeight * (i) + padding + borderWidth));
+        b2->parseAttribute(FONT, font + u" " + intToString(fontSize));
+        b2->setAttribute(BORDER_STYLE, u"none");
         if (b2->getWidth() > biggestWidth) {
             std::u16string buttonText = b2->getAttributeManager()->getText();
             biggestWidth = f->getStringWidth(buttonText);

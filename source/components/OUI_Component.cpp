@@ -3,6 +3,10 @@
 #include "window/OUI_window.h"
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
+
 
 #ifdef _DEBUG
 
@@ -18,30 +22,30 @@ oui::Style* oui::Component::getDefaultComponentStyle() {
 
         AttributeProfile* profile = new AttributeProfile("Component::defaultStyle['default']");
 
-        profile->setAttribute("cursor", u"default");
-        profile->setAttribute("opacity", 255);
-        profile->setAttribute("border-style", u"none");
-        profile->setAttribute("centered-x", false);
-        profile->setAttribute("centered-y", false);
-        profile->setAttribute("border-width", 1);
-        profile->setAttribute("width-percent", 0);
-        profile->setAttribute("height-percent", 0);
-        profile->setAttribute("width-offset", 100);
-        profile->setAttribute("height-offset", 100);
-        profile->setAttribute("x-percent", 0);
-        profile->setAttribute("y-percent", 0);
-        profile->setAttribute("x-offset", 0);
-        profile->setAttribute("y-offset", 0);
-        profile->setAttribute("visible", true);
-        profile->setAttribute("interactable", true);
-        profile->setAttribute("bg-color1", Color::WHITE);
-        profile->setAttribute("bg-color2", Color::WHITE);
-        profile->setAttribute("border-color", Color::BLACK);
-        profile->setAttribute("min-width", 0);
-        profile->setAttribute("min-height", 0);
-        profile->setAttribute("z-index", 0);
-        profile->setAttribute("right-click-options", std::vector<Attribute>());
-        profile->setAttribute("permanent", false);
+        profile->setAttribute(CURSOR, u"default");
+        profile->setAttribute(OPACITY, 255);
+        profile->setAttribute(BORDER_STYLE, u"none");
+        profile->setAttribute(CENTERED_X, false);
+        profile->setAttribute(CENTERED_Y, false);
+        profile->setAttribute(BORDER_WIDTH, 1);
+        profile->setAttribute(WIDTH_PERCENT, 0);
+        profile->setAttribute(HEIGHT_PERCENT, 0);
+        profile->setAttribute(WIDTH_OFFSET, 100);
+        profile->setAttribute(HEIGHT_OFFSET, 100);
+        profile->setAttribute(X_PERCENT, 0);
+        profile->setAttribute(Y_PERCENT, 0);
+        profile->setAttribute(X_OFFSET, 0);
+        profile->setAttribute(Y_OFFSET, 0);
+        profile->setAttribute(VISIBLE, true);
+        profile->setAttribute(INTERACTABLE, true);
+        profile->setAttribute(BACKGROUND_COLOR_1, Color::WHITE);
+        profile->setAttribute(BACKGROUND_COLOR_2, Color::WHITE);
+        profile->setAttribute(BORDER_COLOR, Color::BLACK);
+        profile->setAttribute(MIN_WIDTH, 0);
+        profile->setAttribute(MIN_HEIGHT, 0);
+        profile->setAttribute(Z_INDEX, 0);
+        profile->setAttribute(RIGHT_CLICK_OPTIONS, std::vector<Attribute>());
+        profile->setAttribute(PERMANENT, false);
 
         style->addProfile(u"default", profile);
         style->addProfile(u"hover", new AttributeProfile("Component::defaultStyle['hover']"));

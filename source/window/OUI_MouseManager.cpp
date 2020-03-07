@@ -3,6 +3,9 @@
 #include "event/OUI_ScrollEvent.h"
 #include "components/menu/OUI_Menu.h"
 #include "OUI.h"
+#include "attribute/OUI_AttributeNames.h"
+
+using namespace oui::AttributeNames;
 
 oui::MouseManager::MouseManager():
     globalMouseX{0}, globalMouseY{0}, lastGlobalMouseX{0}, lastGlobalMouseY{0},
@@ -98,7 +101,7 @@ void oui::MouseManager::onSystemMouseDown(ComponentEvent* compEvent) {
 
     Menu* menu = static_cast<Menu*>(window->getChild("rightClickMenu"));
     if (menu != NULL && comp != menu) {
-        menu->setAttribute("visible", false);
+        menu->setAttribute(VISIBLE, false);
     }
 
     switch(event->button) {
