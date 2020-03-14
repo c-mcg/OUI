@@ -2,7 +2,7 @@
 #define OUI_WINDOW_ATTRIBUTE_MANAGER_H
 
 #include "OUI_Export.h"
-#include "components/container/OUI_ContainerAttributeManager.h"
+#include "component/impl/container/OUI_ContainerAttributeManager.h"
 
 namespace oui {
 

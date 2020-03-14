@@ -3,7 +3,7 @@
 
 #include "OUI_Export.h"
 #include "event/OUI_ComponentEvent.h"
-#include "components/menu/OUI_Menu.h"
+#include "component/impl/menu/OUI_Menu.h"
 
 namespace oui {
 

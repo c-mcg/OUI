@@ -3,9 +3,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <thread>
-#include "attribute/OUI_AttributeSubstitution.h"
+#include "component/attribute/OUI_AttributeSubstitution.h"
 #include "os/OUI_OS.h"
-#include "attribute/OUI_AttributeNames.h"
+#include "component/attribute/OUI_AttributeNames.h"
 
 using namespace oui::AttributeNames;
 

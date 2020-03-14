@@ -2,7 +2,7 @@
 #define OUI_EDITEVENT_H
 
 #include "OUI_Export.h"
-#include "components/OUI_Component.h"
+#include "component/OUI_Component.h"
 #include <functional>
 
 namespace oui {

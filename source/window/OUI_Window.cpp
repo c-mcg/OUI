@@ -4,16 +4,16 @@
 #include "OUI.h"
 #include <iostream>
 #include <math.h>
-#include "components/menu/OUI_Menu.h"
-#include "components/scrollpanel/OUI_ScrollPanel.h"
+#include "component/impl/menu/OUI_Menu.h"
+#include "component/impl/scrollpanel/OUI_ScrollPanel.h"
 #include "util/OUI_StringUtil.h"
 #include "os/OUI_OS.h"
-#include "components/OUI_ComponentLoader.h"
+#include "component/OUI_ComponentLoader.h"
 
 #include "event/OUI_WindowEvent.h"
 #include "event/OUI_ScrollEvent.h"
 #include "event/OUI_KeyboardEvent.h"
-#include "attribute/OUI_AttributeNames.h"
+#include "component/attribute/OUI_AttributeNames.h"
 
 using namespace oui::AttributeNames;
 

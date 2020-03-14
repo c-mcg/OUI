@@ -1,5 +1,5 @@
 #include "event/OUI_WindowEventDispatcher.h"
-#include "components/OUI_Component.h"
+#include "component/OUI_Component.h"
 
 oui::WindowEventDispatcher::WindowEventDispatcher(): EventDispatcher() {}
 

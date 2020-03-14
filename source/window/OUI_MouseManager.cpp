@@ -1,9 +1,9 @@
 #include "window/OUI_MouseManager.h"
 #include "window/OUI_Window.h"
 #include "event/OUI_ScrollEvent.h"
-#include "components/menu/OUI_Menu.h"
+#include "component/impl/menu/OUI_Menu.h"
 #include "OUI.h"
-#include "attribute/OUI_AttributeNames.h"
+#include "component/attribute/OUI_AttributeNames.h"
 
 using namespace oui::AttributeNames;
 

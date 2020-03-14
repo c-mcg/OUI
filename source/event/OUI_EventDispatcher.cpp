@@ -1,6 +1,6 @@
 #include "event/OUI_EventDispatcher.h"
-#include "components/OUI_Component.h"
-#include "components/container/OUI_Container.h"
+#include "component/OUI_Component.h"
+#include "component/impl/container/OUI_Container.h"
 
 oui::EventDispatcher::EventDispatcher() :
     target{NULL}, listeners() {

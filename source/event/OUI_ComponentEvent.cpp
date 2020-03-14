@@ -1,7 +1,7 @@
 #include <functional>
 
 #include "event/OUI_ComponentEvent.h"
-#include "components/OUI_Component.h"
+#include "component/OUI_Component.h"
 
 oui::ComponentEvent::ComponentEvent(Component* originalTarget, std::string eventClass, std::string type, bool bubbles)
     : Event(eventClass, type), originalTarget{originalTarget}, target{originalTarget}, bubbles{bubbles}, propagationStopped{false} {
