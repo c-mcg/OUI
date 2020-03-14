@@ -4,6 +4,7 @@
 #include "OUI.h"
 #include "util/OUI_StringUtil.h"
 #include "component/attribute/OUI_AttributeNames.h"
+#include "component/location/OUI_PercentOffsetLocationManager.h"
 
 using namespace oui::AttributeNames;
 
@@ -68,7 +69,7 @@ oui::Component::~Component() {
 oui::Component::Component(const std::string& tag, const std::string& name, const std::string& classes, bool needsProcessing, EventDispatcher* eventDispatcher, ComponentAttributeManager* attributeManager) : 
     tag{tag}, name{name}, needsProcessing{needsProcessing},
     window{NULL}, graphics{NULL}, parent{NULL},
-    x{0}, y{0}, screenX{0}, screenY{0}, scrollOffsetX{0}, scrollOffsetY{0},
+    x{0}, y{0}, screenX{0}, screenY{0},
     width{0}, height{0}, graphicsUpdate{true},
     hovered{false}, selected{false}, mouseDown{false},
     mouseX{0}, mouseY{0}, eventDispatcher{eventDispatcher}, attributeManager{attributeManager}
@@ -81,6 +82,9 @@ oui::Component::Component(const std::string& tag, const std::string& name, const
     });
 
     attributeManager->setComponent(this);
+
+    locationManager = new PercentOffsetLocationManager();
+    locationManager->setTarget(this);
 
     this->classes = std::vector<std::string>();
     std::istringstream iss(classes.c_str());
@@ -289,18 +293,16 @@ int oui::Component::getHeight() {
 }
 
 int oui::Component::getRelativeX() {
-    x = calculateRelativeX();
-    return x;
+    return locationManager->getRelativeX();
 }
 int oui::Component::getRelativeY() {
-    y = calculateRelativeY();
-    return y;
+    return locationManager->getRelativeY();
 }
 int oui::Component::getWindowX() {
-    return calculateWindowX();
+    return locationManager->getWindowX();
 }
 int oui::Component::getWindowY() {
-    return calculateWindowY();
+    return locationManager->getWindowY();
 }
 
 int oui::Component::calculateWidth() {//TODO cache width
@@ -316,36 +318,6 @@ int oui::Component::calculateHeight() {//TODO cache height
     int minHeight = attributeManager->getMinHeight();
     auto height = parent == NULL ? heightOffset : ((float) heightPercent / 100.0) * parent->calculateHeight() + heightOffset;
     return (int) (height < minHeight ? minHeight : height);
-}
-
-int oui::Component::calculateRelativeX() {
-    int xPercent = attributeManager->getXPercent();
-    int xOffset = attributeManager->getXOffset();
-    int centeredX = attributeManager->getCenteredX();
-    //TODO percent based on screen size for Window class
-    auto offset = (int) (xOffset - (centeredX ? calculateWidth() / 2 : 0));
-    return (int) (parent == NULL ? offset : ((float) (xPercent) / 100.0) * parent->calculateWidth() + offset - scrollOffsetX);
-}
-int oui::Component::calculateRelativeY() {
-    int yPercent = attributeManager->getYPercent();
-    int yOffset = attributeManager->getYOffset();
-    int centeredY = attributeManager->getCenteredY();
-    //TODO percent based on screen size for Window class
-    auto offset = (int) (yOffset - (centeredY ? calculateHeight() / 2 : 0));
-    return (int) (parent == NULL ? offset : ((float) (yPercent) / 100.0) * parent->calculateHeight() + offset - scrollOffsetY);
-}
-
-int oui::Component::calculateWindowX() {
-    return calculateRelativeX() + (parent == NULL ? 0 : parent->calculateRelativeX());
-}
-int oui::Component::calculateWindowY() {
-    return calculateRelativeY() + (parent == NULL ? 0 : parent->calculateRelativeY());
-}
-void oui::Component::setScrollOffsetX(int scrollOffsetX) {
-    this->scrollOffsetX = scrollOffsetX;
-}
-void oui::Component::setScrollOffsetY(int scrollOffsetY) {
-    this->scrollOffsetY = scrollOffsetY;
 }
 
 /* END OF SIZE & LOCATION */
@@ -423,6 +395,10 @@ void oui::Component::deriveAttributesForComponent(StyleSheet* styleSheet) {
 
 oui::ComponentAttributeManager* oui::Component::getAttributeManager() {
     return attributeManager;
+}
+
+oui::LocationManager* oui::Component::getLocationManager() {
+    return locationManager;
 }
 
 void oui::Component::refreshProfile() {

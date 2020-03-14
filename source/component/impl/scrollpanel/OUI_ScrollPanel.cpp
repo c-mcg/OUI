@@ -244,7 +244,7 @@ void oui::ScrollPanel::redraw() {
             for (unsigned int i = 0; i < children.size(); i++) {
                 Component* target = children.at(i);
                 if (!target->compareTag("scrollbar")) {
-                    target->setScrollOffsetY(scrollPosY);
+                    target->getLocationManager()->setScrollOffsetY(scrollPosY);
                 }
             }
 
@@ -279,7 +279,7 @@ void oui::ScrollPanel::redraw() {
             for (unsigned int i = 0; i < children.size(); i++) {
                 Component* target = children.at(i);
                 if (!target->compareTag("scrollbar")) {
-                    target->setScrollOffsetX(scrollPosX);
+                    target->getLocationManager()->setScrollOffsetX(scrollPosX);
                 }
             }
 

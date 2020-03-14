@@ -7,6 +7,7 @@
 #include <functional>
 #include "component/attribute/OUI_StyleSheet.h"
 #include "component/OUI_ComponentAttributeManager.h"
+#include "component/location/OUI_LocationManager.h"
 
 #include "event/OUI_EventDispatcher.h"
 
@@ -37,6 +38,7 @@ namespace oui {
             virtual OUI_API void deriveAttributesForComponent(StyleSheet* styleSheet = NULL);
 
             virtual OUI_API ComponentAttributeManager* getAttributeManager();
+            virtual OUI_API LocationManager* getLocationManager();
 
             std::u16string OUI_API getCursor();
             virtual OUI_API std::vector<std::u16string> getRightClickOptions();
@@ -47,15 +49,13 @@ namespace oui {
             
             Graphics* graphics;
             ComponentAttributeManager* attributeManager;
+            LocationManager* locationManager;
             EventDispatcher* eventDispatcher;
 
     //Identification
         private: std::string tag;
         private: std::string name;
         protected: std::vector<std::string> classes;
-
-    //Location
-        private: float scrollOffsetX, scrollOffsetY;
 
     //Cached calculations
         private: int x, y;
@@ -123,16 +123,10 @@ namespace oui {
         public: OUI_API int getHeight();
         public: OUI_API int calculateWidth();
         public: OUI_API int calculateHeight();
-        public: OUI_API int calculateRelativeX();
-        public: OUI_API int calculateRelativeY();
-        public: OUI_API int calculateWindowX();
-        public: OUI_API int calculateWindowY();
         public: OUI_API int getRelativeX();
         public: OUI_API int getRelativeY();
         public: OUI_API int getWindowX();
         public: OUI_API int getWindowY();
-        public: OUI_API void setScrollOffsetX(int scrollOffsetX);
-        public: OUI_API void setScrollOffsetY(int scrollOffsetY);
 
     //Graphics
         public: OUI_API Graphics* getGraphics();
