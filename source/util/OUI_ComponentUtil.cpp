@@ -17,8 +17,8 @@ bool oui::util::isComponentChildOf(Component* child, Component* parent) {
 }
 
 bool oui::util::componentContainsPoint(Component* component, int localX, int localY) {
-    int x = component->getX();
-    int y = component->getY();
+    int x = component->getRelativeX();
+    int y = component->getRelativeY();
     int width = component->getWidth();
     int height = component->getHeight();
     return localX >= x && localX <= x + width &&
@@ -27,8 +27,8 @@ bool oui::util::componentContainsPoint(Component* component, int localX, int loc
 
 oui::Component* oui::util::getComponentAt(Container* container, int localX, int localY) {
     Component* foundComponent = NULL;
-    int containerX = container->isWindow() ? 0 : container->getX();
-    int containerY = container->isWindow() ? 0 : container->getY();
+    int containerX = container->isWindow() ? 0 : container->getRelativeX();
+    int containerY = container->isWindow() ? 0 : container->getRelativeY();
     auto children = container->getChildren();
     std::map<int, std::vector<Component*>> zIndexes = orderByZIndex(children);
 

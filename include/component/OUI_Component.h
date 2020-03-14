@@ -123,14 +123,14 @@ namespace oui {
         public: OUI_API int getHeight();
         public: OUI_API int calculateWidth();
         public: OUI_API int calculateHeight();
-        public: OUI_API int calculateX();
-        public: OUI_API int calculateY();
-        public: OUI_API int calculateScreenX();
-        public: OUI_API int calculateScreenY();
-        public: OUI_API int getX();
-        public: OUI_API int getY();
-        public: OUI_API int getScreenX();
-        public: OUI_API int getScreenY();
+        public: OUI_API int calculateRelativeX();
+        public: OUI_API int calculateRelativeY();
+        public: OUI_API int calculateWindowX();
+        public: OUI_API int calculateWindowY();
+        public: OUI_API int getRelativeX();
+        public: OUI_API int getRelativeY();
+        public: OUI_API int getWindowX();
+        public: OUI_API int getWindowY();
         public: OUI_API void setScrollOffsetX(int scrollOffsetX);
         public: OUI_API void setScrollOffsetY(int scrollOffsetY);
 

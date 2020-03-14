@@ -148,8 +148,8 @@ void oui::ScrollPanel::getChildSize(int* w, int* h) {
     int boundsY = getHeight();
     for (unsigned int i = 0; i < children.size(); i++) {
         Component* c = children.at(i);
-        int w = c->getX() + c->getWidth();
-        int h = c->getY() + c->getHeight();
+        int w = c->getRelativeX() + c->getWidth();
+        int h = c->getRelativeY() + c->getHeight();
         if (w > boundsX) {
             boundsX = w;
         }
@@ -228,7 +228,7 @@ void oui::ScrollPanel::redraw() {
             int pageDifference = childHeight - getHeight();
             int barDifference = spaceSize - c->getHeight();
 
-            int barY = c->getWindow()->getMouseY() - c->getParent()->getY() - clickStartY;
+            int barY = c->getWindow()->getMouseY() - c->getParent()->getRelativeY() - clickStartY;
             if (resetY && pageDifference != 0 && barDifference != 0) {
                 barY = (int) (scrollPosY / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE);
             }
@@ -263,7 +263,7 @@ void oui::ScrollPanel::redraw() {
             int pageDifference = childWidth - getWidth();
             int barDifference = spaceSize - c->getWidth();
 
-            int barX = c->getWindow()->getMouseX() - c->getParent()->getX() - clickStartX;
+            int barX = c->getWindow()->getMouseX() - c->getParent()->getRelativeX() - clickStartX;
             if (resetX && pageDifference != 0 && barDifference != 0) {
                 barX = (int) (scrollPosX / (pageDifference / (float) barDifference) + SCROLLBAR_SIZE);
             }

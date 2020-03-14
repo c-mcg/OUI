@@ -169,7 +169,7 @@ void oui::TextField::onMouseUp(ComponentEvent* e) {
 void oui::TextField::onMouseMove(ComponentEvent* compEvent) {
     MouseEvent* event = static_cast<MouseEvent*>(compEvent);
     if (this->highlighting) {
-        int localX = event->windowX - getScreenX();
+        int localX = event->windowX - getWindowX();
         setCaratIndex(getIndexAt(localX));
     }
 }

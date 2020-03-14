@@ -12,8 +12,8 @@ void oui::WindowAttributeManager::refreshProfile() {
     bool wasVisible = isVisible();
     int width = window->getWidth();
     int height = window->getHeight();
-    int x = window->getX();
-    int y = window->getY();
+    int x = window->getRelativeX();
+    int y = window->getRelativeY();
 
     ContainerAttributeManager::refreshProfile();
 
@@ -34,8 +34,8 @@ void oui::WindowAttributeManager::refreshProfile() {
         window->flagGraphicsUpdateAll();
     }
 
-    if (x != window->getX() || y != window->getY()) {
-        window->setPosition(window->getX(), window->getY());
+    if (x != window->getRelativeX() || y != window->getRelativeY()) {
+        window->setPosition(window->getRelativeX(), window->getRelativeY());
     }
 
 }

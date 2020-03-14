@@ -9,20 +9,20 @@ oui::MouseEvent* oui::MouseEvent::create(std::string type, bool bubbles, Window*
     int mouseY = window->getMouseY();
     Component* originalTarget = util::getComponentAt(window, mouseX, mouseY);
     
-    int localX = mouseX - originalTarget->getScreenX();
-    int localY = mouseY - originalTarget->getScreenY();
+    int localX = mouseX - originalTarget->getWindowX();
+    int localY = mouseY - originalTarget->getWindowY();
 
     return new MouseEvent(type, bubbles, originalTarget,
         window->isAltDown(), button, buttons, localX, localY, window->isCtrlDown(),
-        window->isMetaDown(), movementX, movementY, mouseX + window->getX(), mouseY + window->getY(),
+        window->isMetaDown(), movementX, movementY, mouseX + window->getRelativeX(), mouseY + window->getRelativeY(),
         window->isShiftDown(), mouseX, mouseY);
 }
 
 oui::MouseEvent* oui::MouseEvent::createBubbledEvent(MouseEvent* event) {
     auto comp = event->getTarget();
     auto parent = comp->getParent();
-    int newLocalX = event->windowX - parent->getScreenX();
-    int newLocalY = event->windowY - parent->getScreenY();
+    int newLocalX = event->windowX - parent->getWindowX();
+    int newLocalY = event->windowY - parent->getWindowY();
 
     if (event->type == "scroll") {
         int scrollDistance = static_cast<ScrollEvent*>(event)->scrollDistance;

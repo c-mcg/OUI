@@ -250,7 +250,7 @@ void oui::Container::redrawChildren() {
                 c->refreshProfile();
                 c->redraw();
             }
-            c->getGraphics()->renderToGraphics(c->getX(), c->getY(), graphics);
+            c->getGraphics()->renderToGraphics(c->getRelativeX(), c->getRelativeY(), graphics);
         }
     }
 }

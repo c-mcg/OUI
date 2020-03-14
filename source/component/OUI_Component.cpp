@@ -288,19 +288,19 @@ int oui::Component::getHeight() {
     return height;
 }
 
-int oui::Component::getX() {
-    x = calculateX();
+int oui::Component::getRelativeX() {
+    x = calculateRelativeX();
     return x;
 }
-int oui::Component::getY() {
-    y = calculateY();
+int oui::Component::getRelativeY() {
+    y = calculateRelativeY();
     return y;
 }
-int oui::Component::getScreenX() {
-    return calculateScreenX();
+int oui::Component::getWindowX() {
+    return calculateWindowX();
 }
-int oui::Component::getScreenY() {
-    return calculateScreenY();
+int oui::Component::getWindowY() {
+    return calculateWindowY();
 }
 
 int oui::Component::calculateWidth() {//TODO cache width
@@ -318,7 +318,7 @@ int oui::Component::calculateHeight() {//TODO cache height
     return (int) (height < minHeight ? minHeight : height);
 }
 
-int oui::Component::calculateX() {
+int oui::Component::calculateRelativeX() {
     int xPercent = attributeManager->getXPercent();
     int xOffset = attributeManager->getXOffset();
     int centeredX = attributeManager->getCenteredX();
@@ -326,7 +326,7 @@ int oui::Component::calculateX() {
     auto offset = (int) (xOffset - (centeredX ? calculateWidth() / 2 : 0));
     return (int) (parent == NULL ? offset : ((float) (xPercent) / 100.0) * parent->calculateWidth() + offset - scrollOffsetX);
 }
-int oui::Component::calculateY() {
+int oui::Component::calculateRelativeY() {
     int yPercent = attributeManager->getYPercent();
     int yOffset = attributeManager->getYOffset();
     int centeredY = attributeManager->getCenteredY();
@@ -335,11 +335,11 @@ int oui::Component::calculateY() {
     return (int) (parent == NULL ? offset : ((float) (yPercent) / 100.0) * parent->calculateHeight() + offset - scrollOffsetY);
 }
 
-int oui::Component::calculateScreenX() {
-    return calculateX() + (parent == NULL ? 0 : parent->calculateX());
+int oui::Component::calculateWindowX() {
+    return calculateRelativeX() + (parent == NULL ? 0 : parent->calculateRelativeX());
 }
-int oui::Component::calculateScreenY() {
-    return calculateY() + (parent == NULL ? 0 : parent->calculateY());
+int oui::Component::calculateWindowY() {
+    return calculateRelativeY() + (parent == NULL ? 0 : parent->calculateRelativeY());
 }
 void oui::Component::setScrollOffsetX(int scrollOffsetX) {
     this->scrollOffsetX = scrollOffsetX;

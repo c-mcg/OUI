@@ -150,7 +150,7 @@ void oui::Window::initializeWindow(int width, int height) {
 
     Button* closeBtn = new Button("closeBtn", "window-button");
     closeBtn->addEventListener("click", [this](ComponentEvent* e) {
-        WindowEvent* windowEvent = WindowEvent::create("close", this, getX(), getY(), getWidth(), getHeight());
+        WindowEvent* windowEvent = WindowEvent::create("close", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
         eventDispatcher->dispatchEvent(windowEvent);
         e->stopPropagation();
         delete windowEvent;
@@ -193,8 +193,8 @@ void oui::Window::startResizing() {
     int globalMouseX = mouseManager->getGlobalMouseX();
     int globalMouseY = mouseManager->getGlobalMouseY();
     closeRightClickMenu();
-    resizeX = getWidth() - (globalMouseX - getX());
-    resizeY = getHeight() - (globalMouseY - getY());
+    resizeX = getWidth() - (globalMouseX - getRelativeX());
+    resizeY = getHeight() - (globalMouseY - getRelativeY());
     resizing = true;
 }
 void oui::Window::stopResizing() {
@@ -252,7 +252,7 @@ int oui::Window::process() {
     }
 
     if (resizing) {
-        this->parseAttribute(SIZE, u"0 0 " + intToString(globalMouseX - getX() + resizeX) + u" " + intToString(globalMouseY - getY() + resizeY));
+        this->parseAttribute(SIZE, u"0 0 " + intToString(globalMouseX - getRelativeX() + resizeX) + u" " + intToString(globalMouseY - getRelativeY() + resizeY));
     }
 
 
@@ -292,43 +292,43 @@ oui::Graphics* oui::Window::getGraphics() {
 }
 
 void oui::Window::onSystemClose(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("close", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("close", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemMinimize(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("minimize", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("minimize", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemUnminimize(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("unminimize", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("unminimize", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemMaximize(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("maximize", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("maximize", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemUnmaximize(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("unmaximize", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("unmaximize", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemFocus(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("focus", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("focus", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
 
 void oui::Window::onSystemBlur(ComponentEvent* compEvent) {
-    WindowEvent* event = new WindowEvent("blur", this, getX(), getY(), getWidth(), getHeight());
+    WindowEvent* event = new WindowEvent("blur", this, getRelativeX(), getRelativeY(), getWidth(), getHeight());
     eventDispatcher->dispatchEvent(event);
     delete event;
 }
@@ -374,8 +374,8 @@ void oui::Window::onMaximize(ComponentEvent* compEvent) {
     if (maximizeBtn != NULL) {
         maximizeBtn->setAttribute(IMAGE, u"maximize-btn2.png");
     }
-    maximizeX = getX();
-    maximizeY = getY();
+    maximizeX = getRelativeX();
+    maximizeY = getRelativeY();
     maximizeWidth = getWidth();
     maximizeHeight = getHeight();
 

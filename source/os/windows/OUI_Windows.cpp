@@ -29,10 +29,10 @@ bool oui::WindowsOS::getMaximizeSize(oui::Window* window, int &x, int &y, int &w
 
     RECT* prc = new RECT();
     RECT rc;
-    prc->left = window->getX();
-    prc->top = window->getY();
-    prc->right = window->getX() + window->getWidth();
-    prc->bottom = window->getY() + window->getHeight();
+    prc->left = window->getRelativeX();
+    prc->top = window->getRelativeY();
+    prc->right = window->getRelativeX() + window->getWidth();
+    prc->bottom = window->getRelativeY() + window->getHeight();
     HMONITOR hMonitor = MonitorFromRect(prc, MONITOR_DEFAULTTONEAREST);
     MONITORINFO mi;
     mi.cbSize = sizeof(mi);

@@ -42,8 +42,8 @@ void oui::MouseManager::onSystemMouseMove(ComponentEvent* compEvent) {
     MouseEvent* event = MouseEvent::create("mousemove", true, window, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
 
     bool resizing = window->isResizing();
-    int windowX = window->getX();
-    int windowY = window->getY();
+    int windowX = window->getRelativeX();
+    int windowY = window->getRelativeY();
     int windowWidth = window->getWidth();
     int windowHeight = window->getHeight();
     if (!resizing) {
@@ -94,8 +94,8 @@ void oui::MouseManager::onSystemMouseDown(ComponentEvent* compEvent) {
     MouseEvent* event = MouseEvent::create("mousedown", true, window, rawMouseEvent->button, rawMouseEvent->buttons, rawMouseEvent->movementX, rawMouseEvent->movementY);
     Component* comp = event->getTarget();
 
-    int windowX = window->getX();
-    int windowY = window->getY();
+    int windowX = window->getRelativeX();
+    int windowY = window->getRelativeY();
     int windowWidth = window->getWidth();
     int windowHeight = window->getHeight();
 
@@ -130,8 +130,8 @@ void oui::MouseManager::onSystemScrollWheel(ComponentEvent* compEvent) {
 }
 
 void oui::MouseManager::process() {
-    int windowX = window->getX();
-    int windowY = window->getY();
+    int windowX = window->getRelativeX();
+    int windowY = window->getRelativeY();
     int windowWidth = window->getWidth();
     int windowHeight = window->getHeight();
     OS()->getGlobalMousePos(window, globalMouseX, globalMouseY);

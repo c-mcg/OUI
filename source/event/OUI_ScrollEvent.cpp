@@ -8,12 +8,12 @@ oui::ScrollEvent* oui::ScrollEvent::create(bool bubbles, Window* window, std::ve
     int mouseY = window->getMouseY();
     Component* originalTarget = util::getComponentAt(window, mouseX, mouseY);
     
-    int localX = mouseX - originalTarget->getScreenX();
-    int localY = mouseY - originalTarget->getScreenY();
+    int localX = mouseX - originalTarget->getWindowX();
+    int localY = mouseY - originalTarget->getWindowY();
 
     return new ScrollEvent(bubbles, originalTarget,
         window->isAltDown(), buttons, localX, localY, window->isCtrlDown(),
-        window->isMetaDown(), movementX, movementY, window->getScreenX(), window->getScreenY(),
+        window->isMetaDown(), movementX, movementY, window->getWindowX(), window->getWindowY(),
         window->isShiftDown(), mouseX, mouseY, scrollDistance);
 }
 
